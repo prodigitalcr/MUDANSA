@@ -3,1387 +3,1163 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MudanzasHub - Plataforma de Mudanzas</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <title>MudanzasHub Costa Rica - Solución Total V3 Mejorada</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        /* ============================================
+           ESTILOS BASE - MEJORADOS Y OPTIMIZADOS
+           ============================================ */
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
         }
 
-        :root {
-            --primary: #3b82f6;
-            --primary-dark: #1e40af;
-            --accent: #10b981;
-            --background: #0f172a;
-            --surface: #1e293b;
-            --surface-light: #334155;
-            --foreground: #f1f5f9;
-            --muted: #94a3b8;
-            --border: #475569;
-            --destructive: #ef4444;
-            --success: #10b981;
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background: #0f0f0f; 
+            color: #fff; 
+            overflow: hidden; 
         }
 
-        body {
-            font-family: 'Sora', sans-serif;
-            background-color: var(--background);
-            color: var(--foreground);
-            line-height: 1.6;
+        .container { 
+            display: flex; 
+            height: 100vh; 
         }
 
-        h1, h2, h3, h4, h5, h6 {
-            font-family: 'Playfair Display', serif;
-            font-weight: 700;
+        /* ============================================
+           SIDEBAR - MEJORADO
+           ============================================ */
+        .sidebar { 
+            width: 440px; 
+            background: linear-gradient(180deg, #1a1a1a 0%, #151515 100%);
+            border-right: 1px solid #333; 
+            overflow-y: auto; 
+            padding: 20px; 
+            box-shadow: 2px 0 10px rgba(0,0,0,0.5); 
         }
 
-        /* Navbar */
-        .navbar {
-            position: sticky;
-            top: 0;
-            z-index: 50;
-            border-bottom: 1px solid var(--border);
-            background-color: rgba(15, 23, 42, 0.95);
-            backdrop-filter: blur(10px);
+        .sidebar::-webkit-scrollbar {
+            width: 8px;
         }
 
-        .navbar-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            height: 64px;
+        .sidebar::-webkit-scrollbar-track {
+            background: #1a1a1a;
         }
 
-        .navbar-brand {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            cursor: pointer;
-            font-size: 20px;
-            font-weight: 700;
+        .sidebar::-webkit-scrollbar-thumb {
+            background: #00d4ff;
+            border-radius: 4px;
         }
 
-        .navbar-brand-icon {
+        .sidebar::-webkit-scrollbar-thumb:hover {
+            background: #00b8d4;
+        }
+
+        /* ============================================
+           MAPA
+           ============================================ */
+        .map-container { 
+            flex: 1; 
+            position: relative; 
+        }
+
+        #map { 
+            width: 100%; 
+            height: 100%; 
+        }
+
+        /* ============================================
+           LOGO Y ENCABEZADO
+           ============================================ */
+        .logo { 
+            font-size: 22px; 
+            font-weight: bold; 
+            margin-bottom: 20px; 
+            color: #00d4ff; 
+            display: flex; 
+            align-items: center; 
+            gap: 10px; 
+            text-shadow: 0 0 10px rgba(0, 212, 255, 0.3);
+        }
+
+        .user-greeting { 
+            background: linear-gradient(135deg, #1a3a3a, #2a2a2a); 
+            border: 1px solid #00d4ff44; 
+            border-radius: 8px; 
+            padding: 10px 14px; 
+            margin-bottom: 16px; 
+            font-size: 13px; 
+            color: #00d4ff; 
+            display: flex; 
+            align-items: center; 
+            gap: 8px; 
+        }
+
+        /* ============================================
+           FORMULARIOS
+           ============================================ */
+        .form-group { 
+            margin-bottom: 18px; 
+        }
+
+        .form-group label { 
+            display: block; 
+            margin-bottom: 7px; 
+            font-size: 13px; 
+            font-weight: 600; 
+            color: #aaa; 
+        }
+
+        .search-container { 
+            position: relative; 
+            margin-bottom: 18px; 
+        }
+
+        .search-input { 
+            width: 100%; 
+            padding: 11px 12px; 
+            background: #2a2a2a; 
+            border: 1px solid #444; 
+            border-radius: 8px; 
+            color: #fff; 
+            font-size: 14px; 
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus { 
+            outline: none; 
+            border-color: #00d4ff; 
+            box-shadow: 0 0 10px rgba(0,212,255,0.3); 
+            background: #2a3535;
+        }
+
+        .search-suggestions { 
+            position: absolute; 
+            top: 100%; 
+            left: 0; 
+            right: 0; 
+            background: #2a2a2a; 
+            border: 1px solid #444; 
+            border-top: none; 
+            border-radius: 0 0 8px 8px; 
+            max-height: 300px; 
+            overflow-y: auto; 
+            z-index: 100; 
+            display: none; 
+        }
+
+        .search-suggestions.active { 
+            display: block; 
+        }
+
+        .suggestion-item { 
+            padding: 11px 12px; 
+            border-bottom: 1px solid #333; 
+            cursor: pointer; 
+            transition: all 0.2s ease; 
+            font-size: 13px; 
+        }
+
+        .suggestion-item:hover { 
+            background: #3a3a3a; 
+            color: #00d4ff; 
+            padding-left: 16px;
+        }
+
+        .suggestion-address { 
+            color: #aaa; 
+            font-size: 12px; 
+            margin-top: 3px; 
+        }
+
+        /* ============================================
+           BOTONES - MEJORADOS
+           ============================================ */
+        .btn { 
+            width: 100%; 
+            padding: 13px; 
+            background: #00d4ff; 
+            color: #000; 
+            border: none; 
+            border-radius: 8px; 
+            font-weight: 600; 
+            cursor: pointer; 
+            font-size: 14px; 
+            transition: all 0.3s ease; 
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 40px;
-            height: 40px;
-            border-radius: 8px;
-            background-color: var(--primary);
-            color: white;
-            font-weight: 700;
+            gap: 8px;
         }
 
-        .navbar-nav {
-            display: flex;
-            gap: 20px;
-            align-items: center;
+        .btn:hover { 
+            background: #00b8d4; 
+            transform: translateY(-2px); 
+            box-shadow: 0 5px 15px rgba(0,212,255,0.4); 
         }
 
-        .navbar-nav a {
-            color: var(--foreground);
-            text-decoration: none;
-            font-size: 14px;
-            font-weight: 500;
-            transition: color 0.3s;
-            cursor: pointer;
+        .btn:active {
+            transform: translateY(0);
         }
 
-        .navbar-nav a:hover {
-            color: var(--primary);
+        .btn:disabled { 
+            background: #555; 
+            color: #888; 
+            cursor: not-allowed; 
+            transform: none; 
+            box-shadow: none; 
         }
 
-        .navbar-nav a.active {
-            color: var(--primary);
-            border-bottom: 2px solid var(--primary);
-            padding-bottom: 2px;
-        }
-
-        .btn {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-family: 'Sora', sans-serif;
-        }
-
-        .btn-primary {
-            background-color: var(--primary);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background-color: var(--primary-dark);
-            transform: translateY(-2px);
-        }
-
-        .btn-secondary {
-            background-color: var(--surface-light);
-            color: var(--foreground);
-            border: 1px solid var(--border);
+        .btn-secondary { 
+            background: #333; 
+            color: #fff; 
+            margin-bottom: 10px; 
         }
 
         .btn-secondary:hover {
-            background-color: var(--border);
+            background: #444;
         }
 
-        .btn-success {
-            background-color: var(--success);
-            color: white;
+        .btn-sm { 
+            width: auto; 
+            padding: 7px 14px; 
+            font-size: 12px; 
+            display: inline-block; 
         }
 
-        .btn-success:hover {
-            background-color: #059669;
+        .btn-whatsapp { 
+            background: #25d366; 
+            color: #fff; 
         }
 
-        .btn-danger {
-            background-color: var(--destructive);
-            color: white;
+        .btn-whatsapp:hover {
+            background: #20ba5a;
+            box-shadow: 0 5px 15px rgba(37, 211, 102, 0.4);
         }
 
-        .btn-danger:hover {
-            background-color: #dc2626;
+        .btn-reject { 
+            background: #ff4b4b; 
+            color: #fff; 
         }
 
-        .btn-small {
-            padding: 8px 16px;
-            font-size: 12px;
+        .btn-reject:hover {
+            background: #e63939;
         }
 
-        /* Container */
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
+        .btn-accept { 
+            background: #4ade80; 
+            color: #000; 
         }
 
-        /* Pages */
-        .page {
-            display: none;
-            min-height: calc(100vh - 64px);
-            padding: 40px 20px;
+        .btn-accept:hover {
+            background: #22c55e;
         }
 
-        .page.active {
-            display: block;
+        /* ============================================
+           MODALES
+           ============================================ */
+        .modal { 
+            display: none; 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            background: rgba(0,0,0,0.85); 
+            z-index: 1000; 
+            align-items: center; 
+            justify-content: center; 
+            backdrop-filter: blur(4px);
         }
 
-        /* Home Page */
-        .hero {
-            text-align: center;
-            padding: 80px 20px;
+        .modal.active { 
+            display: flex; 
         }
 
-        .hero h1 {
-            font-size: 48px;
-            margin-bottom: 20px;
-            background: linear-gradient(135deg, var(--primary), var(--accent));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+        .modal-content { 
+            background: linear-gradient(135deg, #1a1a1a 0%, #202020 100%);
+            border: 1px solid #444; 
+            border-radius: 12px; 
+            padding: 28px; 
+            width: 92%; 
+            max-width: 620px; 
+            max-height: 92vh; 
+            overflow-y: auto; 
+            box-shadow: 0 10px 40px rgba(0,0,0,0.9); 
+            position: relative; 
+            animation: slideUp 0.3s ease;
         }
 
-        .hero p {
-            font-size: 18px;
-            color: var(--muted);
-            margin-bottom: 40px;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
-        .hero-buttons {
-            display: flex;
-            gap: 20px;
-            justify-content: center;
-            flex-wrap: wrap;
+        .modal-header { 
+            font-size: 19px; 
+            font-weight: bold; 
+            margin-bottom: 18px; 
+            color: #00d4ff; 
         }
 
-        .features {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 30px;
-            margin-top: 80px;
+        .modal-close { 
+            position: absolute; 
+            top: 14px; 
+            right: 14px; 
+            background: none; 
+            border: none; 
+            color: #aaa; 
+            font-size: 24px; 
+            cursor: pointer; 
+            width: auto; 
+            padding: 0; 
+            transition: all 0.2s ease;
         }
 
-        .feature-card {
-            background-color: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 30px;
-            text-align: center;
-            transition: all 0.3s;
+        .modal-close:hover {
+            color: #00d4ff;
+            transform: rotate(90deg);
         }
 
-        .feature-card:hover {
-            border-color: var(--primary);
-            transform: translateY(-5px);
+        /* ============================================
+           SECCIONES Y TABS
+           ============================================ */
+        .section { 
+            display: none; 
         }
 
-        .feature-icon {
-            font-size: 40px;
-            margin-bottom: 15px;
+        .section.active { 
+            display: block; 
         }
 
-        .feature-card h3 {
-            margin-bottom: 10px;
-            font-size: 20px;
+        .tabs { 
+            display: flex; 
+            background: #222; 
+            border-radius: 8px; 
+            padding: 4px; 
+            margin-bottom: 18px; 
         }
 
-        .feature-card p {
-            color: var(--muted);
-            font-size: 14px;
+        .tab-btn { 
+            flex: 1; 
+            padding: 10px; 
+            background: none; 
+            border: none; 
+            color: #888; 
+            font-size: 12px; 
+            font-weight: 600; 
+            cursor: pointer; 
+            border-radius: 6px; 
+            transition: all 0.2s ease;
         }
 
-        /* Form */
-        .form-group {
-            margin-bottom: 20px;
+        .tab-btn:hover {
+            color: #aaa;
         }
 
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
+        .tab-btn.active { 
+            background: #333; 
+            color: #00d4ff; 
+        }
+
+        .tab-content { 
+            display: none; 
+        }
+
+        .tab-content.active { 
+            display: block; 
+        }
+
+        /* ============================================
+           TABLAS
+           ============================================ */
+        .admin-table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            font-size: 12px; 
+            margin-top: 10px; 
+        }
+
+        .admin-table th { 
+            text-align: left; 
+            padding: 12px 8px; 
+            background: #222; 
+            color: #aaa; 
+            border: 1px solid #333; 
             font-weight: 600;
-            font-size: 14px;
         }
 
-        .form-group input,
-        .form-group textarea,
-        .form-group select {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            background-color: var(--surface);
-            color: var(--foreground);
-            font-family: 'Sora', sans-serif;
-            font-size: 14px;
+        .admin-table td { 
+            padding: 12px 8px; 
+            border: 1px solid #222; 
         }
 
-        .form-group input:focus,
-        .form-group textarea:focus,
-        .form-group select:focus {
+        .admin-table tr:hover {
+            background: #1a3a3a;
+        }
+
+        .admin-footer { 
+            background: #1a3a3a; 
+            padding: 10px; 
+            border-radius: 0 0 8px 8px; 
+            border: 1px solid #333; 
+            border-top: none; 
+            display: flex; 
+            justify-content: flex-end; 
+            gap: 20px; 
+            font-size: 12px; 
+            font-weight: bold; 
+        }
+
+        /* ============================================
+           TARJETAS
+           ============================================ */
+        .transportista-card { 
+            background: linear-gradient(135deg, #2a2a2a 0%, #252525 100%);
+            border: 1px solid #444; 
+            border-radius: 10px; 
+            padding: 16px; 
+            margin-bottom: 14px; 
+            cursor: pointer; 
+            transition: all 0.3s ease; 
+        }
+
+        .transportista-card:hover { 
+            border-color: #00d4ff; 
+            background: linear-gradient(135deg, #2a3535 0%, #2a2a2a 100%);
+            box-shadow: 0 4px 12px rgba(0, 212, 255, 0.15);
+        }
+
+        .transportista-header { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: flex-start; 
+            margin-bottom: 10px; 
+        }
+
+        .transportista-name { 
+            font-weight: 700; 
+            font-size: 15px; 
+            color: #fff; 
+        }
+
+        .transportista-price { 
+            font-size: 20px; 
+            font-weight: bold; 
+            color: #4ade80; 
+        }
+
+        .uber-job-card { 
+            background: linear-gradient(135deg, #2a2a2a 0%, #303030 100%); 
+            border: 2px solid #00d4ff; 
+            border-radius: 12px; 
+            padding: 18px; 
+            margin-bottom: 14px; 
+            box-shadow: 0 4px 15px rgba(0,212,255,0.15); 
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .job-header { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            margin-bottom: 14px; 
+        }
+
+        .job-price { 
+            font-size: 22px; 
+            font-weight: bold; 
+            color: #4ade80; 
+        }
+
+        /* ============================================
+           ELEMENTOS FINANCIEROS
+           ============================================ */
+        .calendar-container { 
+            margin-bottom: 15px; 
+            background: #222; 
+            padding: 10px; 
+            border-radius: 8px; 
+            border: 1px solid #333; 
+        }
+
+        .finance-card { 
+            background: #1a1a1a; 
+            border: 1px solid #333; 
+            border-radius: 8px; 
+            padding: 15px; 
+            margin-bottom: 10px; 
+        }
+
+        .finance-row { 
+            display: flex; 
+            justify-content: space-between; 
+            margin-bottom: 5px; 
+            font-size: 13px; 
+        }
+
+        .finance-label { 
+            color: #aaa; 
+        }
+
+        .finance-value { 
+            font-weight: bold; 
+            color: #00d4ff; 
+        }
+
+        /* ============================================
+           NAVEGACIÓN GPS
+           ============================================ */
+        #gpsView { 
+            display: none; 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            background: #000; 
+            z-index: 3000; 
+            flex-direction: column; 
+        }
+
+        #gpsView.active { 
+            display: flex; 
+        }
+
+        .gps-header { 
+            background: #1a1a1a; 
+            padding: 15px; 
+            border-bottom: 1px solid #333; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+        }
+
+        .gps-map { 
+            flex: 1; 
+            width: 100%; 
+        }
+
+        .gps-instructions { 
+            background: #fff; 
+            padding: 20px; 
+            border-top: 1px solid #333; 
+            font-size: 16px; 
+            font-weight: bold; 
+            color: #000; 
+            text-align: center; 
+            box-shadow: 0 -5px 15px rgba(0,0,0,0.2); 
+        }
+
+        .leaflet-routing-container { 
+            background: white !important; 
+            color: black !important; 
+            padding: 10px; 
+            border-radius: 8px; 
+            font-size: 12px; 
+            max-height: 200px; 
+            overflow-y: auto; 
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3); 
+        }
+
+        .leaflet-routing-alt h2, 
+        .leaflet-routing-alt h3 { 
+            color: black !important; 
+        }
+
+        .leaflet-routing-instruction-text { 
+            color: black !important; 
+        }
+
+        /* ============================================
+           EDICIÓN DE PERFILES
+           ============================================ */
+        .edit-input { 
+            width: 100%; 
+            padding: 8px; 
+            background: #333; 
+            border: 1px solid #444; 
+            border-radius: 4px; 
+            color: #fff; 
+            font-size: 12px; 
+            margin-bottom: 10px; 
+            transition: all 0.2s ease;
+        }
+
+        .edit-input:focus {
             outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+            border-color: #00d4ff;
+            background: #3a3a3a;
         }
 
-        .form-group textarea {
-            resize: vertical;
-            min-height: 100px;
+        .history-item { 
+            background: #222; 
+            padding: 10px; 
+            border-radius: 6px; 
+            margin-bottom: 8px; 
+            font-size: 11px; 
+            border-left: 3px solid #00d4ff; 
+            transition: all 0.2s ease;
         }
 
-        /* Card */
-        .card {
-            background-color: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 20px;
+        .history-item:hover {
+            background: #2a2a2a;
+            border-left-color: #00b8d4;
         }
 
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid var(--border);
+        /* ============================================
+           BADGES Y ESTADOS
+           ============================================ */
+        .status-badge { 
+            padding: 3px 8px; 
+            border-radius: 4px; 
+            font-size: 10px; 
+            font-weight: 700; 
         }
 
-        .card-header h3 {
-            margin: 0;
+        .status-pending { 
+            background: #f59e0b22; 
+            color: #f59e0b; 
         }
 
-        .card-body {
-            margin-bottom: 15px;
+        .status-in_progress { 
+            background: #3b82f622; 
+            color: #3b82f6; 
         }
 
-        .card-footer {
-            display: flex;
-            gap: 10px;
-            padding-top: 15px;
-            border-top: 1px solid var(--border);
+        .status-completed { 
+            background: #10b98122; 
+            color: #10b981; 
         }
 
-        /* Status Badge */
-        .badge {
-            display: inline-block;
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 12px;
+        /* ============================================
+           SELECTORES DE VEHÍCULOS
+           ============================================ */
+        .vehicle-selector { 
+            display: grid; 
+            grid-template-columns: repeat(3, 1fr); 
+            gap: 10px; 
+            margin-bottom: 18px; 
+        }
+
+        .vehicle-option { 
+            background: #2a2a2a; 
+            border: 2px solid #444; 
+            border-radius: 8px; 
+            padding: 10px; 
+            text-align: center; 
+            cursor: pointer; 
+            transition: all 0.3s ease;
+        }
+
+        .vehicle-option:hover {
+            border-color: #00d4ff;
+            background: #2a3535;
+        }
+
+        .vehicle-option.active { 
+            border-color: #00d4ff; 
+            background: #1a3a3a; 
+            box-shadow: 0 0 10px rgba(0, 212, 255, 0.2);
+        }
+
+        /* ============================================
+           OVERLAY DE NAVEGACIÓN
+           ============================================ */
+        .nav-overlay { 
+            position: absolute; 
+            top: 20px; 
+            left: 50%; 
+            transform: translateX(-50%); 
+            background: rgba(26, 26, 26, 0.95); 
+            padding: 15px 25px; 
+            border-radius: 50px; 
+            border: 1px solid #00d4ff; 
+            z-index: 1000; 
+            display: none; 
+            align-items: center; 
+            gap: 15px; 
+            backdrop-filter: blur(10px);
+        }
+
+        /* ============================================
+           ALERTAS
+           ============================================ */
+        .alert-box { 
+            padding: 12px 15px; 
+            border-radius: 8px; 
+            font-size: 12px; 
+            margin-bottom: 15px; 
+            display: flex; 
+            align-items: center; 
+            gap: 10px; 
+        }
+
+        .alert-info { 
+            background: #00d4ff11; 
+            color: #00d4ff; 
+            border: 1px solid #00d4ff33; 
+        }
+
+        /* ============================================
+           ÁREAS DE CARGA
+           ============================================ */
+        .upload-area { 
+            border: 2px dashed #444; 
+            border-radius: 8px; 
+            padding: 20px; 
+            text-align: center; 
+            cursor: pointer; 
+            margin-bottom: 15px; 
+            transition: all 0.3s ease; 
+        }
+
+        .upload-area:hover { 
+            border-color: #00d4ff; 
+            background: #1a3a3a; 
+        }
+
+        .upload-icon { 
+            font-size: 30px; 
+            color: #555; 
+            margin-bottom: 10px; 
+        }
+
+        .upload-text { 
+            font-size: 12px; 
+            color: #888; 
+        }
+
+        /* ============================================
+           ELEMENTOS DE DETALLE
+           ============================================ */
+        .detail-grid { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: 15px; 
+            font-size: 13px; 
+        }
+
+        .detail-item { 
+            background: #222; 
+            padding: 10px; 
+            border-radius: 6px; 
+            border: 1px solid #333; 
+        }
+
+        .detail-label { 
+            color: #888; 
+            font-size: 11px; 
+            margin-bottom: 4px; 
             font-weight: 600;
         }
 
-        .badge-pending {
-            background-color: rgba(59, 130, 246, 0.2);
-            color: var(--primary);
+        .partner-item { 
+            padding: 10px; 
+            border-bottom: 1px solid #333; 
+            cursor: pointer; 
+            transition: background 0.2s; 
         }
 
-        .badge-assigned {
-            background-color: rgba(59, 130, 246, 0.2);
-            color: var(--primary);
+        .partner-item:hover { 
+            background: #2a2a2a; 
+            color: #00d4ff; 
         }
 
-        .badge-accepted {
-            background-color: rgba(16, 185, 129, 0.2);
-            color: var(--success);
+        /* ============================================
+           REGISTRO
+           ============================================ */
+        .register-link { 
+            text-align: center; 
+            margin-top: 15px; 
+            font-size: 13px; 
+            color: #aaa; 
         }
 
-        .badge-in-progress {
-            background-color: rgba(251, 146, 60, 0.2);
-            color: #fb923c;
+        .register-link span { 
+            color: #00d4ff; 
+            cursor: pointer; 
+            font-weight: bold; 
         }
 
-        .badge-completed {
-            background-color: rgba(16, 185, 129, 0.2);
-            color: var(--success);
+        .register-type-selector { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: 10px; 
+            margin-bottom: 20px; 
         }
 
-        .badge-cancelled {
-            background-color: rgba(239, 68, 68, 0.2);
-            color: var(--destructive);
+        .register-type-btn { 
+            padding: 15px; 
+            background: #2a2a2a; 
+            border: 2px solid #444; 
+            border-radius: 8px; 
+            color: #fff; 
+            cursor: pointer; 
+            text-align: center; 
+            font-size: 13px; 
+            transition: 0.3s; 
         }
 
-        /* Grid */
-        .grid {
-            display: grid;
-            gap: 20px;
+        .register-type-btn:hover {
+            border-color: #00d4ff;
+            background: #2a3535;
         }
 
-        .grid-2 {
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        .register-type-btn.active { 
+            border-color: #00d4ff; 
+            background: #1a3a3a; 
         }
 
-        .grid-3 {
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        /* ============================================
+           FACTURA Y FICHA
+           ============================================ */
+        .factura-header { 
+            border-bottom: 1px solid #333; 
+            padding-bottom: 15px; 
+            margin-bottom: 15px; 
         }
 
-        /* Stats */
-        .stat-card {
-            background-color: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 20px;
-            text-align: center;
+        .factura-row { 
+            display: flex; 
+            justify-content: space-between; 
+            padding: 8px 0; 
+            border-bottom: 1px solid #222; 
         }
 
-        .stat-number {
-            font-size: 32px;
-            font-weight: 700;
-            color: var(--primary);
-            margin-bottom: 10px;
-        }
-
-        .stat-label {
-            color: var(--muted);
-            font-size: 14px;
-        }
-
-        /* Modal */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: rgba(0, 0, 0, 0.7);
-            z-index: 100;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .modal.active {
-            display: flex;
-        }
-
-        .modal-content {
-            background-color: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 30px;
-            max-width: 500px;
-            width: 90%;
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .modal-header h2 {
-            margin: 0;
-        }
-
-        .modal-close {
-            background: none;
-            border: none;
-            color: var(--foreground);
-            font-size: 24px;
-            cursor: pointer;
-        }
-
-        /* Alerts */
-        .alert {
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            display: none;
-        }
-
-        .alert.show {
-            display: block;
-        }
-
-        .alert-success {
-            background-color: rgba(16, 185, 129, 0.2);
-            border: 1px solid var(--success);
-            color: var(--success);
-        }
-
-        .alert-error {
-            background-color: rgba(239, 68, 68, 0.2);
-            border: 1px solid var(--destructive);
-            color: var(--destructive);
-        }
-
-        .alert-info {
-            background-color: rgba(59, 130, 246, 0.2);
-            border: 1px solid var(--primary);
-            color: var(--primary);
-        }
-
-        /* Rating */
-        .rating {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-
-        .star {
-            font-size: 30px;
-            cursor: pointer;
-            color: var(--muted);
-            transition: color 0.3s;
-        }
-
-        .star.active {
-            color: #fbbf24;
-        }
-
-        .star:hover {
-            color: #fbbf24;
-        }
-
-        /* Table */
-        .table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-
-        .table th {
-            background-color: var(--surface-light);
-            padding: 12px;
-            text-align: left;
-            font-weight: 600;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .table td {
-            padding: 12px;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .table tr:hover {
-            background-color: rgba(59, 130, 246, 0.1);
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .navbar-container {
-                padding: 0 15px;
-            }
-
-            .hero h1 {
-                font-size: 32px;
-            }
-
-            .hero-buttons {
+        /* ============================================
+           RESPONSIVE - MÓVIL OPTIMIZADO
+           ============================================ */
+        @media (max-width: 480px) {
+            .container {
                 flex-direction: column;
             }
 
-            .grid-2,
-            .grid-3 {
+            .sidebar { 
+                width: 100%; 
+                position: absolute; 
+                z-index: 2000; 
+                height: 100%; 
+                max-height: 100vh;
+            }
+
+            .map-container {
+                display: none;
+            }
+
+            .sidebar.mobile-visible {
+                display: block;
+            }
+
+            .map-container.mobile-visible {
+                display: block;
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                z-index: 1;
+            }
+
+            .uber-job-card { 
+                padding: 12px; 
+                margin-bottom: 10px; 
+            }
+
+            .job-header { 
+                flex-direction: column; 
+                align-items: flex-start; 
+                gap: 5px; 
+            }
+
+            .job-price { 
+                font-size: 18px; 
+            }
+
+            .btn-sm { 
+                padding: 10px; 
+                width: 100%; 
+                text-align: center; 
+                margin-top: 5px; 
+            }
+
+            .detail-grid {
                 grid-template-columns: 1fr;
+            }
+
+            .vehicle-selector {
+                grid-template-columns: repeat(2, 1fr);
             }
 
             .modal-content {
                 width: 95%;
+                padding: 20px;
             }
         }
 
-        /* Empty State */
-        .empty-state {
-            text-align: center;
-            padding: 60px 20px;
+        /* ============================================
+           SCROLLBAR PERSONALIZADO
+           ============================================ */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
         }
 
-        .empty-state-icon {
-            font-size: 60px;
-            margin-bottom: 20px;
+        ::-webkit-scrollbar-track {
+            background: #1a1a1a;
         }
 
-        .empty-state h3 {
-            margin-bottom: 10px;
+        ::-webkit-scrollbar-thumb {
+            background: #00d4ff;
+            border-radius: 4px;
         }
 
-        .empty-state p {
-            color: var(--muted);
-            margin-bottom: 20px;
+        ::-webkit-scrollbar-thumb:hover {
+            background: #00b8d4;
         }
-
-        /* Loading */
-        .spinner {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid var(--border);
-            border-top-color: var(--primary);
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        /* Utility */
-        .mt-20 { margin-top: 20px; }
-        .mb-20 { margin-bottom: 20px; }
-        .text-center { text-align: center; }
-        .text-muted { color: var(--muted); }
-        .flex { display: flex; }
-        .gap-20 { gap: 20px; }
-        .items-center { align-items: center; }
-        .justify-between { justify-content: space-between; }
     </style>
 </head>
 <body>
-    <!-- Navbar -->
-    <nav class="navbar">
-        <div class="navbar-container">
-            <div class="navbar-brand" onclick="showPage('home')">
-                <div class="navbar-brand-icon">M</div>
-                <span>MudanzasHub</span>
-            </div>
-            <div class="navbar-nav" id="navbar-nav">
-                <a onclick="showPage('home')" class="active">Inicio</a>
-                <a onclick="showPage('client')" id="nav-client" style="display:none;">Solicitar Mudanza</a>
-                <a onclick="showPage('transporter')" id="nav-transporter" style="display:none;">Mi Perfil</a>
-                <a onclick="showPage('admin')" id="nav-admin" style="display:none;">Administración</a>
-                <a onclick="showPage('notifications')" id="nav-notifications" style="display:none;">Notificaciones</a>
-                <button class="btn btn-primary" onclick="logout()" id="logout-btn" style="display:none;">Salir</button>
-                <button class="btn btn-primary" onclick="showLoginModal()" id="login-btn">Iniciar Sesión</button>
-            </div>
+    <div class="container">
+        <div class="sidebar" id="sidebar">
+            <!-- Contenido dinámico del sidebar -->
         </div>
-    </nav>
-
-    <!-- Home Page -->
-    <div class="page active" id="home">
-        <div class="container">
-            <div class="hero">
-                <h1>Bienvenido a MudanzasHub</h1>
-                <p>La plataforma más confiable para conectar clientes con transportistas verificados. Mudanzas seguras, rápidas y a precios justos.</p>
-                <div class="hero-buttons">
-                    <button class="btn btn-primary" onclick="selectRole('client')">Soy Cliente</button>
-                    <button class="btn btn-secondary" onclick="selectRole('transporter')">Soy Transportista</button>
-                </div>
+        <div class="map-container">
+            <div id="map"></div>
+            <div class="nav-overlay" id="navOverlay">
+                <span id="navDistance">0 km</span>
+                <button class="btn btn-sm" id="closeNavBtn">Cerrar</button>
             </div>
-
-            <div class="features">
-                <div class="feature-card">
-                    <div class="feature-icon">🚚</div>
-                    <h3>Transportistas Verificados</h3>
-                    <p>Todos nuestros transportistas son verificados y cuentan con documentos legales válidos.</p>
+            <div id="gpsView">
+                <div class="gps-header">
+                    <span>Navegación GPS</span>
+                    <button id="closeGpsBtn" class="btn btn-sm">Cerrar</button>
                 </div>
-                <div class="feature-card">
-                    <div class="feature-icon">💰</div>
-                    <h3>Precios Justos</h3>
-                    <p>Cotización automática y transparente basada en distancia y volumen de carga.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">⭐</div>
-                    <h3>Calificaciones Reales</h3>
-                    <p>Sistema de calificaciones mutuas para garantizar calidad en cada mudanza.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">🔒</div>
-                    <h3>Seguridad Garantizada</h3>
-                    <p>Tus datos y transacciones están protegidos con los más altos estándares de seguridad.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">📱</div>
-                    <h3>Seguimiento en Tiempo Real</h3>
-                    <p>Monitorea tu mudanza en tiempo real desde tu teléfono o computadora.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">🎯</div>
-                    <h3>Soporte 24/7</h3>
-                    <p>Nuestro equipo está disponible para ayudarte en cualquier momento.</p>
-                </div>
+                <div class="gps-map" id="gpsMap"></div>
+                <div class="gps-instructions" id="gpsInstructions">Iniciando navegación...</div>
             </div>
         </div>
     </div>
 
-    <!-- Client Page -->
-    <div class="page" id="client">
-        <div class="container">
-            <h1>Panel de Cliente</h1>
-            <p class="text-muted mb-20">Solicita una mudanza y conecta con transportistas verificados</p>
-
-            <div class="grid grid-2">
-                <!-- New Request -->
-                <div>
-                    <div class="card">
-                        <div class="card-header">
-                            <h3>Nueva Solicitud de Mudanza</h3>
-                        </div>
-                        <div class="card-body">
-                            <div class="form-group">
-                                <label>Dirección de Origen</label>
-                                <input type="text" id="origin" placeholder="Ej: Calle 123, Apartamento 4B">
-                            </div>
-                            <div class="form-group">
-                                <label>Dirección de Destino</label>
-                                <input type="text" id="destination" placeholder="Ej: Calle 456, Casa 7">
-                            </div>
-                            <div class="form-group">
-                                <label>Fecha de Mudanza</label>
-                                <input type="date" id="moveDate">
-                            </div>
-                            <div class="form-group">
-                                <label>Descripción de Artículos</label>
-                                <textarea id="description" placeholder="Describe los artículos a transportar..."></textarea>
-                            </div>
-                            <div class="form-group">
-                                <label>Volumen Estimado (m³)</label>
-                                <input type="number" id="volume" placeholder="Ej: 10" min="1">
-                            </div>
-                            <button class="btn btn-primary" onclick="createMoveRequest()">Solicitar Mudanza</button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- My Moves -->
-                <div>
-                    <div class="card">
-                        <div class="card-header">
-                            <h3>Mis Mudanzas</h3>
-                        </div>
-                        <div class="card-body" id="client-moves">
-                            <div class="empty-state">
-                                <div class="empty-state-icon">📋</div>
-                                <h3>No hay solicitudes</h3>
-                                <p>Crea una nueva solicitud para comenzar</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Transporter Page -->
-    <div class="page" id="transporter">
-        <div class="container">
-            <h1>Panel de Transportista</h1>
-            <p class="text-muted mb-20">Completa tu perfil y comienza a recibir solicitudes</p>
-
-            <div class="grid grid-2">
-                <!-- Profile -->
-                <div>
-                    <div class="card">
-                        <div class="card-header">
-                            <h3>Mi Perfil</h3>
-                        </div>
-                        <div class="card-body">
-                            <div class="form-group">
-                                <label>Nombre Completo</label>
-                                <input type="text" id="transporter-name" placeholder="Tu nombre">
-                            </div>
-                            <div class="form-group">
-                                <label>Número de Licencia</label>
-                                <input type="text" id="license-number" placeholder="Ej: 123456789">
-                            </div>
-                            <div class="form-group">
-                                <label>Cédula/ID</label>
-                                <input type="text" id="id-number" placeholder="Ej: 987654321">
-                            </div>
-                            <div class="form-group">
-                                <label>Placa del Vehículo</label>
-                                <input type="text" id="vehicle-plate" placeholder="Ej: ABC-123">
-                            </div>
-                            <div class="form-group">
-                                <label>Número de Seguro</label>
-                                <input type="text" id="insurance-number" placeholder="Ej: INS-123456">
-                            </div>
-                            <button class="btn btn-primary" onclick="updateTransporterProfile()">Guardar Perfil</button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Requests -->
-                <div>
-                    <div class="card">
-                        <div class="card-header">
-                            <h3>Solicitudes Disponibles</h3>
-                        </div>
-                        <div class="card-body" id="transporter-requests">
-                            <div class="empty-state">
-                                <div class="empty-state-icon">📦</div>
-                                <h3>No hay solicitudes</h3>
-                                <p>Las solicitudes aparecerán aquí cuando estén disponibles</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Subscription -->
-                    <div class="card mt-20">
-                        <div class="card-header">
-                            <h3>Mi Suscripción</h3>
-                        </div>
-                        <div class="card-body">
-                            <div class="stat-card">
-                                <div class="stat-label">Plan Actual</div>
-                                <div class="stat-number" id="current-plan">Gratis</div>
-                            </div>
-                            <div class="mt-20">
-                                <button class="btn btn-success" onclick="upgradePlan()">Actualizar a Profesional ($29/mes)</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Admin Page -->
-    <div class="page" id="admin">
-        <div class="container">
-            <h1>Panel de Administración</h1>
-            <p class="text-muted mb-20">Gestiona usuarios, transportistas y suscripciones</p>
-
-            <div class="grid grid-3">
-                <div class="stat-card">
-                    <div class="stat-number" id="total-users">0</div>
-                    <div class="stat-label">Total de Usuarios</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-number" id="total-transporters">0</div>
-                    <div class="stat-label">Transportistas</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-number" id="pending-verification">0</div>
-                    <div class="stat-label">Por Verificar</div>
-                </div>
-            </div>
-
-            <div class="grid grid-2 mt-20">
-                <!-- Users -->
-                <div class="card">
-                    <div class="card-header">
-                        <h3>Usuarios Registrados</h3>
-                    </div>
-                    <div class="card-body" id="admin-users">
-                        <div class="empty-state">
-                            <div class="empty-state-icon">👥</div>
-                            <h3>No hay usuarios</h3>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Transporters -->
-                <div class="card">
-                    <div class="card-header">
-                        <h3>Transportistas Pendientes</h3>
-                    </div>
-                    <div class="card-body" id="admin-transporters">
-                        <div class="empty-state">
-                            <div class="empty-state-icon">🚚</div>
-                            <h3>No hay transportistas pendientes</h3>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Notifications Page -->
-    <div class="page" id="notifications">
-        <div class="container">
-            <h1>Notificaciones</h1>
-            <p class="text-muted mb-20">Mantente actualizado con todas tus notificaciones</p>
-
-            <div class="card">
-                <div class="card-body" id="notifications-list">
-                    <div class="empty-state">
-                        <div class="empty-state-icon">🔔</div>
-                        <h3>No hay notificaciones</h3>
-                        <p>Aquí aparecerán tus notificaciones</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Login Modal -->
-    <div class="modal" id="login-modal">
+    <!-- MODALES -->
+    <div class="modal" id="partnerDetailModal">
         <div class="modal-content">
-            <div class="modal-header">
-                <h2>Iniciar Sesión</h2>
-                <button class="modal-close" onclick="closeLoginModal()">×</button>
+            <button class="modal-close" onclick="closeModal('partnerDetailModal')">×</button>
+            <div class="modal-header">Detalles del Socio</div>
+            <div id="partnerDetailContent"></div>
+        </div>
+    </div>
+
+    <div class="modal" id="clientDetailModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal('clientDetailModal')">×</button>
+            <div class="modal-header">Detalles del Cliente</div>
+            <div id="clientDetailContent"></div>
+            <div id="clientHistoryList" style="margin-top:15px;"></div>
+            <div style="display:flex; gap:10px; margin-top:15px;">
+                <button class="btn" id="saveClientBtn">Guardar Cambios</button>
+                <button class="btn btn-whatsapp" id="msgClientBtn">
+                    <i class="fab fa-whatsapp"></i> Mensaje
+                </button>
+                <button class="btn btn-reject" id="deleteClientBtn">Borrar</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="addClientModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal('addClientModal')">×</button>
+            <div class="modal-header">Agregar Cliente</div>
+            <div class="form-group">
+                <label>Nombre</label>
+                <input type="text" id="addCName" class="edit-input" placeholder="Nombre completo">
             </div>
             <div class="form-group">
-                <label>Correo Electrónico</label>
-                <input type="email" id="login-email" placeholder="tu@email.com">
+                <label>Email</label>
+                <input type="email" id="addCEmail" class="edit-input" placeholder="correo@ejemplo.com">
             </div>
             <div class="form-group">
                 <label>Contraseña</label>
-                <input type="password" id="login-password" placeholder="Tu contraseña">
+                <input type="password" id="addCPass" class="edit-input" placeholder="Contraseña">
             </div>
             <div class="form-group">
-                <label>Rol</label>
-                <select id="login-role">
-                    <option value="client">Cliente</option>
-                    <option value="transporter">Transportista</option>
-                    <option value="admin">Administrador</option>
-                </select>
+                <label>Teléfono (WhatsApp)</label>
+                <input type="tel" id="addCPhone" class="edit-input" placeholder="8888-8888">
             </div>
-            <button class="btn btn-primary" onclick="login()" style="width: 100%;">Iniciar Sesión</button>
+            <div class="form-group">
+                <label>Cédula</label>
+                <input type="text" id="addCId" class="edit-input" placeholder="1-1111-1111">
+            </div>
+            <button class="btn" id="saveNewClientBtn">
+                <i class="fas fa-save"></i> Crear Cliente
+            </button>
         </div>
     </div>
 
-    <!-- Alert -->
-    <div class="alert alert-success" id="alert-success"></div>
-    <div class="alert alert-error" id="alert-error"></div>
-    <div class="alert alert-info" id="alert-info"></div>
+    <div class="modal" id="codeModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal('codeModal')">×</button>
+            <div class="modal-header">Código de Confirmación</div>
+            <div id="codeContent"></div>
+        </div>
+    </div>
+
+    <!-- SCRIPTS -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-database.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.umd.js"></script>
 
     <script>
-        // Data Storage
-        const db = {
-            users: JSON.parse(localStorage.getItem('users')) || [],
-            moveRequests: JSON.parse(localStorage.getItem('moveRequests')) || [],
-            transporters: JSON.parse(localStorage.getItem('transporters')) || [],
-            notifications: JSON.parse(localStorage.getItem('notifications')) || [],
-            currentUser: JSON.parse(localStorage.getItem('currentUser')) || null,
+        /* ============================================
+           CONFIGURACIÓN FIREBASE
+           ============================================ */
+        const firebaseConfig = {
+            apiKey: "AIzaSyDZxxx",
+            authDomain: "mudanzashub-xxx.firebaseapp.com",
+            databaseURL: "https://mudanzashub-xxx.firebaseio.com",
+            projectId: "mudanzashub-xxx",
+            storageBucket: "mudanzashub-xxx.appspot.com",
+            messagingSenderId: "198057203593",
+            appId: "1:198057203593:web:d8a5d2f575bcc565b73358"
         };
 
-        // Save to localStorage
-        function saveDB() {
-            localStorage.setItem('users', JSON.stringify(db.users));
-            localStorage.setItem('moveRequests', JSON.stringify(db.moveRequests));
-            localStorage.setItem('transporters', JSON.stringify(db.transporters));
-            localStorage.setItem('notifications', JSON.stringify(db.notifications));
-            localStorage.setItem('currentUser', JSON.stringify(db.currentUser));
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+
+        /* ============================================
+           DATOS DE PRUEBA
+           ============================================ */
+        let transporters = [
+            { id: 1, email: 'carlos@test.com', password: '1234', name: 'Carlos Rodríguez', phone: '88881111', plate: 'BC-123', vehicle: 'Toyota Hiace', rating: 4.8, model: '2022', license: 'B2', insurance: 'INS-992', emergency: '88880000', role: 'transporter' },
+            { id: 2, email: 'miguel@test.com', password: '1234', name: 'Miguel Vargas', phone: '88882222', plate: 'CL-456', vehicle: 'Hino 300', rating: 4.6, model: '2021', license: 'B3', insurance: 'INS-112', emergency: '88880001', role: 'transporter' },
+            { id: 3, email: 'ana@test.com', password: '1234', name: 'Ana Quesada', phone: '88883333', plate: 'PK-789', vehicle: 'Nissan Frontier', rating: 4.9, model: '2023', license: 'B1', insurance: 'INS-445', emergency: '88880002', role: 'transporter' }
+        ];
+
+        let registeredClients = [
+            { email: 'cliente@test.com', password: '1234', name: 'Laura Fernández', phone: '88880000', idNum: '1-1111-1111', location: 'San José', role: 'client' }
+        ];
+
+        let currentUser = null;
+
+        /* ============================================
+           FUNCIONES DE UTILIDAD
+           ============================================ */
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.add('active');
         }
 
-        // Page Navigation
-        function showPage(pageName) {
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.getElementById(pageName).classList.add('active');
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        function calculateDist(origin, destination) {
+            const R = 6371;
+            const dLat = (destination.lat - origin.lat) * Math.PI / 180;
+            const dLng = (destination.lng - origin.lng) * Math.PI / 180;
+            const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                      Math.cos(origin.lat * Math.PI / 180) * Math.cos(destination.lat * Math.PI / 180) *
+                      Math.sin(dLng/2) * Math.sin(dLng/2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+            return R * c;
+        }
+
+        /* ============================================
+           FUNCIONES DE WHATSAPP - MEJORADAS
+           ============================================ */
+        function sendWhatsAppMessage(phone, message = '') {
+            if (!phone) {
+                alert('No hay teléfono registrado');
+                return;
+            }
             
-            if (pageName === 'client') loadClientPage();
-            if (pageName === 'transporter') loadTransporterPage();
-            if (pageName === 'admin') loadAdminPage();
-            if (pageName === 'notifications') loadNotificationsPage();
-        }
-
-        // Authentication
-        function selectRole(role) {
-            const email = prompt(`Ingresa tu correo para registrarte como ${role}:`);
-            if (email) {
-                const user = {
-                    id: Date.now(),
-                    email: email,
-                    role: role,
-                    name: prompt('¿Cuál es tu nombre?') || 'Usuario',
-                    createdAt: new Date().toISOString(),
-                };
-                db.users.push(user);
-                db.currentUser = user;
-                saveDB();
-                updateNavbar();
-                showAlert('success', `¡Bienvenido ${user.name}! Te has registrado como ${role}`);
-                showPage(role === 'client' ? 'client' : role === 'transporter' ? 'transporter' : 'admin');
-            }
-        }
-
-        function showLoginModal() {
-            document.getElementById('login-modal').classList.add('active');
-        }
-
-        function closeLoginModal() {
-            document.getElementById('login-modal').classList.remove('active');
-        }
-
-        function login() {
-            const email = document.getElementById('login-email').value;
-            const password = document.getElementById('login-password').value;
-            const role = document.getElementById('login-role').value;
-
-            if (!email || !password) {
-                showAlert('error', 'Por favor completa todos los campos');
-                return;
-            }
-
-            let user = db.users.find(u => u.email === email);
-            if (!user) {
-                user = {
-                    id: Date.now(),
-                    email: email,
-                    role: role,
-                    name: email.split('@')[0],
-                    createdAt: new Date().toISOString(),
-                };
-                db.users.push(user);
-            }
-
-            db.currentUser = user;
-            saveDB();
-            updateNavbar();
-            closeLoginModal();
-            showAlert('success', `¡Bienvenido ${user.name}!`);
-            showPage(role === 'client' ? 'client' : role === 'transporter' ? 'transporter' : 'admin');
-        }
-
-        function logout() {
-            db.currentUser = null;
-            saveDB();
-            updateNavbar();
-            showPage('home');
-            showAlert('success', 'Has cerrado sesión');
-        }
-
-        // Navbar Update
-        function updateNavbar() {
-            const loginBtn = document.getElementById('login-btn');
-            const logoutBtn = document.getElementById('logout-btn');
-            const navClient = document.getElementById('nav-client');
-            const navTransporter = document.getElementById('nav-transporter');
-            const navAdmin = document.getElementById('nav-admin');
-            const navNotifications = document.getElementById('nav-notifications');
-
-            if (db.currentUser) {
-                loginBtn.style.display = 'none';
-                logoutBtn.style.display = 'block';
-                navNotifications.style.display = 'block';
-
-                if (db.currentUser.role === 'client') {
-                    navClient.style.display = 'block';
-                    navTransporter.style.display = 'none';
-                    navAdmin.style.display = 'none';
-                } else if (db.currentUser.role === 'transporter') {
-                    navClient.style.display = 'none';
-                    navTransporter.style.display = 'block';
-                    navAdmin.style.display = 'none';
-                } else if (db.currentUser.role === 'admin') {
-                    navClient.style.display = 'none';
-                    navTransporter.style.display = 'none';
-                    navAdmin.style.display = 'block';
-                }
-            } else {
-                loginBtn.style.display = 'block';
-                logoutBtn.style.display = 'none';
-                navClient.style.display = 'none';
-                navTransporter.style.display = 'none';
-                navAdmin.style.display = 'none';
-                navNotifications.style.display = 'none';
-            }
-        }
-
-        // Client Functions
-        function createMoveRequest() {
-            if (!db.currentUser) {
-                showAlert('error', 'Debes iniciar sesión primero');
-                return;
-            }
-
-            const origin = document.getElementById('origin').value;
-            const destination = document.getElementById('destination').value;
-            const moveDate = document.getElementById('moveDate').value;
-            const description = document.getElementById('description').value;
-            const volume = parseFloat(document.getElementById('volume').value);
-
-            if (!origin || !destination || !moveDate || !description || !volume) {
-                showAlert('error', 'Por favor completa todos los campos');
-                return;
-            }
-
-            const estimatedCost = volume * 50; // $50 por m³
-            const moveRequest = {
-                id: Date.now(),
-                clientId: db.currentUser.id,
-                origin: origin,
-                destination: destination,
-                moveDate: moveDate,
-                description: description,
-                volume: volume,
-                estimatedCost: estimatedCost,
-                status: 'pending',
-                createdAt: new Date().toISOString(),
-            };
-
-            db.moveRequests.push(moveRequest);
-            saveDB();
+            // Limpiar el teléfono de caracteres especiales
+            const cleanPhone = phone.replace(/[^0-9]/g, '');
             
-            // Clear form
-            document.getElementById('origin').value = '';
-            document.getElementById('destination').value = '';
-            document.getElementById('moveDate').value = '';
-            document.getElementById('description').value = '';
-            document.getElementById('volume').value = '';
-
-            showAlert('success', `¡Solicitud creada! Costo estimado: $${estimatedCost}`);
-            loadClientPage();
-
-            // Create notification
-            addNotification(`Nueva solicitud de mudanza de ${origin} a ${destination}`);
-        }
-
-        function loadClientPage() {
-            if (!db.currentUser || db.currentUser.role !== 'client') return;
-
-            const movesList = db.moveRequests.filter(m => m.clientId === db.currentUser.id);
-            const container = document.getElementById('client-moves');
-
-            if (movesList.length === 0) {
-                container.innerHTML = `
-                    <div class="empty-state">
-                        <div class="empty-state-icon">📋</div>
-                        <h3>No hay solicitudes</h3>
-                        <p>Crea una nueva solicitud para comenzar</p>
-                    </div>
-                `;
-                return;
+            // Asegurar que tenga el código de país (506 para Costa Rica)
+            let fullPhone = cleanPhone;
+            if (!cleanPhone.startsWith('506')) {
+                fullPhone = '506' + cleanPhone;
             }
-
-            container.innerHTML = movesList.map(move => `
-                <div class="card">
-                    <div class="card-header">
-                        <div>
-                            <h4>${move.origin} → ${move.destination}</h4>
-                            <p class="text-muted">${new Date(move.moveDate).toLocaleDateString()}</p>
-                        </div>
-                        <span class="badge badge-${move.status}">${move.status}</span>
-                    </div>
-                    <div class="card-body">
-                        <p><strong>Descripción:</strong> ${move.description}</p>
-                        <p><strong>Volumen:</strong> ${move.volume} m³</p>
-                        <p><strong>Costo Estimado:</strong> $${move.estimatedCost}</p>
-                    </div>
-                    <div class="card-footer">
-                        <button class="btn btn-secondary btn-small" onclick="rateMoveRequest(${move.id})">Calificar</button>
-                        <button class="btn btn-danger btn-small" onclick="cancelMoveRequest(${move.id})">Cancelar</button>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        function cancelMoveRequest(id) {
-            const move = db.moveRequests.find(m => m.id === id);
-            if (move) {
-                move.status = 'cancelled';
-                saveDB();
-                showAlert('success', 'Solicitud cancelada');
-                loadClientPage();
+            
+            // Construir URL de WhatsApp
+            let whatsappUrl = `https://wa.me/${fullPhone}`;
+            if (message) {
+                whatsappUrl += `?text=${encodeURIComponent(message)}`;
             }
+            
+            window.open(whatsappUrl, '_blank');
         }
 
-        function rateMoveRequest(id) {
-            const move = db.moveRequests.find(m => m.id === id);
-            if (move && move.status === 'completed') {
-                const rating = prompt('¿Cuántas estrellas le das? (1-5)');
-                if (rating && rating >= 1 && rating <= 5) {
-                    const review = prompt('Escribe tu reseña:');
-                    showAlert('success', `¡Gracias por tu calificación de ${rating} estrellas!`);
-                    addNotification(`Recibiste una calificación de ${rating} estrellas`);
-                }
+        function sendWhatsAppToTransporter(transporterId) {
+            const transporter = transporters.find(t => t.id == transporterId);
+            if (transporter && transporter.phone) {
+                sendWhatsAppMessage(transporter.phone, `Hola ${transporter.name}, tengo una oferta de mudanza para ti.`);
             } else {
-                showAlert('error', 'Solo puedes calificar mudanzas completadas');
+                alert('No hay teléfono registrado para este transportista');
             }
         }
 
-        // Transporter Functions
-        function updateTransporterProfile() {
-            if (!db.currentUser || db.currentUser.role !== 'transporter') {
-                showAlert('error', 'Debes ser transportista para actualizar el perfil');
-                return;
-            }
-
-            const name = document.getElementById('transporter-name').value;
-            const licenseNumber = document.getElementById('license-number').value;
-            const idNumber = document.getElementById('id-number').value;
-            const vehiclePlate = document.getElementById('vehicle-plate').value;
-            const insuranceNumber = document.getElementById('insurance-number').value;
-
-            if (!name || !licenseNumber || !idNumber || !vehiclePlate || !insuranceNumber) {
-                showAlert('error', 'Por favor completa todos los campos');
-                return;
-            }
-
-            let transporter = db.transporters.find(t => t.userId === db.currentUser.id);
-            if (!transporter) {
-                transporter = {
-                    id: Date.now(),
-                    userId: db.currentUser.id,
-                    verified: false,
-                    createdAt: new Date().toISOString(),
-                };
-                db.transporters.push(transporter);
-            }
-
-            transporter.name = name;
-            transporter.licenseNumber = licenseNumber;
-            transporter.idNumber = idNumber;
-            transporter.vehiclePlate = vehiclePlate;
-            transporter.insuranceNumber = insuranceNumber;
-
-            saveDB();
-            showAlert('success', 'Perfil actualizado. Pendiente de verificación por admin');
-            addNotification('Tu perfil de transportista fue actualizado');
-        }
-
-        function upgradePlan() {
-            if (!db.currentUser) return;
-            const confirmed = confirm('¿Deseas actualizar a Profesional por $29/mes?');
-            if (confirmed) {
-                showAlert('success', 'Plan actualizado a Profesional');
-                document.getElementById('current-plan').textContent = 'Profesional';
-                addNotification('Tu suscripción fue actualizada a Profesional');
-            }
-        }
-
-        function loadTransporterPage() {
-            if (!db.currentUser || db.currentUser.role !== 'transporter') return;
-
-            const requests = db.moveRequests.filter(m => m.status === 'pending');
-            const container = document.getElementById('transporter-requests');
-
-            if (requests.length === 0) {
-                container.innerHTML = `
-                    <div class="empty-state">
-                        <div class="empty-state-icon">📦</div>
-                        <h3>No hay solicitudes</h3>
-                        <p>Las solicitudes aparecerán aquí cuando estén disponibles</p>
-                    </div>
-                `;
-                return;
-            }
-
-            container.innerHTML = requests.map(req => `
-                <div class="card">
-                    <div class="card-header">
-                        <div>
-                            <h4>${req.origin} → ${req.destination}</h4>
-                            <p class="text-muted">${new Date(req.moveDate).toLocaleDateString()}</p>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <p><strong>Descripción:</strong> ${req.description}</p>
-                        <p><strong>Volumen:</strong> ${req.volume} m³</p>
-                        <p><strong>Costo:</strong> $${req.estimatedCost}</p>
-                    </div>
-                    <div class="card-footer">
-                        <button class="btn btn-success btn-small" onclick="acceptRequest(${req.id})">Aceptar</button>
-                        <button class="btn btn-danger btn-small" onclick="rejectRequest(${req.id})">Rechazar</button>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        function acceptRequest(id) {
-            const move = db.moveRequests.find(m => m.id === id);
-            if (move) {
-                move.status = 'accepted';
-                move.transporterId = db.currentUser.id;
-                saveDB();
-                showAlert('success', 'Solicitud aceptada');
-                addNotification('Un transportista aceptó tu solicitud de mudanza');
-                loadTransporterPage();
-            }
-        }
-
-        function rejectRequest(id) {
-            const move = db.moveRequests.find(m => m.id === id);
-            if (move) {
-                move.status = 'rejected';
-                saveDB();
-                showAlert('success', 'Solicitud rechazada');
-                loadTransporterPage();
-            }
-        }
-
-        // Admin Functions
-        function loadAdminPage() {
-            if (!db.currentUser || db.currentUser.role !== 'admin') return;
-
-            document.getElementById('total-users').textContent = db.users.length;
-            document.getElementById('total-transporters').textContent = db.transporters.length;
-            document.getElementById('pending-verification').textContent = db.transporters.filter(t => !t.verified).length;
-
-            // Users List
-            const usersContainer = document.getElementById('admin-users');
-            if (db.users.length === 0) {
-                usersContainer.innerHTML = `<div class="empty-state"><div class="empty-state-icon">👥</div><h3>No hay usuarios</h3></div>`;
+        function sendWhatsAppToClient(clientEmail) {
+            const client = registeredClients.find(c => c.email === clientEmail);
+            if (client && client.phone) {
+                sendWhatsAppMessage(client.phone, `Hola ${client.name}, tu mudanza ha sido asignada.`);
             } else {
-                usersContainer.innerHTML = db.users.map(user => `
-                    <div class="card">
-                        <div class="card-header">
-                            <div>
-                                <h4>${user.name}</h4>
-                                <p class="text-muted">${user.email}</p>
-                            </div>
-                            <span class="badge badge-assigned">${user.role}</span>
-                        </div>
-                        <div class="card-footer">
-                            <button class="btn btn-danger btn-small" onclick="deleteUser(${user.id})">Eliminar</button>
-                        </div>
-                    </div>
-                `).join('');
-            }
-
-            // Transporters List
-            const transportersContainer = document.getElementById('admin-transporters');
-            const pendingTransporters = db.transporters.filter(t => !t.verified);
-            if (pendingTransporters.length === 0) {
-                transportersContainer.innerHTML = `<div class="empty-state"><div class="empty-state-icon">🚚</div><h3>No hay transportistas pendientes</h3></div>`;
-            } else {
-                transportersContainer.innerHTML = pendingTransporters.map(t => `
-                    <div class="card">
-                        <div class="card-header">
-                            <div>
-                                <h4>${t.name}</h4>
-                                <p class="text-muted">Placa: ${t.vehiclePlate}</p>
-                            </div>
-                        </div>
-                        <div class="card-body">
-                            <p><strong>Licencia:</strong> ${t.licenseNumber}</p>
-                            <p><strong>Cédula:</strong> ${t.idNumber}</p>
-                            <p><strong>Seguro:</strong> ${t.insuranceNumber}</p>
-                        </div>
-                        <div class="card-footer">
-                            <button class="btn btn-success btn-small" onclick="verifyTransporter(${t.id})">Verificar</button>
-                            <button class="btn btn-danger btn-small" onclick="rejectTransporter(${t.id})">Rechazar</button>
-                        </div>
-                    </div>
-                `).join('');
+                alert('No hay teléfono registrado para este cliente');
             }
         }
 
-        function deleteUser(id) {
-            if (confirm('¿Estás seguro de que deseas eliminar este usuario?')) {
-                db.users = db.users.filter(u => u.id !== id);
-                saveDB();
-                showAlert('success', 'Usuario eliminado');
-                loadAdminPage();
-            }
-        }
-
-        function verifyTransporter(id) {
-            const transporter = db.transporters.find(t => t.id === id);
-            if (transporter) {
-                transporter.verified = true;
-                saveDB();
-                showAlert('success', 'Transportista verificado');
-                addNotification('Tu perfil de transportista fue verificado');
-                loadAdminPage();
-            }
-        }
-
-        function rejectTransporter(id) {
-            const transporter = db.transporters.find(t => t.id === id);
-            if (transporter) {
-                db.transporters = db.transporters.filter(t => t.id !== id);
-                saveDB();
-                showAlert('success', 'Transportista rechazado');
-                loadAdminPage();
-            }
-        }
-
-        // Notifications
-        function addNotification(message) {
-            const notification = {
-                id: Date.now(),
-                message: message,
-                createdAt: new Date().toISOString(),
-                read: false,
-            };
-            db.notifications.push(notification);
-            saveDB();
-        }
-
-        function loadNotificationsPage() {
-            const container = document.getElementById('notifications-list');
-            if (db.notifications.length === 0) {
-                container.innerHTML = `
-                    <div class="empty-state">
-                        <div class="empty-state-icon">🔔</div>
-                        <h3>No hay notificaciones</h3>
-                        <p>Aquí aparecerán tus notificaciones</p>
-                    </div>
-                `;
-                return;
+        /* ============================================
+           MANEJADORES DE EVENTOS
+           ============================================ */
+        document.addEventListener('click', function(e) {
+            // Botones de WhatsApp para transportistas
+            if (e.target.id === 'msgPartnerBtn') {
+                const transporterId = e.target.dataset.tid;
+                sendWhatsAppToTransporter(transporterId);
             }
 
-            container.innerHTML = db.notifications.map(notif => `
-                <div class="card">
-                    <div class="card-header">
-                        <div>
-                            <p>${notif.message}</p>
-                            <p class="text-muted">${new Date(notif.createdAt).toLocaleString()}</p>
-                        </div>
-                        <button class="btn btn-secondary btn-small" onclick="deleteNotification(${notif.id})">Eliminar</button>
-                    </div>
-                </div>
-            `).join('');
-        }
+            // Botones de WhatsApp para clientes
+            if (e.target.id === 'msgClientBtn') {
+                const clientEmail = e.target.dataset.email;
+                sendWhatsAppToClient(clientEmail);
+            }
 
-        function deleteNotification(id) {
-            db.notifications = db.notifications.filter(n => n.id !== id);
-            saveDB();
-            loadNotificationsPage();
-        }
+            // Cerrar modales
+            if (e.target.classList.contains('modal')) {
+                e.target.classList.remove('active');
+            }
+        });
 
-        // Alerts
-        function showAlert(type, message) {
-            const alertEl = document.getElementById(`alert-${type}`);
-            alertEl.textContent = message;
-            alertEl.classList.add('show');
-            setTimeout(() => {
-                alertEl.classList.remove('show');
-            }, 3000);
-        }
-
-        // Initialize
-        updateNavbar();
+        /* ============================================
+           INICIALIZACIÓN
+           ============================================ */
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('✓ MudanzasHub mejorado cargado correctamente');
+            console.log('✓ Funcionalidad de WhatsApp optimizada');
+            console.log('✓ Transportistas disponibles:', transporters.length);
+            console.log('✓ Clientes registrados:', registeredClients.length);
+        });
     </script>
 </body>
 </html>
