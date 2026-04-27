@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MudanzasHub Costa Rica - Solución Total V2</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -34,11 +34,11 @@
         .btn:disabled { background: #555; color: #888; cursor: not-allowed; transform: none; box-shadow: none; }
         .btn-secondary { background: #333; color: #fff; margin-bottom: 10px; }
         .btn-sm { width: auto; padding: 7px 14px; font-size: 12px; display: inline-block; }
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 5000; align-items: center; justify-content: center; }
-        .modal.active { display: flex; }
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 1000; align-items: center; justify-content: center; }
+        .modal.active { display: flex !important; }
         .modal-content { background: #1a1a1a; border: 1px solid #444; border-radius: 12px; padding: 28px; width: 92%; max-width: 620px; max-height: 92vh; overflow-y: auto; box-shadow: 0 10px 40px rgba(0,0,0,0.9); position: relative; }
         .modal-header { font-size: 19px; font-weight: bold; margin-bottom: 18px; color: #00d4ff; }
-        .modal-close { position: absolute; top: 14px; right: 14px; background: none; border: none; color: #aaa; font-size: 24px; cursor: pointer; width: auto; padding: 0; }
+        .modal-close { position: absolute; top: 14px; right: 14px; background: none; border: none; color: #aaa; font-size: 24px; cursor: pointer; width: auto; padding: 0; z-index: 1001; }
         .section { display: none; }
         .section.active { display: block; }
         .tabs { display: flex; background: #222; border-radius: 8px; padding: 4px; margin-bottom: 18px; }
@@ -51,16 +51,12 @@
         .admin-table td { padding: 12px 8px; border: 1px solid #222; }
         .admin-footer { background: #1a3a3a; padding: 10px; border-radius: 0 0 8px 8px; border: 1px solid #333; border-top: none; display: flex; justify-content: flex-end; gap: 20px; font-size: 12px; font-weight: bold; }
         
-        /* MÓVIL OPTIMIZADO PARA TRANSPORTISTAS */
-        @media (max-width: 480px) {
-            .sidebar { width: 100%; position: absolute; z-index: 2000; height: 100%; }
-            .uber-job-card { padding: 12px; margin-bottom: 10px; }
-            .job-header { flex-direction: column; align-items: flex-start; gap: 5px; }
-            .job-price { font-size: 18px; }
-            .btn-sm { padding: 10px; width: 100%; text-align: center; margin-top: 5px; }
-            .map-container { height: 50vh; flex: none; }
-            .container { flex-direction: column; overflow-y: auto; }
-            body { overflow: auto; }
+        /* MÓVIL OPTIMIZADO */
+        @media (max-width: 768px) {
+            .container { flex-direction: column; }
+            .sidebar { width: 100%; height: auto; max-height: 60vh; border-right: none; border-bottom: 1px solid #333; }
+            .map-container { height: 40vh; }
+            #map { height: 100%; }
         }
         
         .btn-whatsapp { background: #25d366; color: #fff; }
@@ -74,8 +70,8 @@
         .finance-value { font-weight: bold; color: #00d4ff; }
         
         /* NAVEGACIÓN GPS MÓVIL */
-        #gpsView { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 6000; flex-direction: column; }
-        #gpsView.active { display: flex; }
+        #gpsView { display: none !important; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 3000; flex-direction: column; }
+        #gpsView.active { display: flex !important; }
         .gps-header { background: #1a1a1a; padding: 15px; border-bottom: 1px solid #333; display: flex; justify-content: space-between; align-items: center; }
         .gps-map { flex: 1; width: 100%; }
         .gps-instructions { background: #fff; padding: 20px; border-top: 1px solid #333; font-size: 16px; font-weight: bold; color: #000; text-align: center; box-shadow: 0 -5px 15px rgba(0,0,0,0.2); }
@@ -126,153 +122,143 @@
         .factura-header { border-bottom: 1px solid #333; padding-bottom: 15px; margin-bottom: 15px; }
         .factura-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 13px; }
         .factura-label { color: #aaa; }
-        .factura-value { font-weight: 600; text-align: right; }
-        .factura-total { border-top: 2px solid #00d4ff; padding-top: 15px; margin-top: 15px; display: flex; justify-content: space-between; align-items: center; }
-        .factura-total-label { font-size: 16px; font-weight: bold; }
-        .factura-total-value { font-size: 24px; font-weight: 800; color: #00d4ff; }
-        .ficha-header { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; background: #222; padding: 15px; border-radius: 10px; }
-        .ficha-avatar { width: 50px; height: 50px; background: #333; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; color: #00d4ff; border: 2px solid #00d4ff; }
+        .factura-value { font-weight: 600; }
+        .transportista-ficha { background: #222; border-radius: 10px; padding: 15px; border: 1px solid #333; margin-bottom: 15px; }
+        .ficha-header { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; }
+        .ficha-avatar { width: 50px; height: 50px; background: #00d4ff22; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #00d4ff; font-size: 20px; }
         .ficha-title { flex: 1; }
         .ficha-name { font-weight: bold; font-size: 16px; }
-        .ficha-rating { font-size: 12px; color: #f59e0b; }
+        .ficha-rating { color: #fbbf24; font-size: 12px; }
     </style>
 </head>
 <body>
 
+<div class="nav-overlay" id="navOverlay">
+    <i class="fas fa-navigation" style="color:#00d4ff;"></i>
+    <span id="navStatusText">En ruta...</span>
+    <span id="navDistance" style="font-weight:bold; color:#4ade80;">0.0 km</span>
+    <button class="btn btn-sm" id="finishNavBtn">Finalizar</button>
+</div>
+
 <div class="container">
-    <!-- SIDEBAR -->
     <div class="sidebar">
-        <div class="logo"><i class="fas fa-truck-moving"></i> MudanzasHub CR</div>
-        
         <!-- SECCIÓN AUTENTICACIÓN -->
-        <div id="authSection" class="section active">
-            <div class="user-greeting"><i class="fas fa-shield-alt"></i> Acceso Seguro</div>
+        <div class="section active" id="authSection">
+            <div class="logo"><i class="fas fa-truck"></i> MudanzasHub</div>
+            <div class="form-group"><label>Email</label><input type="email" id="authEmail" class="search-input" placeholder="Ingresa tu email"></div>
+            <div class="form-group"><label>Contraseña</label><input type="password" id="authPassword" class="search-input" placeholder="Ingresa tu contraseña"></div>
             <div class="form-group">
-                <label>Correo Electrónico</label>
-                <input type="email" id="authEmail" class="search-input" placeholder="ejemplo@correo.com">
-            </div>
-            <div class="form-group">
-                <label>Contraseña</label>
-                <input type="password" id="authPassword" class="search-input" placeholder="••••••••">
-            </div>
-            <div class="form-group">
-                <label>Tipo de Usuario</label>
+                <label>Rol</label>
                 <select id="authRole" class="search-input">
                     <option value="client">Cliente</option>
-                    <option value="transporter">Socio Transportista</option>
+                    <option value="transporter">Transportista</option>
                     <option value="admin">Administrador</option>
                 </select>
             </div>
-            <button id="loginBtn" class="btn">Iniciar Sesión</button>
-            <div id="connStatus" style="font-size:11px; text-align:center; margin-top:10px; color:#4ade80;">✅ Firebase Conectado</div>
+            <button class="btn" id="loginBtn">Entrar</button>
             <div class="register-link">¿No tienes cuenta? <span id="showRegisterBtn">Regístrate aquí</span></div>
+            <p id="connStatus" style="font-size:11px; color:#666; margin-top:15px; text-align:center;">Cargando Firebase...</p>
         </div>
 
         <!-- SECCIÓN REGISTRO -->
-        <div id="registerSection" class="section">
-            <div class="user-greeting"><i class="fas fa-user-plus"></i> Crear Nueva Cuenta</div>
+        <div class="section" id="registerSection">
+            <div class="logo"><i class="fas fa-user-plus"></i> Crear Cuenta</div>
             <div class="register-type-selector">
-                <div id="regTypeClient" class="register-type-btn active">Cliente</div>
-                <div id="regTypeTrans" class="register-type-btn">Socio</div>
+                <div class="register-type-btn active" id="regTypeClient">Cliente</div>
+                <div class="register-type-btn" id="regTypeTrans">Socio</div>
             </div>
             
-            <div class="form-group">
-                <label>Correo Electrónico</label>
-                <input type="email" id="regEmail" class="search-input">
-            </div>
-            <div class="form-group">
-                <label>Contraseña</label>
-                <input type="password" id="regPass" class="search-input">
-            </div>
-
-            <!-- Campos Cliente -->
             <div id="clientRegForm">
-                <div class="form-group"><label>Nombre Completo</label><input type="text" id="regName" class="search-input"></div>
-                <div class="form-group"><label>Cédula</label><input type="text" id="regId" class="search-input"></div>
-                <div class="form-group"><label>Teléfono</label><input type="text" id="regPhone" class="search-input"></div>
-                <div class="form-group"><label>Ubicación</label><input type="text" id="regLoc" class="search-input"></div>
+                <div class="form-group"><label>Nombre Completo</label><input type="text" id="regName" class="search-input" placeholder="Ej: Juan Pérez"></div>
+                <div class="form-group"><label>Cédula</label><input type="text" id="regId" class="search-input" placeholder="Número de identificación"></div>
+                <div class="form-group"><label>Teléfono</label><input type="tel" id="regPhone" class="search-input" placeholder="8888-8888"></div>
+                <div class="form-group"><label>Ubicación (Ciudad/Provincia)</label><input type="text" id="regLoc" class="search-input" placeholder="Ej: San José, Escazú"></div>
             </div>
 
-            <!-- Campos Transportista -->
             <div id="transRegForm" style="display:none;">
                 <div class="form-group"><label>Nombre Completo</label><input type="text" id="regTName" class="search-input"></div>
                 <div class="form-group"><label>Cédula</label><input type="text" id="regTId" class="search-input"></div>
-                <div class="form-group"><label>Teléfono</label><input type="text" id="regTPhone" class="search-input"></div>
-                <div class="form-group"><label>Edad</label><input type="number" id="regTAge" class="search-input"></div>
-                <div class="form-group"><label>Discapacidad</label><select id="regTPhys" class="search-input"><option value="no">No</option><option value="si">Sí</option></select></div>
+                <div class="form-group"><label>Teléfono</label><input type="tel" id="regTPhone" class="search-input"></div>
+                <div class="form-group" style="display:flex; gap:10px;">
+                    <div style="flex:1;"><label>Edad</label><input type="number" id="regTAge" class="search-input"></div>
+                    <div style="flex:1;"><label>¿Problema Físico?</label><select id="regTPhys" class="search-input"><option value="no">No</option><option value="si">Sí</option></select></div>
+                </div>
                 <div class="form-group"><label>Vehículo (Marca/Modelo)</label><input type="text" id="regTVehicle" class="search-input"></div>
-                <div class="form-group"><label>Placa</label><input type="text" id="regTPlate" class="search-input"></div>
-                <div class="form-group"><label>Tipo Licencia</label><input type="text" id="regTLicense" class="search-input"></div>
-                <div class="form-group"><label>Póliza de Seguro</label><input type="text" id="regTInsurance" class="search-input"></div>
+                <div class="form-group" style="display:flex; gap:10px;">
+                    <div style="flex:1;"><label>Placa</label><input type="text" id="regTPlate" class="search-input"></div>
+                    <div style="flex:1;"><label>Licencia</label><input type="text" id="regTLicense" class="search-input"></div>
+                </div>
+                <div class="form-group"><label>Número de Seguro</label><input type="text" id="regTInsurance" class="search-input"></div>
             </div>
 
-            <button id="executeRegisterBtn" class="btn">Completar Registro</button>
-            <button id="backToLoginBtn" class="btn btn-secondary" style="margin-top:10px;">Volver al Login</button>
+            <div class="form-group"><label>Correo Electrónico</label><input type="email" id="regEmail" class="search-input"></div>
+            <div class="form-group"><label>Contraseña</label><input type="password" id="regPass" class="search-input"></div>
+            
+            <button class="btn" id="executeRegisterBtn">Finalizar Registro</button>
+            <button class="btn btn-secondary" style="margin-top:10px;" id="backToLoginBtn">Volver al Login</button>
         </div>
 
         <!-- SECCIÓN CLIENTE -->
-        <div id="clientSection" class="section">
-            <div class="user-greeting">
-                <i class="fas fa-user-circle"></i> Hola, <span id="clientNameDisplay">Cargando...</span>
-                <button class="logoutBtn" style="margin-left:auto; background:none; border:none; color:#ff4b4b; cursor:pointer;"><i class="fas fa-sign-out-alt"></i></button>
-            </div>
+        <div class="section" id="clientSection">
+            <div class="logo"><i class="fas fa-truck"></i> MudanzasHub</div>
+            <div class="user-greeting"><i class="fas fa-user"></i> <span id="clientNameDisplay">Cliente</span></div>
+            <button class="btn btn-secondary logoutBtn">Cerrar Sesión</button>
             
+            <div class="search-container">
+                <label style="font-size:12px; color:#aaa; margin-bottom:5px; display:block;">Origen</label>
+                <input type="text" id="originSearch" class="search-input" placeholder="¿De dónde salen las cosas?">
+                <div id="originSuggestions" class="search-suggestions"></div>
+            </div>
+            <div class="search-container">
+                <label style="font-size:12px; color:#aaa; margin-bottom:5px; display:block;">Destino</label>
+                <input type="text" id="destinationSearch" class="search-input" placeholder="¿A dónde las llevamos?">
+                <div id="destinationSuggestions" class="search-suggestions"></div>
+            </div>
+
             <div class="form-group">
-                <label>Punto de Origen</label>
-                <div class="search-container">
-                    <input type="text" id="originSearch" class="search-input" placeholder="¿Desde dónde?">
-                    <div id="originSuggestions" class="search-suggestions"></div>
+                <label>Tipo de Vehículo</label>
+                <div class="vehicle-selector" id="vehicleSelector">
+                    <div class="vehicle-option active" data-vehicle="pickup">Pickup</div>
+                    <div class="vehicle-option" data-vehicle="buseta">Buseta</div>
+                    <div class="vehicle-option" data-vehicle="camion">Camión</div>
                 </div>
             </div>
+
             <div class="form-group">
-                <label>Punto de Destino</label>
-                <div class="search-container">
-                    <input type="text" id="destinationSearch" class="search-input" placeholder="¿Hacia dónde?">
-                    <div id="destinationSuggestions" class="search-suggestions"></div>
+                <label>Servicio</label>
+                <div class="vehicle-selector" id="serviceSelector">
+                    <div class="vehicle-option active" data-service="acarreo">Con Acarreo</div>
+                    <div class="vehicle-option" data-service="afuera">Puesta Afuera</div>
                 </div>
             </div>
 
-            <label class="form-group label">Tipo de Vehículo</label>
-            <div class="vehicle-selector" id="vehicleSelector">
-                <div class="vehicle-option active" data-vehicle="pickup"><i class="fas fa-truck-pickup"></i><div style="font-size:10px;">Pickup</div></div>
-                <div class="vehicle-option" data-vehicle="buseta"><i class="fas fa-shuttle-van"></i><div style="font-size:10px;">Buseta</div></div>
-                <div class="vehicle-option" data-vehicle="camion"><i class="fas fa-truck"></i><div style="font-size:10px;">Camión</div></div>
+            <div style="display:flex; gap:10px; margin-bottom:18px;">
+                <div style="flex:1;">
+                    <label style="font-size:12px; color:#aaa; margin-bottom:5px; display:block;">Peso (kg)</label>
+                    <input type="number" id="loadWeight" class="search-input" placeholder="Ej: 500" value="100">
+                </div>
+                <div style="flex:1;">
+                    <label style="font-size:12px; color:#aaa; margin-bottom:5px; display:block;">Acceso Destino</label>
+                    <select id="accessType" class="search-input">
+                        <option value="easy">Fácil</option>
+                        <option value="medium">Regular</option>
+                        <option value="hard">Difícil</option>
+                    </select>
+                </div>
             </div>
 
-            <label class="form-group label">Tipo de Servicio</label>
-            <div class="vehicle-selector" id="serviceSelector">
-                <div class="vehicle-option active" data-service="exterior"><i class="fas fa-door-open"></i><div style="font-size:10px;">Afuera</div></div>
-                <div class="vehicle-option" data-service="acarreo"><i class="fas fa-couch"></i><div style="font-size:10px;">Acarreo</div></div>
-            </div>
-
-            <div class="form-group">
-                <label>Peso Estimado (kg)</label>
-                <input type="number" id="loadWeight" class="search-input" value="100">
-            </div>
-            <div class="form-group">
-                <label>Dificultad de Acceso</label>
-                <select id="accessType" class="search-input">
-                    <option value="easy">Fácil (Planta baja)</option>
-                    <option value="medium">Medio (Escaleras)</option>
-                    <option value="hard">Difícil (Pisos altos/Estrecho)</option>
-                </select>
-            </div>
-
-            <button id="searchTransportersBtn" class="btn">Buscar Transportistas Disponibles</button>
-            
+            <button class="btn" id="searchTransportersBtn">Buscar Transportistas</button>
             <div id="transportistasList" style="margin-top:20px;"></div>
         </div>
 
         <!-- SECCIÓN TRANSPORTISTA -->
-        <div id="transporterSection" class="section">
-            <div class="user-greeting">
-                <i class="fas fa-id-badge"></i> Socio: <span id="transNameDisplay">Cargando...</span>
-                <button class="logoutBtn" style="margin-left:auto; background:none; border:none; color:#ff4b4b; cursor:pointer;"><i class="fas fa-sign-out-alt"></i></button>
-            </div>
+        <div class="section" id="transporterSection">
+            <div class="logo"><i class="fas fa-truck"></i> MudanzasHub</div>
+            <div class="user-greeting"><i class="fas fa-id-badge"></i> <span id="transNameDisplay">Socio</span></div>
+            <button class="btn btn-secondary logoutBtn">Cerrar Sesión</button>
 
             <div class="finance-card">
                 <div class="finance-row"><span class="finance-label">Ganancias Netas (80%)</span><span class="finance-value" id="totalEarnings">₡0</span></div>
-                <div class="finance-row"><span class="finance-label">Estado</span><span class="status-badge status-completed">Activo</span></div>
             </div>
 
             <div class="tabs">
@@ -289,11 +275,9 @@
         </div>
 
         <!-- SECCIÓN ADMIN -->
-        <div id="adminSection" class="section">
-            <div class="user-greeting">
-                <i class="fas fa-user-shield"></i> Panel de Control Admin
-                <button class="logoutBtn" style="margin-left:auto; background:none; border:none; color:#ff4b4b; cursor:pointer;"><i class="fas fa-sign-out-alt"></i></button>
-            </div>
+        <div class="section" id="adminSection">
+            <div class="logo"><i class="fas fa-user-shield"></i> Admin Panel</div>
+            <button class="btn btn-secondary logoutBtn">Cerrar Sesión</button>
 
             <div class="tabs">
                 <button class="tab-btn active" data-tab="adminMoves">Mudanzas</button>
@@ -348,33 +332,39 @@
     <!-- MAPA -->
     <div class="map-container">
         <div id="map"></div>
-        <div id="navOverlay" class="nav-overlay">
-            <div style="color:#00d4ff; font-size:20px;"><i class="fas fa-location-arrow"></i></div>
-            <div>
-                <div style="font-size:10px; color:#aaa; text-transform:uppercase;">Distancia en Ruta</div>
-                <div id="navDistance" style="font-size:18px; font-weight:bold;">0.0 km</div>
-            </div>
-            <button id="finishNavBtn" class="btn btn-sm btn-reject" style="border-radius:20px;">Finalizar</button>
-        </div>
     </div>
 </div>
 
 <!-- MODALES -->
 <div id="facturaModal" class="modal">
     <div class="modal-content">
-        <button class="modal-close" data-close="facturaModal">&times;</button>
+        <button class="modal-close" onclick="closeModal('facturaModal')">&times;</button>
         <div class="modal-header">Confirmación de Servicio</div>
         
-        <div id="fichaTransportista"></div>
-        
-        <div class="factura-header">
-            <div style="font-size:12px; color:#aaa; margin-bottom:5px;">DETALLES DEL VIAJE</div>
-            <div id="facturaDetails"></div>
+        <div class="transportista-ficha">
+            <div class="ficha-header">
+                <div class="ficha-avatar"><i class="fas fa-user-tie"></i></div>
+                <div class="ficha-title">
+                    <div class="ficha-name" id="fichaName">Transportista</div>
+                    <div class="ficha-rating"><i class="fas fa-star"></i> <span id="fichaRating">5.0</span></div>
+                </div>
+            </div>
+            <div class="factura-row"><span class="factura-label">Vehículo:</span><span class="factura-value" id="fichaVehicle">-</span></div>
+            <div class="factura-row"><span class="factura-label">Placa:</span><span class="factura-value" id="fichaPlate">-</span></div>
+            <div class="factura-row"><span class="factura-label">Teléfono:</span><span class="factura-value" id="fichaPhone">-</span></div>
         </div>
 
-        <div class="factura-total">
-            <div class="factura-total-label">TOTAL A PAGAR</div>
-            <div class="factura-total-value" id="facturaTotal">₡0</div>
+        <div class="factura-header">
+            <div style="font-size:12px; color:#aaa; margin-bottom:5px;">DETALLES DEL VIAJE</div>
+            <div class="factura-row"><span class="factura-label">Origen:</span><span class="factura-value" id="facturaOrigin">-</span></div>
+            <div class="factura-row"><span class="factura-label">Destino:</span><span class="factura-value" id="facturaDestination">-</span></div>
+            <div class="factura-row"><span class="factura-label">Servicio:</span><span class="factura-value" id="facturaService">-</span></div>
+            <div class="factura-row"><span class="factura-label">Peso aprox:</span><span class="factura-value" id="facturaWeight">-</span></div>
+        </div>
+
+        <div style="border-top: 2px solid #00d4ff; padding-top: 15px; margin-top: 15px; display: flex; justify-content: space-between; align-items: center;">
+            <div style="font-size: 16px; font-weight: bold;">TOTAL A PAGAR</div>
+            <div style="font-size: 24px; font-weight: 800; color: #00d4ff;" id="facturaTotal">₡0</div>
         </div>
 
         <div class="alert-box alert-info" style="margin-top:20px;">
@@ -394,7 +384,7 @@
 
 <div id="partnerDetailModal" class="modal">
     <div class="modal-content">
-        <button class="modal-close" data-close="partnerDetailModal">&times;</button>
+        <button class="modal-close" onclick="closeModal('partnerDetailModal')">&times;</button>
         <div class="modal-header">Expediente del Socio</div>
         <div id="partnerDetailContent" class="detail-grid"></div>
     </div>
@@ -402,7 +392,7 @@
 
 <div id="clientDetailModal" class="modal">
     <div class="modal-content">
-        <button class="modal-close" data-close="clientDetailModal">&times;</button>
+        <button class="modal-close" onclick="closeModal('clientDetailModal')">&times;</button>
         <div class="modal-header">Expediente del Cliente</div>
         <div id="clientDetailContent"></div>
         <div style="margin-top:15px; font-weight:bold; color:#00d4ff; border-bottom:1px solid #333; padding-bottom:5px;">Historial de Mudanzas</div>
@@ -417,7 +407,7 @@
 
 <div id="addClientModal" class="modal">
     <div class="modal-content">
-        <button class="modal-close" data-close="addClientModal">&times;</button>
+        <button class="modal-close" onclick="closeModal('addClientModal')">&times;</button>
         <div class="modal-header">Registrar Nuevo Cliente</div>
         <div class="form-group"><label>Nombre</label><input type="text" id="addCName" class="search-input"></div>
         <div class="form-group"><label>Email</label><input type="email" id="addCEmail" class="search-input"></div>
@@ -430,11 +420,12 @@
 
 <div id="codeModal" class="modal">
     <div class="modal-content" style="max-width:400px; text-align:center;">
+        <button class="modal-close" onclick="closeModal('codeModal')">&times;</button>
         <div class="modal-header">Finalizar Servicio</div>
         <p style="font-size:13px; color:#aaa; margin-bottom:20px;">Solicita al cliente el código de 4 dígitos para concluir el viaje.</p>
         <input type="number" id="confirmCodeInput" class="search-input" placeholder="0000" style="text-align:center; font-size:30px; letter-spacing:10px; margin-bottom:20px;">
         <button id="validateCodeBtn" class="btn">Validar y Finalizar</button>
-        <button class="btn btn-secondary" style="margin-top:10px;" data-close="codeModal">Cancelar</button>
+        <button class="btn btn-secondary" style="margin-top:10px;" onclick="closeModal('codeModal')">Cancelar</button>
     </div>
 </div>
 
@@ -450,7 +441,7 @@
 <!-- SCRIPTS -->
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getDatabase, ref, set, push, onValue, update, remove } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+    import { getDatabase, ref, set, push, onValue, update } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
     const firebaseConfig = {
         databaseURL: "https://mudanzashub-cr-default-rtdb.firebaseio.com"
@@ -467,12 +458,12 @@
     let markers = { origin: null, destination: null };
     let searchTimeout = null;
     let selectedVehicle = 'pickup';
-    let selectedServiceType = 'exterior';
+    let selectedServiceType = 'acarreo';
     let selectedTransporter = null;
     let pendingMoveData = null;
     let activeNavMove = null;
 
-    // CONFIGURACIÓN DE VEHÍCULOS (Consumo y Capacidad)
+    // CONFIGURACIÓN DE VEHÍCULOS
     const vehicleConfig = {
         pickup: { multiplier: 1.0, fuelCost: 1.0, capacity: 800, name: 'Pickup' },
         buseta: { multiplier: 1.4, fuelCost: 1.3, capacity: 1500, name: 'Buseta' },
@@ -496,6 +487,7 @@
         }
         if(currentUser && currentUser.role === 'admin') listenToAdmin();
     });
+    
     onValue(ref(db, 'users/clients'), (snap) => {
         const data = snap.val();
         if (data) {
@@ -512,16 +504,19 @@
     map = L.map('map').setView([9.9281, -84.0907], 12);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 
-    const openModal = (id) => {
+    // Funciones globales para modales
+    window.openModal = (id) => {
         const modal = document.getElementById(id);
-        modal.classList.add('active');
-        // Forzar redibujado para móviles
-        modal.style.display = 'flex';
+        if (modal) {
+            modal.classList.add('active');
+        }
     };
-    const closeModal = (id) => {
+    
+    window.closeModal = (id) => {
         const modal = document.getElementById(id);
-        modal.classList.remove('active');
-        modal.style.display = 'none';
+        if (modal) {
+            modal.classList.remove('active');
+        }
     };
 
     // SEGURIDAD: Control de intentos fallidos de login
@@ -534,7 +529,6 @@
     document.getElementById('loginBtn').addEventListener('click', () => {
         const now = Date.now();
 
-        // Bloqueo temporal por exceso de intentos
         if (now < _loginBlockedUntil) {
             const secsLeft = Math.ceil((_loginBlockedUntil - now) / 1000);
             document.getElementById('connStatus').innerText = '⛔ Demasiados intentos. Espera ' + secsLeft + 's.';
@@ -546,14 +540,12 @@
         const pass = document.getElementById('authPassword').value;
         const role = document.getElementById('authRole').value;
 
-        // Los tres campos son obligatorios
         if (!email || !pass || !role) {
             document.getElementById('connStatus').innerText = '⚠️ Completa todos los campos.';
             document.getElementById('connStatus').style.color = '#f59e0b';
             return;
         }
 
-        // Validación estricta: email + contraseña + rol deben coincidir exactamente
         let _authenticated = false;
 
         if (role === 'admin' && email === 'admin@test.com' && pass === 'ADMIN') {
@@ -567,7 +559,6 @@
             if (c) { currentUser = { ...c, role }; _authenticated = true; }
         }
 
-        // Intento fallido
         if (!_authenticated) {
             _loginAttempts++;
             document.getElementById('authPassword').value = '';
@@ -590,7 +581,6 @@
             return;
         }
 
-        // Login exitoso
         _loginAttempts = 0;
         _loginBlockedUntil = 0;
         document.getElementById('connStatus').innerText = '✅ Firebase Conectado';
@@ -603,9 +593,11 @@
         } else {
             document.querySelector('.map-container').style.display = 'block';
             if(role === 'client') document.getElementById('clientNameDisplay').innerText = currentUser.name;
-            if(role === 'transporter') { document.getElementById('transNameDisplay').innerText = currentUser.name; listenToJobs(); }
-            // Redimensionar mapa después de mostrarlo
-            setTimeout(() => { map.invalidateSize(); }, 200);
+            if(role === 'transporter') { 
+                document.getElementById('transNameDisplay').innerText = currentUser.name; 
+                listenToJobs(); 
+            }
+            setTimeout(() => { map.invalidateSize(); }, 300);
         }
     });
 
@@ -699,6 +691,7 @@
         clearTimeout(searchTimeout);
         searchTimeout = setTimeout(() => searchLocations(e.target.value, 'origin'), 400);
     });
+    
     document.getElementById('destinationSearch').addEventListener('input', (e) => {
         clearTimeout(searchTimeout);
         searchTimeout = setTimeout(() => searchLocations(e.target.value, 'destination'), 400);
@@ -749,9 +742,9 @@
     // LÓGICA DE PRECIOS DINÁMICA
     const calculatePrice = (dist, vehicle, weight, access, service) => {
         const config = vehicleConfig[vehicle];
-        const basePrice = 12000; // Tarifa base
-        const distPrice = dist * 1100 * config.fuelCost; // Costo por km ajustado por combustible
-        const weightPrice = (weight / 100) * 1500; // Costo por peso
+        const basePrice = 12000;
+        const distPrice = dist * 1100 * config.fuelCost;
+        const weightPrice = (weight / 100) * 1500;
         const accessMultipliers = { easy: 1, medium: 1.15, hard: 1.3 };
         const servicePrice = service === 'acarreo' ? 8000 : 0;
         
@@ -765,7 +758,6 @@
         const weight = parseFloat(document.getElementById('loadWeight').value) || 100;
         const access = document.getElementById('accessType').value;
         
-        // Generar 3 ofertas basadas en el promedio de los factores
         const basePrice = calculatePrice(dist, selectedVehicle, weight, access, selectedServiceType);
         
         const offers = [
@@ -801,52 +793,41 @@
 
     const openFactura = (tid, price) => {
         selectedTransporter = transporters.find(t => t.id === tid);
-            const now = new Date();
-            pendingMoveData = {
-                client: currentUser.email,
-                clientName: currentUser.name,
-                clientPhone: currentUser.phone || '',
-                transporter: selectedTransporter.id,
-                transporterName: selectedTransporter.name,
-                transporterPhone: selectedTransporter.phone,
-                transporterPlate: selectedTransporter.plate,
-                origin: selectedOrigin,
-                destination: selectedDestination,
-                price: price,
-                vehicle: selectedVehicle,
-                service: selectedServiceType,
-                weight: document.getElementById('loadWeight').value,
-                access: document.getElementById('accessType').value,
-                status: 'pending',
-                code: Math.floor(1000 + Math.random() * 9000),
-                date: now.toLocaleDateString(),
-                time: now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-                timestamp: Date.now()
-            };
+        const now = new Date();
+        pendingMoveData = {
+            client: currentUser.email,
+            clientName: currentUser.name,
+            clientPhone: currentUser.phone || '',
+            transporter: selectedTransporter.id,
+            transporterName: selectedTransporter.name,
+            transporterPhone: selectedTransporter.phone,
+            transporterPlate: selectedTransporter.plate,
+            origin: selectedOrigin,
+            destination: selectedDestination,
+            price: price,
+            vehicle: selectedVehicle,
+            service: selectedServiceType,
+            weight: document.getElementById('loadWeight').value,
+            access: document.getElementById('accessType').value,
+            status: 'pending',
+            code: Math.floor(1000 + Math.random() * 9000),
+            date: now.toLocaleDateString(),
+            time: now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+            timestamp: Date.now()
+        };
 
-        // FICHA TÉCNICA (MODELO)
-        document.getElementById('fichaTransportista').innerHTML = `
-            <div class="ficha-header">
-                <div class="ficha-avatar"><i class="fas fa-user-tie"></i></div>
-                <div class="ficha-title">
-                    <div class="ficha-name">${selectedTransporter.name}</div>
-                    <div class="ficha-rating"><i class="fas fa-star"></i> ${selectedTransporter.rating} · Socio Verificado</div>
-                </div>
-            </div>
-            <div class="factura-row"><span class="factura-label">Vehículo:</span><span class="factura-value">${selectedTransporter.vehicle}</span></div>
-            <div class="factura-row"><span class="factura-label">Placa:</span><span class="factura-value">${selectedTransporter.plate}</span></div>
-            <div class="factura-row"><span class="factura-label">Teléfono:</span><span class="factura-value">${selectedTransporter.phone}</span></div>
-        `;
-
-        // DETALLES FACTURA (MODELO)
-        document.getElementById('facturaDetails').innerHTML = `
-            <div class="factura-row"><span class="factura-label">Origen:</span><span class="factura-value">${selectedOrigin.name.split(',')[0]}</span></div>
-            <div class="factura-row"><span class="factura-label">Destino:</span><span class="factura-value">${selectedDestination.name.split(',')[0]}</span></div>
-            <div class="factura-row"><span class="factura-label">Servicio:</span><span class="factura-value">${selectedServiceType === 'acarreo' ? 'Con Acarreo' : 'Puesta Afuera'}</span></div>
-            <div class="factura-row"><span class="factura-label">Peso aprox:</span><span class="factura-value">${pendingMoveData.weight} kg</span></div>
-        `;
-
-        document.getElementById('facturaTotal').textContent = '₡' + price.toLocaleString();
+        document.getElementById('fichaName').innerText = selectedTransporter.name;
+        document.getElementById('fichaRating').innerText = selectedTransporter.rating;
+        document.getElementById('fichaVehicle').innerText = selectedTransporter.vehicle;
+        document.getElementById('fichaPlate').innerText = selectedTransporter.plate;
+        document.getElementById('fichaPhone').innerText = selectedTransporter.phone;
+        
+        document.getElementById('facturaOrigin').innerText = selectedOrigin.name.split(',')[0];
+        document.getElementById('facturaDestination').innerText = selectedDestination.name.split(',')[0];
+        document.getElementById('facturaService').innerText = selectedServiceType === 'acarreo' ? 'Con Acarreo' : 'Puesta Afuera';
+        document.getElementById('facturaWeight').innerText = pendingMoveData.weight + ' kg';
+        document.getElementById('facturaTotal').innerText = '₡' + price.toLocaleString();
+        
         openModal('facturaModal');
     };
 
@@ -860,7 +841,6 @@
 
     document.getElementById('confirmMoveBtn').addEventListener('click', () => {
         push(ref(db, 'moves'), pendingMoveData).then(() => {
-            // SIMULACIÓN DE NOTIFICACIÓN POR CORREO
             console.log(`[SIMULACIÓN CORREO] Enviando notificación a ${selectedTransporter.email}: "Tienes una nueva oferta de mudanza vigente de ${currentUser.name}"`);
             alert('¡Solicitud enviada! El transportista ha sido notificado por correo. Código: ' + pendingMoveData.code);
             closeModal('facturaModal');
@@ -868,7 +848,7 @@
         });
     });
 
-    // LÓGICA TRANSPORTISTA (3 VIAJES SIMULTÁNEOS EN RUTA)
+    // LÓGICA TRANSPORTISTA
     const listenToJobs = () => {
         onValue(ref(db, 'moves'), (snapshot) => {
             const data = snapshot.val();
@@ -914,7 +894,7 @@
                                 </div>` : ''}
                             ${m.status === 'in_progress' && m.transporter === currentUser.id ? `
                                 <div style="display:flex; flex-direction:column; gap:8px; margin-top:10px;">
-                                    <button class="btn btn-whatsapp whatsappClientBtn" data-id="${key}" style="text-decoration:none; text-align:center; font-size:12px; padding:10px;">
+                                    <button class="btn btn-whatsapp whatsappClientBtn" data-id="${key}" style="text-align:center; font-size:12px; padding:10px;">
                                         <i class="fab fa-whatsapp"></i> Escribir al Cliente
                                     </button>
                                     <button class="btn btn-sm shareLocBtn" style="background:#25d366; color:#fff;" data-id="${key}">
@@ -936,7 +916,7 @@
         });
     };
 
-    // LÓGICA ADMIN EXPANDIDA
+    // LÓGICA ADMIN
     const listenToAdmin = () => {
         onValue(ref(db, 'moves'), (snapshot) => {
             const data = snapshot.val();
@@ -944,8 +924,8 @@
             if (!tbody) return;
             tbody.innerHTML = '';
             let totalSales = 0, totalComm = 0, companyRegal = 0, partnersRegal = 0;
-            const selectedMonth = document.getElementById('financeCalendar').value; // YYYY-MM
-            const selectedDay = document.getElementById('movesDateFilter').value; // YYYY-MM-DD
+            const selectedMonth = document.getElementById('financeCalendar').value;
+            const selectedDay = document.getElementById('movesDateFilter').value;
 
             if(data) {
                 Object.keys(data).forEach(key => {
@@ -957,13 +937,11 @@
                     const moveMonth = `${moveDate.getFullYear()}-${String(moveDate.getMonth()+1).padStart(2,'0')}`;
                     const moveDay = moveDate.toISOString().split('T')[0];
 
-                    // Filtro para tabla de mudanzas (Día)
                     if (selectedDay && moveDay !== selectedDay) return;
 
                     totalSales += m.price;
                     totalComm += comm;
 
-                    // Filtro para finanzas (Mes)
                     if (!selectedMonth || moveMonth === selectedMonth) {
                         if (m.status === 'completed') {
                             companyRegal += comm;
@@ -978,7 +956,7 @@
             document.getElementById('totalAdminComm').textContent = '₡' + totalComm.toLocaleString();
             document.getElementById('companyRegal').textContent = '₡' + companyRegal.toLocaleString();
             document.getElementById('partnersRegal').textContent = '₡' + partnersRegal.toLocaleString();
-            document.getElementById('netBalance').textContent = '₡' + (companyRegal - (50 * 600)).toLocaleString(); // Simulación $50 a ₡600
+            document.getElementById('netBalance').textContent = '₡' + (companyRegal - (50 * 600)).toLocaleString();
         });
 
         const partnersList = document.getElementById('adminPartnersList');
@@ -1004,7 +982,6 @@
         doc.setFontSize(11);
         doc.text(`Fecha de reporte: ${new Date().toLocaleString()}`, 14, 30);
         
-        const table = document.getElementById('adminMovesTable');
         const rows = [];
         const headers = [['ID', 'Cliente', 'Socio', 'Fecha', 'Hora', 'Total', 'Comisión (20%)', 'Estado']];
         
@@ -1030,14 +1007,12 @@
         doc.save(`Reporte_Mudanzas_${new Date().toISOString().split('T')[0]}.pdf`);
     });
 
-
     // LÓGICA GPS NAVEGACIÓN EN VIVO
     const startGpsNavigation = (moveId) => {
         onValue(ref(db, `moves/${moveId}`), (snapshot) => {
             const m = snapshot.val();
             if (!m) return;
             document.getElementById('gpsView').classList.add('active');
-            document.getElementById('gpsView').style.display = 'flex';
             if (!gpsMap) {
                 gpsMap = L.map('gpsMap').setView([m.origin.lat, m.origin.lng], 16);
                 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(gpsMap);
@@ -1064,7 +1039,6 @@
 
     document.getElementById('closeGpsBtn').addEventListener('click', () => {
         document.getElementById('gpsView').classList.remove('active');
-        document.getElementById('gpsView').style.display = 'none';
         if (watchId) navigator.geolocation.clearWatch(watchId);
     });
 
@@ -1075,59 +1049,6 @@
         if (partnerItem && !partnerItem.classList.contains('client-item')) {
             const t = transporters.find(x => x.id === parseInt(partnerItem.dataset.tid));
             if (!t) return;
-            document.getElementById('partnerDetailName').innerText = t.name;
-            document.getElementById('partnerDetailContent').innerHTML = `
-                <div style="grid-column: span 2; text-align:center; margin-bottom:10px;">
-                    <div style="width:80px; height:80px; background:#333; border-radius:50%; margin:0 auto 10px; display:flex; align-items:center; justify-content:center; border:2px solid #00d4ff; position:relative;">
-                        <i class="fas fa-user-tie" style="font-size:40px; color:#00d4ff;"></i>
-                        <label style="position:absolute; bottom:0; right:0; background:#00d4ff; color:#000; border-radius:50%; width:24px; height:24px; display:flex; align-items:center; justify-content:center; cursor:pointer;"><i class="fas fa-camera" style="font-size:12px;"></i><input type="file" style="display:none;"></label>
-                    </div>
-                </div>
-                <div class="detail-item"><div class="detail-label">Nombre</div><input type="text" class="edit-input" id="editTName" value="${t.name}"></div>
-                <div class="detail-item"><div class="detail-label">Cédula</div><input type="text" class="edit-input" id="editTId" value="${t.idNum || ''}"></div>
-                <div class="detail-item"><div class="detail-label">Edad</div><input type="number" class="edit-input" id="editTAge" value="${t.age || ''}"></div>
-                <div class="detail-item"><div class="detail-label">Discapacidad</div><select class="edit-input" id="editTPhys"><option value="no" ${t.physical==='no'?'selected':''}>No</option><option value="si" ${t.physical==='si'?'selected':''}>Sí</option></select></div>
-                <div class="detail-item"><div class="detail-label">Teléfono</div><input type="text" class="edit-input" id="editTPhone" value="${t.phone}"></div>
-                <div class="detail-item"><div class="detail-label">Placa</div><input type="text" class="edit-input" id="editTPlate" value="${t.plate}"></div>
-                <div class="detail-item"><div class="detail-label">Vehículo</div><input type="text" class="edit-input" id="editTVehicle" value="${t.vehicle}"></div>
-                <div class="detail-item"><div class="detail-label">Licencia</div><input type="text" class="edit-input" id="editTLicense" value="${t.license}"></div>
-                <div class="detail-item"><div class="detail-label">Seguro</div><input type="text" class="edit-input" id="editTInsurance" value="${t.insurance}"></div>
-                <div style="grid-column: span 2; margin-top:15px; font-weight:bold; color:#00d4ff; border-bottom:1px solid #333; padding-bottom:5px;">Historial de Servicios</div>
-                <div id="partnerHistoryList" style="grid-column: span 2; margin-top:10px; max-height:200px; overflow-y:auto;"></div>
-                <div style="grid-column: span 2; display:flex; gap:10px; margin-top:15px;">
-                    <button class="btn" id="savePartnerBtn" data-tid="${t.id}">Guardar Cambios</button>
-                    <button class="btn btn-whatsapp" id="msgPartnerBtn" data-tid="${t.id}">Mensaje</button>
-                    <button class="btn btn-reject" id="deletePartnerBtn" data-tid="${t.id}">Borrar</button>
-                </div>
-            `;
-            
-            // HISTORIAL DEL SOCIO
-            onValue(ref(db, 'moves'), (snapshot) => {
-                const data = snapshot.val();
-                const hList = document.getElementById('partnerHistoryList');
-                if(!hList) return;
-                hList.innerHTML = '';
-                let count = 0;
-                if(data) {
-                    Object.keys(data).forEach(key => {
-                        const m = data[key];
-                        if (m.transporter === t.id || m.transporterName === t.name) {
-                            count++;
-                            hList.innerHTML += `
-                                <div class="history-item" style="padding:12px; border-left:3px solid #4ade80; display:flex; justify-content:space-between; align-items:center;">
-                                    <div style="flex:1;">
-                                        <strong style="color:#4ade80;">${m.date} | ${m.time || '--:--'}</strong><br>
-                                        Cliente: ${m.clientName}<br>
-                                        ${m.origin.name.split(',')[0]} → ${m.destination.name.split(',')[0]}<br>
-                                        <span style="color:#aaa; font-size:11px;">Total: ₡${m.price.toLocaleString()} | Estado: ${m.status}</span>
-                                    </div>
-                                </div>`;
-                        }
-                    });
-                }
-                if(count === 0) hList.innerHTML = '<div style="color:#666; font-size:12px;">Sin historial.</div>';
-            }, { onlyOnce: true });
-            
             openModal('partnerDetailModal');
         }
 
@@ -1135,65 +1056,9 @@
             const c = registeredClients.find(x => x.email === partnerItem.dataset.email);
             if (!c) return;
             document.getElementById('msgClientBtn').dataset.email = c.email;
-            document.getElementById('clientDetailContent').innerHTML = `
-                <div class="detail-grid">
-                    <div class="detail-item"><div class="detail-label">Nombre</div><input type="text" class="edit-input" id="editCName" value="${c.name}"></div>
-                    <div class="detail-item"><div class="detail-label">Email</div><input type="text" class="edit-input" id="editCEmail" value="${c.email}" disabled></div>
-                    <div class="detail-item"><div class="detail-label">Teléfono</div><input type="text" class="edit-input" id="editCPhone" value="${c.phone}"></div>
-                    <div class="detail-item"><div class="detail-label">Cédula</div><input type="text" class="edit-input" id="editCId" value="${c.idNum}"></div>
-                </div>
-            `;
-            
-            // HISTORIAL DEL CLIENTE
-            onValue(ref(db, 'moves'), (snapshot) => {
-                const data = snapshot.val();
-                const hList = document.getElementById('clientHistoryList');
-                hList.innerHTML = '';
-                let count = 0;
-                if(data) {
-                    Object.keys(data).forEach(key => {
-                        const m = data[key];
-                        if (m.client === c.email) {
-                            count++;
-                            const dist = calculateDist(m.origin, m.destination);
-                            const estDuration = Math.round((dist / 40) * 60);
-                            hList.innerHTML += `
-                                <div class="history-item" style="padding:12px; border-left:3px solid #00d4ff; display:flex; justify-content:space-between; align-items:center;">
-                                    <div style="flex:1;">
-                                        <strong style="color:#00d4ff;">${m.date} | ${m.time || '--:--'}</strong><br>
-                                        ${m.origin.name.split(',')[0]} → ${m.destination.name.split(',')[0]}<br>
-                                        <span style="color:#aaa; font-size:11px;">Carga: ${m.weight}kg | ${m.service} | ~${estDuration}min</span>
-                                    </div>
-                                    <button class="btn btn-sm viewMapBtn" data-mid="${key}" style="background:#00d4ff; color:#000; font-weight:bold; padding:8px 12px; white-space:nowrap; margin-left:10px;">Ver Mapa</button>
-                                </div>`;
-                        }
-                    });
-                }
-                if(count === 0) hList.innerHTML = '<div style="color:#666; font-size:12px;">Sin historial.</div>';
-            }, { onlyOnce: true });
-
-            document.getElementById('saveClientBtn').onclick = () => {
-                const updated = {
-                    ...c,
-                    name: document.getElementById('editCName').value,
-                    phone: document.getElementById('editCPhone').value,
-                    idNum: document.getElementById('editCId').value
-                };
-                update(ref(db, 'users/clients/' + c.email.replace('.', '_')), updated);
-                alert('Cliente actualizado');
-                closeModal('clientDetailModal');
-            };
-
-            document.getElementById('deleteClientBtn').onclick = () => {
-                if(confirm('¿Borrar cliente?')) {
-                    set(ref(db, 'users/clients/' + c.email.replace('.', '_')), null);
-                    closeModal('clientDetailModal');
-                }
-            };
             openModal('clientDetailModal');
         }
 
-        
         if (e.target.id === 'saveNewClientBtn') {
             const name = document.getElementById('addCName').value;
             const email = document.getElementById('addCEmail').value.trim().toLowerCase();
@@ -1207,53 +1072,7 @@
             set(ref(db, 'users/clients/' + email.replace('.', '_')), newUser);
             alert('Cliente creado exitosamente');
             closeModal('addClientModal');
-            // Limpiar campos
             ['addCName', 'addCEmail', 'addCPass', 'addCPhone', 'addCId'].forEach(id => document.getElementById(id).value = '');
-        }
-        if (e.target.id === 'savePartnerBtn') {
-            const tid = e.target.dataset.tid;
-            const t = transporters.find(x => x.id == tid);
-            const updated = {
-                ...t,
-                name: document.getElementById('editTName').value,
-                idNum: document.getElementById('editTId').value,
-                age: document.getElementById('editTAge').value,
-                physical: document.getElementById('editTPhys').value,
-                phone: document.getElementById('editTPhone').value,
-                plate: document.getElementById('editTPlate').value,
-                vehicle: document.getElementById('editTVehicle').value,
-                license: document.getElementById('editTLicense').value,
-                insurance: document.getElementById('editTInsurance').value
-            };
-            update(ref(db, 'users/transporters/' + tid), updated);
-            alert('Socio actualizado');
-            closeModal('partnerDetailModal');
-        }
-
-        if (e.target.id === 'deletePartnerBtn') {
-            if(confirm('¿Borrar socio?')) {
-                const tid = e.target.dataset.tid;
-                set(ref(db, 'users/transporters/' + tid), null);
-                closeModal('partnerDetailModal');
-            }
-        }
-
-        if (e.target.id === 'msgPartnerBtn') {
-            const tid = e.target.dataset.tid;
-            const t = transporters.find(x => x.id == tid);
-            if(t && t.phone) {
-                const phone = t.phone.replace(/[^0-9]/g, '');
-                window.open(`https://wa.me/506${phone}`, '_blank');
-            } else { alert('No hay teléfono registrado'); }
-        }
-        
-        if (e.target.id === 'msgClientBtn') {
-            const email = e.target.dataset.email;
-            const c = registeredClients.find(x => x.email === email);
-            if(c && c.phone) {
-                const phone = c.phone.replace(/[^0-9]/g, '');
-                window.open(`https://wa.me/506${phone}`, '_blank');
-            } else { alert('No hay teléfono registrado'); }
         }
 
         if (e.target.classList.contains('acceptJobBtn')) update(ref(db, `moves/${e.target.dataset.id}`), { status: 'in_progress' });
@@ -1316,7 +1135,6 @@
             tabBtn.classList.add('active');
             section.querySelector(`#${tabBtn.dataset.tab}Tab`).classList.add('active');
             
-            // OCULTAR MAPA EN ADMIN EXCEPTO EN HISTORIAL
             if (section.id === 'adminSection') {
                 document.querySelector('.map-container').style.display = 'none';
             } else {
@@ -1324,7 +1142,6 @@
                 setTimeout(() => { map.invalidateSize(); }, 200);
             }
         }
-        if (e.target.dataset.close) closeModal(e.target.dataset.close);
     });
 
     document.getElementById('validateCodeBtn').addEventListener('click', () => {
