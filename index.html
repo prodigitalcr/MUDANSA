@@ -2,14 +2,15 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MudanzasHub Costa Rica - Solución Total</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>MudanzasHub Costa Rica - Solución Total V2</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
     <style>
+        /* ESTILOS ORIGINALES Y NUEVOS */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #0f0f0f; color: #fff; overflow: hidden; }
         .container { display: flex; height: 100vh; }
@@ -33,7 +34,7 @@
         .btn:disabled { background: #555; color: #888; cursor: not-allowed; transform: none; box-shadow: none; }
         .btn-secondary { background: #333; color: #fff; margin-bottom: 10px; }
         .btn-sm { width: auto; padding: 7px 14px; font-size: 12px; display: inline-block; }
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 1000; align-items: center; justify-content: center; }
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 5000; align-items: center; justify-content: center; }
         .modal.active { display: flex; }
         .modal-content { background: #1a1a1a; border: 1px solid #444; border-radius: 12px; padding: 28px; width: 92%; max-width: 620px; max-height: 92vh; overflow-y: auto; box-shadow: 0 10px 40px rgba(0,0,0,0.9); position: relative; }
         .modal-header { font-size: 19px; font-weight: bold; margin-bottom: 18px; color: #00d4ff; }
@@ -49,21 +50,43 @@
         .admin-table th { text-align: left; padding: 12px 8px; background: #222; color: #aaa; border: 1px solid #333; }
         .admin-table td { padding: 12px 8px; border: 1px solid #222; }
         .admin-footer { background: #1a3a3a; padding: 10px; border-radius: 0 0 8px 8px; border: 1px solid #333; border-top: none; display: flex; justify-content: flex-end; gap: 20px; font-size: 12px; font-weight: bold; }
+        
+        /* MÓVIL OPTIMIZADO PARA TRANSPORTISTAS */
+        @media (max-width: 480px) {
+            .sidebar { width: 100%; position: absolute; z-index: 2000; height: 100%; }
+            .uber-job-card { padding: 12px; margin-bottom: 10px; }
+            .job-header { flex-direction: column; align-items: flex-start; gap: 5px; }
+            .job-price { font-size: 18px; }
+            .btn-sm { padding: 10px; width: 100%; text-align: center; margin-top: 5px; }
+            .map-container { height: 50vh; flex: none; }
+            .container { flex-direction: column; overflow-y: auto; }
+            body { overflow: auto; }
+        }
+        
         .btn-whatsapp { background: #25d366; color: #fff; }
         .btn-reject { background: #ff4b4b; color: #fff; }
         .btn-accept { background: #4ade80; color: #000; }
+        
         .calendar-container { margin-bottom: 15px; background: #222; padding: 10px; border-radius: 8px; border: 1px solid #333; }
         .finance-card { background: #1a1a1a; border: 1px solid #333; border-radius: 8px; padding: 15px; margin-bottom: 10px; }
         .finance-row { display: flex; justify-content: space-between; margin-bottom: 5px; font-size: 13px; }
         .finance-label { color: #aaa; }
         .finance-value { font-weight: bold; color: #00d4ff; }
-        #gpsView { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 3000; flex-direction: column; }
+        
+        /* NAVEGACIÓN GPS MÓVIL */
+        #gpsView { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 6000; flex-direction: column; }
         #gpsView.active { display: flex; }
         .gps-header { background: #1a1a1a; padding: 15px; border-bottom: 1px solid #333; display: flex; justify-content: space-between; align-items: center; }
         .gps-map { flex: 1; width: 100%; }
         .gps-instructions { background: #fff; padding: 20px; border-top: 1px solid #333; font-size: 16px; font-weight: bold; color: #000; text-align: center; box-shadow: 0 -5px 15px rgba(0,0,0,0.2); }
+        .leaflet-routing-container { background: white !important; color: black !important; padding: 10px; border-radius: 8px; font-size: 12px; max-height: 200px; overflow-y: auto; box-shadow: 0 2px 10px rgba(0,0,0,0.3); }
+        .leaflet-routing-alt h2, .leaflet-routing-alt h3 { color: black !important; }
+        .leaflet-routing-instruction-text { color: black !important; }
+        
+        /* EDICIÓN DE PERFILES */
         .edit-input { width: 100%; padding: 8px; background: #333; border: 1px solid #444; border-radius: 4px; color: #fff; font-size: 12px; margin-bottom: 10px; }
         .history-item { background: #222; padding: 10px; border-radius: 6px; margin-bottom: 8px; font-size: 11px; border-left: 3px solid #00d4ff; }
+        
         .status-badge { padding: 3px 8px; border-radius: 4px; font-size: 10px; font-weight: 700; }
         .status-pending { background: #f59e0b22; color: #f59e0b; }
         .status-in_progress { background: #3b82f622; color: #3b82f6; }
@@ -91,397 +114,1259 @@
         .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; font-size: 13px; }
         .detail-item { background: #222; padding: 10px; border-radius: 6px; border: 1px solid #333; }
         .detail-label { color: #888; font-size: 11px; margin-bottom: 4px; }
+        
+        /* ESTILOS REGISTRO */
         .register-link { text-align: center; margin-top: 15px; font-size: 13px; color: #aaa; }
         .register-link span { color: #00d4ff; cursor: pointer; font-weight: bold; }
         .register-type-selector { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
         .register-type-btn { padding: 15px; background: #2a2a2a; border: 2px solid #444; border-radius: 8px; color: #fff; cursor: pointer; text-align: center; font-size: 13px; transition: 0.3s; }
         .register-type-btn.active { border-color: #00d4ff; background: #1a3a3a; }
-        .factura-header { border-bottom: 1px solid #333; padding-bottom: 15px; margin-bottom: 15px; }
-        .factura-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #222; }
         
-        @media (max-width: 480px) {
-            .sidebar { width: 100%; position: absolute; z-index: 2000; height: 100%; }
-            .uber-job-card { padding: 12px; margin-bottom: 10px; }
-            .job-header { flex-direction: column; align-items: flex-start; gap: 5px; }
-            .job-price { font-size: 18px; }
-            .btn-sm { padding: 10px; width: 100%; text-align: center; margin-top: 5px; }
-        }
+        /* MEJORAS INTERFAZ FACTURA Y FICHA (MODELO) */
+        .factura-header { border-bottom: 1px solid #333; padding-bottom: 15px; margin-bottom: 15px; }
+        .factura-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 13px; }
+        .factura-label { color: #aaa; }
+        .factura-value { font-weight: 600; text-align: right; }
+        .factura-total { border-top: 2px solid #00d4ff; padding-top: 15px; margin-top: 15px; display: flex; justify-content: space-between; align-items: center; }
+        .factura-total-label { font-size: 16px; font-weight: bold; }
+        .factura-total-value { font-size: 24px; font-weight: 800; color: #00d4ff; }
+        .ficha-header { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; background: #222; padding: 15px; border-radius: 10px; }
+        .ficha-avatar { width: 50px; height: 50px; background: #333; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; color: #00d4ff; border: 2px solid #00d4ff; }
+        .ficha-title { flex: 1; }
+        .ficha-name { font-weight: bold; font-size: 16px; }
+        .ficha-rating { font-size: 12px; color: #f59e0b; }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="sidebar" id="sidebar">
-            <!-- SECCIÓN LOGIN -->
-            <div class="section active" id="loginSection">
-                <div class="logo"><i class="fas fa-truck"></i> MudanzasHub</div>
-                <div style="text-align:center; margin-bottom:30px; color:#00d4ff;">
-                    <i class="fas fa-map-location-dot" style="font-size:40px; margin-bottom:10px; display:block;"></i>
-                    <div style="font-size:12px; color:#aaa;">Solución Total de Mudanzas</div>
-                </div>
 
-                <div class="form-group">
-                    <label>Email</label>
-                    <input type="email" id="loginEmail" class="search-input" placeholder="correo@ejemplo.com">
-                </div>
-                <div class="form-group">
-                    <label>Contraseña</label>
-                    <input type="password" id="loginPassword" class="search-input" placeholder="Contraseña">
-                </div>
-                <button class="btn" id="loginBtn">Iniciar Sesión</button>
-                <div class="register-link">¿No tienes cuenta? <span id="goRegisterBtn">Registrarse</span></div>
-            </div>
-
-            <!-- SECCIÓN CLIENTE -->
-            <div class="section" id="clientSection">
-                <div class="logo"><i class="fas fa-truck"></i> MudanzasHub</div>
-                <div class="user-greeting"><i class="fas fa-user"></i> <span id="clientNameDisplay">Cliente</span></div>
-                <button class="btn btn-secondary logoutBtn">Cerrar Sesión</button>
-                
-                <div class="search-container">
-                    <label style="font-size:12px; color:#aaa; margin-bottom:5px; display:block;">Origen</label>
-                    <input type="text" id="originSearch" class="search-input" placeholder="¿De dónde salen las cosas?">
-                    <div id="originSuggestions" class="search-suggestions"></div>
-                </div>
-                <div class="search-container">
-                    <label style="font-size:12px; color:#aaa; margin-bottom:5px; display:block;">Destino</label>
-                    <input type="text" id="destinationSearch" class="search-input" placeholder="¿A dónde las llevamos?">
-                    <div id="destinationSuggestions" class="search-suggestions"></div>
-                </div>
-
-                <div class="form-group">
-                    <label>Tipo de Vehículo</label>
-                    <div class="vehicle-selector" id="vehicleSelector">
-                        <div class="vehicle-option active" data-vehicle="pickup">Pickup</div>
-                        <div class="vehicle-option" data-vehicle="buseta">Buseta</div>
-                        <div class="vehicle-option" data-vehicle="camion">Camión</div>
-                    </div>
-                </div>
-
-                <button class="btn" id="searchTransportersBtn">Ver Ofertas Disponibles</button>
-                
-                <div id="transportistasList" style="margin-top:20px;"></div>
-            </div>
-
-            <!-- SECCIÓN TRANSPORTISTA -->
-            <div class="section" id="transporterSection">
-                <div class="logo"><i class="fas fa-truck"></i> MudanzasHub</div>
-                <div class="user-greeting"><i class="fas fa-id-card"></i> <span id="transNameDisplay">Transportista</span></div>
-                <button class="btn btn-secondary logoutBtn">Cerrar Sesión</button>
-                
-                <div class="tabs">
-                    <button class="tab-btn active" data-tab="jobs">Ofertas</button>
-                    <button class="tab-btn" data-tab="active">En Curso</button>
-                    <button class="tab-btn" data-tab="history">Historial</button>
-                </div>
-                <div id="jobsTab" class="tab-content active"></div>
-                <div id="activeTab" class="tab-content"></div>
-                <div id="historyTab" class="tab-content">
-                    <div style="background:#222; padding:10px; border-radius:8px; margin-bottom:10px; text-align:center;">
-                        <div style="font-size:11px; color:#aaa;">Ganancias Totales</div>
-                        <div id="totalEarnings" style="font-size:20px; font-weight:bold; color:#4ade80;">₡0</div>
-                    </div>
-                    <div id="historyList"></div>
-                </div>
-            </div>
-
-            <!-- SECCIÓN ADMINISTRADOR -->
-            <div class="section" id="adminSection">
-                <div class="logo"><i class="fas fa-shield-alt"></i> Admin Panel</div>
-                <button class="btn btn-secondary logoutBtn">Cerrar Sesión</button>
-                <div class="tabs">
-                    <button class="tab-btn active" data-tab="moves">Mudanzas</button>
-                    <button class="tab-btn" data-tab="partners">Socios</button>
-                    <button class="tab-btn" data-tab="clients">Clientes</button>
-                </div>
-                <div id="movesTab" class="tab-content active">
-                    <div style="margin-bottom:10px; font-weight:bold; color:#00d4ff;">Mudanzas del Sistema</div>
-                    <div id="adminMovesList"></div>
-                </div>
-                <div id="partnersTab" class="tab-content">
-                    <div style="margin-bottom:10px; font-weight:bold; color:#00d4ff;">Lista de Socios</div>
-                    <button class="btn btn-secondary" id="addPartnerBtn" style="margin-bottom:10px;">+ Agregar Socio</button>
-                    <div id="adminPartnersList"></div>
-                </div>
-                <div id="clientsTab" class="tab-content">
-                    <div style="margin-bottom:10px; font-weight:bold; color:#00d4ff;">Lista de Clientes</div>
-                    <button class="btn btn-secondary" id="addClientAdminBtn" style="margin-bottom:10px;">+ Agregar Cliente</button>
-                    <div id="adminClientsList"></div>
-                </div>
-            </div>
-        </div>
-        <div class="map-container">
-            <div id="map"></div>
-            <div class="nav-overlay" id="navOverlay">
-                <span id="navDistance">0 km</span>
-                <button class="btn btn-sm" id="closeNavBtn">Cerrar</button>
-            </div>
-            <div id="gpsView">
-                <div class="gps-header">
-                    <span>Navegación GPS</span>
-                    <button id="closeGpsBtn" class="btn btn-sm">Cerrar</button>
-                </div>
-                <div class="gps-map" id="gpsMap"></div>
-                <div class="gps-instructions" id="gpsInstructions">Iniciando navegación...</div>
-            </div>
-        </div>
-    </div>
-
-    <!-- MODALES -->
-    <div class="modal" id="partnerDetailModal">
-        <div class="modal-content">
-            <button class="modal-close" onclick="closeModal('partnerDetailModal')">×</button>
-            <div class="modal-header">Detalles del Socio</div>
-            <div id="partnerDetailContent"></div>
-        </div>
-    </div>
-
-    <div class="modal" id="clientDetailModal">
-        <div class="modal-content">
-            <button class="modal-close" onclick="closeModal('clientDetailModal')">×</button>
-            <div class="modal-header">Detalles del Cliente</div>
-            <div id="clientDetailContent"></div>
-            <div id="clientHistoryList" style="margin-top:15px;"></div>
-            <div style="display:flex; gap:10px; margin-top:15px;">
-                <button class="btn" id="saveClientBtn">Guardar Cambios</button>
-                <button class="btn btn-whatsapp" id="msgClientBtn">
-                    <i class="fab fa-whatsapp"></i> WhatsApp
-                </button>
-                <button class="btn btn-reject" id="deleteClientBtn">Borrar</button>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal" id="addClientModal">
-        <div class="modal-content">
-            <button class="modal-close" onclick="closeModal('addClientModal')">×</button>
-            <div class="modal-header">Agregar Cliente</div>
+<div class="container">
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+        <div class="logo"><i class="fas fa-truck-moving"></i> MudanzasHub CR</div>
+        
+        <!-- SECCIÓN AUTENTICACIÓN -->
+        <div id="authSection" class="section active">
+            <div class="user-greeting"><i class="fas fa-shield-alt"></i> Acceso Seguro</div>
             <div class="form-group">
-                <label>Nombre</label>
-                <input type="text" id="addCName" class="search-input" placeholder="Nombre completo">
-            </div>
-            <div class="form-group">
-                <label>Email</label>
-                <input type="email" id="addCEmail" class="search-input" placeholder="correo@ejemplo.com">
+                <label>Correo Electrónico</label>
+                <input type="email" id="authEmail" class="search-input" placeholder="ejemplo@correo.com">
             </div>
             <div class="form-group">
                 <label>Contraseña</label>
-                <input type="password" id="addCPass" class="search-input" placeholder="Contraseña">
+                <input type="password" id="authPassword" class="search-input" placeholder="••••••••">
             </div>
             <div class="form-group">
-                <label>Teléfono (WhatsApp)</label>
-                <input type="tel" id="addCPhone" class="search-input" placeholder="8888-8888">
+                <label>Tipo de Usuario</label>
+                <select id="authRole" class="search-input">
+                    <option value="client">Cliente</option>
+                    <option value="transporter">Socio Transportista</option>
+                    <option value="admin">Administrador</option>
+                </select>
+            </div>
+            <button id="loginBtn" class="btn">Iniciar Sesión</button>
+            <div id="connStatus" style="font-size:11px; text-align:center; margin-top:10px; color:#4ade80;">✅ Firebase Conectado</div>
+            <div class="register-link">¿No tienes cuenta? <span id="showRegisterBtn">Regístrate aquí</span></div>
+        </div>
+
+        <!-- SECCIÓN REGISTRO -->
+        <div id="registerSection" class="section">
+            <div class="user-greeting"><i class="fas fa-user-plus"></i> Crear Nueva Cuenta</div>
+            <div class="register-type-selector">
+                <div id="regTypeClient" class="register-type-btn active">Cliente</div>
+                <div id="regTypeTrans" class="register-type-btn">Socio</div>
+            </div>
+            
+            <div class="form-group">
+                <label>Correo Electrónico</label>
+                <input type="email" id="regEmail" class="search-input">
             </div>
             <div class="form-group">
-                <label>Cédula</label>
-                <input type="text" id="addCId" class="search-input" placeholder="1-1111-1111">
+                <label>Contraseña</label>
+                <input type="password" id="regPass" class="search-input">
             </div>
-            <button class="btn" id="saveNewClientBtn">Crear Cliente</button>
+
+            <!-- Campos Cliente -->
+            <div id="clientRegForm">
+                <div class="form-group"><label>Nombre Completo</label><input type="text" id="regName" class="search-input"></div>
+                <div class="form-group"><label>Cédula</label><input type="text" id="regId" class="search-input"></div>
+                <div class="form-group"><label>Teléfono</label><input type="text" id="regPhone" class="search-input"></div>
+                <div class="form-group"><label>Ubicación</label><input type="text" id="regLoc" class="search-input"></div>
+            </div>
+
+            <!-- Campos Transportista -->
+            <div id="transRegForm" style="display:none;">
+                <div class="form-group"><label>Nombre Completo</label><input type="text" id="regTName" class="search-input"></div>
+                <div class="form-group"><label>Cédula</label><input type="text" id="regTId" class="search-input"></div>
+                <div class="form-group"><label>Teléfono</label><input type="text" id="regTPhone" class="search-input"></div>
+                <div class="form-group"><label>Edad</label><input type="number" id="regTAge" class="search-input"></div>
+                <div class="form-group"><label>Discapacidad</label><select id="regTPhys" class="search-input"><option value="no">No</option><option value="si">Sí</option></select></div>
+                <div class="form-group"><label>Vehículo (Marca/Modelo)</label><input type="text" id="regTVehicle" class="search-input"></div>
+                <div class="form-group"><label>Placa</label><input type="text" id="regTPlate" class="search-input"></div>
+                <div class="form-group"><label>Tipo Licencia</label><input type="text" id="regTLicense" class="search-input"></div>
+                <div class="form-group"><label>Póliza de Seguro</label><input type="text" id="regTInsurance" class="search-input"></div>
+            </div>
+
+            <button id="executeRegisterBtn" class="btn">Completar Registro</button>
+            <button id="backToLoginBtn" class="btn btn-secondary" style="margin-top:10px;">Volver al Login</button>
+        </div>
+
+        <!-- SECCIÓN CLIENTE -->
+        <div id="clientSection" class="section">
+            <div class="user-greeting">
+                <i class="fas fa-user-circle"></i> Hola, <span id="clientNameDisplay">Cargando...</span>
+                <button class="logoutBtn" style="margin-left:auto; background:none; border:none; color:#ff4b4b; cursor:pointer;"><i class="fas fa-sign-out-alt"></i></button>
+            </div>
+            
+            <div class="form-group">
+                <label>Punto de Origen</label>
+                <div class="search-container">
+                    <input type="text" id="originSearch" class="search-input" placeholder="¿Desde dónde?">
+                    <div id="originSuggestions" class="search-suggestions"></div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Punto de Destino</label>
+                <div class="search-container">
+                    <input type="text" id="destinationSearch" class="search-input" placeholder="¿Hacia dónde?">
+                    <div id="destinationSuggestions" class="search-suggestions"></div>
+                </div>
+            </div>
+
+            <label class="form-group label">Tipo de Vehículo</label>
+            <div class="vehicle-selector" id="vehicleSelector">
+                <div class="vehicle-option active" data-vehicle="pickup"><i class="fas fa-truck-pickup"></i><div style="font-size:10px;">Pickup</div></div>
+                <div class="vehicle-option" data-vehicle="buseta"><i class="fas fa-shuttle-van"></i><div style="font-size:10px;">Buseta</div></div>
+                <div class="vehicle-option" data-vehicle="camion"><i class="fas fa-truck"></i><div style="font-size:10px;">Camión</div></div>
+            </div>
+
+            <label class="form-group label">Tipo de Servicio</label>
+            <div class="vehicle-selector" id="serviceSelector">
+                <div class="vehicle-option active" data-service="exterior"><i class="fas fa-door-open"></i><div style="font-size:10px;">Afuera</div></div>
+                <div class="vehicle-option" data-service="acarreo"><i class="fas fa-couch"></i><div style="font-size:10px;">Acarreo</div></div>
+            </div>
+
+            <div class="form-group">
+                <label>Peso Estimado (kg)</label>
+                <input type="number" id="loadWeight" class="search-input" value="100">
+            </div>
+            <div class="form-group">
+                <label>Dificultad de Acceso</label>
+                <select id="accessType" class="search-input">
+                    <option value="easy">Fácil (Planta baja)</option>
+                    <option value="medium">Medio (Escaleras)</option>
+                    <option value="hard">Difícil (Pisos altos/Estrecho)</option>
+                </select>
+            </div>
+
+            <button id="searchTransportersBtn" class="btn">Buscar Transportistas Disponibles</button>
+            
+            <div id="transportistasList" style="margin-top:20px;"></div>
+        </div>
+
+        <!-- SECCIÓN TRANSPORTISTA -->
+        <div id="transporterSection" class="section">
+            <div class="user-greeting">
+                <i class="fas fa-id-badge"></i> Socio: <span id="transNameDisplay">Cargando...</span>
+                <button class="logoutBtn" style="margin-left:auto; background:none; border:none; color:#ff4b4b; cursor:pointer;"><i class="fas fa-sign-out-alt"></i></button>
+            </div>
+
+            <div class="finance-card">
+                <div class="finance-row"><span class="finance-label">Ganancias Netas (80%)</span><span class="finance-value" id="totalEarnings">₡0</span></div>
+                <div class="finance-row"><span class="finance-label">Estado</span><span class="status-badge status-completed">Activo</span></div>
+            </div>
+
+            <div class="tabs">
+                <button class="tab-btn active" data-tab="jobs">Disponibles</button>
+                <button class="tab-btn" data-tab="active">En Curso</button>
+                <button class="tab-btn" data-tab="history">Historial</button>
+            </div>
+
+            <div id="jobsTab" class="tab-content active"></div>
+            <div id="activeTab" class="tab-content"></div>
+            <div id="historyTab" class="tab-content">
+                <div id="historyList"></div>
+            </div>
+        </div>
+
+        <!-- SECCIÓN ADMIN -->
+        <div id="adminSection" class="section">
+            <div class="user-greeting">
+                <i class="fas fa-user-shield"></i> Panel de Control Admin
+                <button class="logoutBtn" style="margin-left:auto; background:none; border:none; color:#ff4b4b; cursor:pointer;"><i class="fas fa-sign-out-alt"></i></button>
+            </div>
+
+            <div class="tabs">
+                <button class="tab-btn active" data-tab="adminMoves">Mudanzas</button>
+                <button class="tab-btn" data-tab="adminFinance">Finanzas</button>
+                <button class="tab-btn" data-tab="adminUsers">Usuarios</button>
+            </div>
+
+            <div id="adminMovesTab" class="tab-content active">
+                <div class="form-group">
+                    <label>Filtrar por Día</label>
+                    <input type="date" id="movesDateFilter" class="search-input">
+                </div>
+                <div style="overflow-x:auto;">
+                    <table class="admin-table" id="adminMovesTable">
+                        <thead><tr><th>ID</th><th>Cliente</th><th>Socio</th><th>Fecha</th><th>Hora</th><th>Total</th><th>Comisión</th><th>Estado</th></tr></thead>
+                        <tbody id="movesTableBody"></tbody>
+                    </table>
+                </div>
+                <button id="exportMovesPdfBtn" class="btn btn-secondary" style="margin-top:15px;"><i class="fas fa-file-pdf"></i> Exportar PDF</button>
+            </div>
+
+            <div id="adminFinanceTab" class="tab-content">
+                <div class="calendar-container">
+                    <label style="font-size:12px; color:#aaa;">Seleccionar Mes</label>
+                    <input type="month" id="financeCalendar" class="search-input" style="margin-top:5px;">
+                </div>
+                <div class="finance-card">
+                    <div class="finance-row"><span class="finance-label">Ventas Totales</span><span class="finance-value" id="totalAdminSales">₡0</span></div>
+                    <div class="finance-row"><span class="finance-label">Comisiones (20%)</span><span class="finance-value" id="totalAdminComm">₡0</span></div>
+                    <hr style="border:0; border-top:1px solid #333; margin:10px 0;">
+                    <div class="finance-row"><span class="finance-label">Utilidad Empresa</span><span class="finance-value" id="companyRegal" style="color:#4ade80;">₡0</span></div>
+                    <div class="finance-row"><span class="finance-label">Pago a Socios</span><span class="finance-value" id="partnersRegal">₡0</span></div>
+                    <div class="finance-row"><span class="finance-label">Balance Neto (Post-Gastos)</span><span class="finance-value" id="netBalance">₡0</span></div>
+                </div>
+            </div>
+
+            <div id="adminUsersTab" class="tab-content">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                    <h4 style="font-size:14px; color:#00d4ff;">Socios Transportistas</h4>
+                </div>
+                <div id="adminPartnersList" style="max-height:200px; overflow-y:auto; background:#222; border-radius:8px; border:1px solid #333;"></div>
+                
+                <div style="display:flex; justify-content:space-between; align-items:center; margin:20px 0 10px;">
+                    <h4 style="font-size:14px; color:#00d4ff;">Clientes Registrados</h4>
+                    <button class="btn btn-sm" id="addNewClientBtn" onclick="openModal('addClientModal')">+ Nuevo</button>
+                </div>
+                <div id="adminClientsList" style="max-height:200px; overflow-y:auto; background:#222; border-radius:8px; border:1px solid #333;"></div>
+            </div>
         </div>
     </div>
 
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.js"></script>
+    <!-- MAPA -->
+    <div class="map-container">
+        <div id="map"></div>
+        <div id="navOverlay" class="nav-overlay">
+            <div style="color:#00d4ff; font-size:20px;"><i class="fas fa-location-arrow"></i></div>
+            <div>
+                <div style="font-size:10px; color:#aaa; text-transform:uppercase;">Distancia en Ruta</div>
+                <div id="navDistance" style="font-size:18px; font-weight:bold;">0.0 km</div>
+            </div>
+            <button id="finishNavBtn" class="btn btn-sm btn-reject" style="border-radius:20px;">Finalizar</button>
+        </div>
+    </div>
+</div>
 
-    <script>
-        // ============================================
-        // DATOS DE PRUEBA
-        // ============================================
-        let transporters = [
-            { id: 1, email: 'carlos@test.com', password: '1234', name: 'Carlos Rodríguez', phone: '88881111', plate: 'BC-123', vehicle: 'Toyota Hiace', rating: 4.8, model: '2022', license: 'B2', insurance: 'INS-992', emergency: '88880000', role: 'transporter' },
-            { id: 2, email: 'miguel@test.com', password: '1234', name: 'Miguel Vargas', phone: '88882222', plate: 'CL-456', vehicle: 'Hino 300', rating: 4.6, model: '2021', license: 'B3', insurance: 'INS-112', emergency: '88880001', role: 'transporter' },
-            { id: 3, email: 'ana@test.com', password: '1234', name: 'Ana Quesada', phone: '88883333', plate: 'PK-789', vehicle: 'Nissan Frontier', rating: 4.9, model: '2023', license: 'B1', insurance: 'INS-445', emergency: '88880002', role: 'transporter' }
-        ];
+<!-- MODALES -->
+<div id="facturaModal" class="modal">
+    <div class="modal-content">
+        <button class="modal-close" data-close="facturaModal">&times;</button>
+        <div class="modal-header">Confirmación de Servicio</div>
+        
+        <div id="fichaTransportista"></div>
+        
+        <div class="factura-header">
+            <div style="font-size:12px; color:#aaa; margin-bottom:5px;">DETALLES DEL VIAJE</div>
+            <div id="facturaDetails"></div>
+        </div>
 
-        let registeredClients = [
-            { email: 'cliente@test.com', password: '1234', name: 'Laura Fernández', phone: '88880000', idNum: '1-1111-1111', location: 'San José', role: 'client' }
-        ];
+        <div class="factura-total">
+            <div class="factura-total-label">TOTAL A PAGAR</div>
+            <div class="factura-total-value" id="facturaTotal">₡0</div>
+        </div>
 
-        let admins = [
-            { email: 'admin@test.com', password: 'admin123', name: 'Administrador', role: 'admin' }
-        ];
+        <div class="alert-box alert-info" style="margin-top:20px;">
+            <i class="fas fa-info-circle"></i>
+            <div>Para confirmar, adjunta el comprobante de SINPE Móvil al 8888-0000.</div>
+        </div>
 
-        let currentUser = null;
+        <div class="upload-area" id="uploadArea">
+            <i class="fas fa-cloud-upload-alt upload-icon"></i>
+            <div class="upload-text" id="uploadText">Haz clic para subir comprobante</div>
+            <input type="file" id="comprobanteFileInput" style="display:none;" accept="image/*">
+        </div>
 
-        // ============================================
-        // FUNCIONES DE UTILIDAD
-        // ============================================
-        function openModal(modalId) {
-            document.getElementById(modalId).classList.add('active');
+        <button id="confirmMoveBtn" class="btn" disabled>Enviar Solicitud al Socio</button>
+    </div>
+</div>
+
+<div id="partnerDetailModal" class="modal">
+    <div class="modal-content">
+        <button class="modal-close" data-close="partnerDetailModal">&times;</button>
+        <div class="modal-header">Expediente del Socio</div>
+        <div id="partnerDetailContent" class="detail-grid"></div>
+    </div>
+</div>
+
+<div id="clientDetailModal" class="modal">
+    <div class="modal-content">
+        <button class="modal-close" data-close="clientDetailModal">&times;</button>
+        <div class="modal-header">Expediente del Cliente</div>
+        <div id="clientDetailContent"></div>
+        <div style="margin-top:15px; font-weight:bold; color:#00d4ff; border-bottom:1px solid #333; padding-bottom:5px;">Historial de Mudanzas</div>
+        <div id="clientHistoryList" style="margin-top:10px; max-height:250px; overflow-y:auto;"></div>
+        <div style="display:flex; gap:10px; margin-top:20px;">
+            <button class="btn" id="saveClientBtn">Guardar Cambios</button>
+            <button class="btn btn-whatsapp" id="msgClientBtn">Mensaje</button>
+            <button class="btn btn-reject" id="deleteClientBtn">Borrar</button>
+        </div>
+    </div>
+</div>
+
+<div id="addClientModal" class="modal">
+    <div class="modal-content">
+        <button class="modal-close" data-close="addClientModal">&times;</button>
+        <div class="modal-header">Registrar Nuevo Cliente</div>
+        <div class="form-group"><label>Nombre</label><input type="text" id="addCName" class="search-input"></div>
+        <div class="form-group"><label>Email</label><input type="email" id="addCEmail" class="search-input"></div>
+        <div class="form-group"><label>Contraseña</label><input type="password" id="addCPass" class="search-input"></div>
+        <div class="form-group"><label>Teléfono</label><input type="text" id="addCPhone" class="search-input"></div>
+        <div class="form-group"><label>Cédula</label><input type="text" id="addCId" class="search-input"></div>
+        <button class="btn" id="saveNewClientBtn">Crear Cliente</button>
+    </div>
+</div>
+
+<div id="codeModal" class="modal">
+    <div class="modal-content" style="max-width:400px; text-align:center;">
+        <div class="modal-header">Finalizar Servicio</div>
+        <p style="font-size:13px; color:#aaa; margin-bottom:20px;">Solicita al cliente el código de 4 dígitos para concluir el viaje.</p>
+        <input type="number" id="confirmCodeInput" class="search-input" placeholder="0000" style="text-align:center; font-size:30px; letter-spacing:10px; margin-bottom:20px;">
+        <button id="validateCodeBtn" class="btn">Validar y Finalizar</button>
+        <button class="btn btn-secondary" style="margin-top:10px;" data-close="codeModal">Cancelar</button>
+    </div>
+</div>
+
+<div id="gpsView">
+    <div class="gps-header">
+        <div style="color:#00d4ff; font-weight:bold;"><i class="fas fa-navigation"></i> NAVEGACIÓN EN VIVO</div>
+        <button id="closeGpsBtn" style="background:none; border:none; color:#fff; font-size:20px;"><i class="fas fa-times"></i></button>
+    </div>
+    <div id="gpsMap" class="gps-map"></div>
+    <div class="gps-instructions" id="gpsInstruction">Calculando ruta óptima...</div>
+</div>
+
+<!-- SCRIPTS -->
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getDatabase, ref, set, push, onValue, update, remove } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+    const firebaseConfig = {
+        databaseURL: "https://mudanzashub-cr-default-rtdb.firebaseio.com"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    // VARIABLES GLOBALES
+    let map, gpsMap, routingControl, gpsRouting, userMarker, watchId;
+    let currentUser = null;
+    let selectedOrigin = null;
+    let selectedDestination = null;
+    let markers = { origin: null, destination: null };
+    let searchTimeout = null;
+    let selectedVehicle = 'pickup';
+    let selectedServiceType = 'exterior';
+    let selectedTransporter = null;
+    let pendingMoveData = null;
+    let activeNavMove = null;
+
+    // CONFIGURACIÓN DE VEHÍCULOS (Consumo y Capacidad)
+    const vehicleConfig = {
+        pickup: { multiplier: 1.0, fuelCost: 1.0, capacity: 800, name: 'Pickup' },
+        buseta: { multiplier: 1.4, fuelCost: 1.3, capacity: 1500, name: 'Buseta' },
+        camion: { multiplier: 1.8, fuelCost: 1.7, capacity: 3500, name: 'Camión' }
+    };
+
+    let transporters = [];
+    let registeredClients = [];
+
+    // Sincronización de usuarios con Firebase
+    onValue(ref(db, 'users/transporters'), (snap) => {
+        const data = snap.val();
+        if (data) {
+            transporters = Object.values(data);
+        } else {
+            transporters = [
+                { id: 1, email: 'carlos@test.com', password: '1234', name: 'Carlos Rodríguez', phone: '88881111', plate: 'BC-123', vehicle: 'Toyota Hiace', rating: 4.8, model: '2022', license: 'B2', insurance: 'INS-992', emergency: '88880000', role: 'transporter' },
+                { id: 2, email: 'miguel@test.com', password: '1234', name: 'Miguel Vargas', phone: '88882222', plate: 'CL-456', vehicle: 'Hino 300', rating: 4.6, model: '2021', license: 'B3', insurance: 'INS-112', emergency: '88880001', role: 'transporter' },
+                { id: 3, email: 'ana@test.com', password: '1234', name: 'Ana Quesada', phone: '88883333', plate: 'PK-789', vehicle: 'Nissan Frontier', rating: 4.9, model: '2023', license: 'B1', insurance: 'INS-445', emergency: '88880002', role: 'transporter' }
+            ];
+        }
+        if(currentUser && currentUser.role === 'admin') listenToAdmin();
+    });
+    onValue(ref(db, 'users/clients'), (snap) => {
+        const data = snap.val();
+        if (data) {
+            registeredClients = Object.values(data);
+        } else {
+            registeredClients = [
+                { email: 'cliente@test.com', password: '1234', name: 'Laura Fernández', phone: '88880000', idNum: '1-1111-1111', location: 'San José', role: 'client' }
+            ];
+        }
+        if(currentUser && currentUser.role === 'admin') listenToAdmin();
+    });
+
+    // INICIALIZAR MAPA
+    map = L.map('map').setView([9.9281, -84.0907], 12);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+    const openModal = (id) => {
+        const modal = document.getElementById(id);
+        modal.classList.add('active');
+        // Forzar redibujado para móviles
+        modal.style.display = 'flex';
+    };
+    const closeModal = (id) => {
+        const modal = document.getElementById(id);
+        modal.classList.remove('active');
+        modal.style.display = 'none';
+    };
+
+    // SEGURIDAD: Control de intentos fallidos de login
+    let _loginAttempts = 0;
+    let _loginBlockedUntil = 0;
+    const _MAX_ATTEMPTS = 5;
+    const _BLOCK_MS = 30000;
+
+    // LOGIN
+    document.getElementById('loginBtn').addEventListener('click', () => {
+        const now = Date.now();
+
+        // Bloqueo temporal por exceso de intentos
+        if (now < _loginBlockedUntil) {
+            const secsLeft = Math.ceil((_loginBlockedUntil - now) / 1000);
+            document.getElementById('connStatus').innerText = '⛔ Demasiados intentos. Espera ' + secsLeft + 's.';
+            document.getElementById('connStatus').style.color = '#ff6b6b';
+            return;
         }
 
-        function closeModal(modalId) {
-            document.getElementById(modalId).classList.remove('active');
+        const email = document.getElementById('authEmail').value.trim().toLowerCase();
+        const pass = document.getElementById('authPassword').value;
+        const role = document.getElementById('authRole').value;
+
+        // Los tres campos son obligatorios
+        if (!email || !pass || !role) {
+            document.getElementById('connStatus').innerText = '⚠️ Completa todos los campos.';
+            document.getElementById('connStatus').style.color = '#f59e0b';
+            return;
         }
 
-        function showSection(sectionId) {
-            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-            document.getElementById(sectionId).classList.add('active');
+        // Validación estricta: email + contraseña + rol deben coincidir exactamente
+        let _authenticated = false;
+
+        if (role === 'admin' && email === 'admin@test.com' && pass === 'ADMIN') {
+            currentUser = { email, role, name: 'Admin' };
+            _authenticated = true;
+        } else if (role === 'transporter') {
+            const t = transporters.find(x => x.email === email && x.password === pass);
+            if (t) { currentUser = { ...t, role }; _authenticated = true; }
+        } else if (role === 'client') {
+            const c = registeredClients.find(x => x.email === email && x.password === pass);
+            if (c) { currentUser = { ...c, role }; _authenticated = true; }
         }
 
-        // ============================================
-        // FUNCIONES DE WHATSAPP - MEJORADAS
-        // ============================================
-        function sendWhatsAppMessage(phone, message = '') {
-            if (!phone) {
-                alert('No hay teléfono registrado');
-                return;
-            }
-            
-            const cleanPhone = phone.replace(/[^0-9]/g, '');
-            let fullPhone = cleanPhone;
-            if (!cleanPhone.startsWith('506')) {
-                fullPhone = '506' + cleanPhone;
-            }
-            
-            let whatsappUrl = `https://wa.me/${fullPhone}`;
-            if (message) {
-                whatsappUrl += `?text=${encodeURIComponent(message)}`;
-            }
-            
-            window.open(whatsappUrl, '_blank');
-        }
-
-        function sendWhatsAppToTransporter(transporterId) {
-            const transporter = transporters.find(t => t.id == transporterId);
-            if (transporter && transporter.phone) {
-                sendWhatsAppMessage(transporter.phone, `Hola ${transporter.name}, tengo una oferta de mudanza para ti.`);
+        // Intento fallido
+        if (!_authenticated) {
+            _loginAttempts++;
+            document.getElementById('authPassword').value = '';
+            if (_loginAttempts >= _MAX_ATTEMPTS) {
+                _loginBlockedUntil = Date.now() + _BLOCK_MS;
+                _loginAttempts = 0;
+                document.getElementById('loginBtn').disabled = true;
+                document.getElementById('connStatus').innerText = '⛔ Bloqueado 30s por múltiples intentos fallidos.';
+                document.getElementById('connStatus').style.color = '#ff6b6b';
+                setTimeout(() => {
+                    document.getElementById('loginBtn').disabled = false;
+                    document.getElementById('connStatus').innerText = '✅ Firebase Conectado';
+                    document.getElementById('connStatus').style.color = '#4ade80';
+                }, _BLOCK_MS);
             } else {
-                alert('No hay teléfono registrado para este transportista');
+                const _rem = _MAX_ATTEMPTS - _loginAttempts;
+                document.getElementById('connStatus').innerText = '❌ Credenciales incorrectas. Intentos restantes: ' + _rem;
+                document.getElementById('connStatus').style.color = '#ff6b6b';
             }
+            return;
         }
 
-        function sendWhatsAppToClient(clientEmail) {
-            const client = registeredClients.find(c => c.email === clientEmail);
-            if (client && client.phone) {
-                sendWhatsAppMessage(client.phone, `Hola ${client.name}, tu mudanza ha sido asignada.`);
-            } else {
-                alert('No hay teléfono registrado para este cliente');
-            }
+        // Login exitoso
+        _loginAttempts = 0;
+        _loginBlockedUntil = 0;
+        document.getElementById('connStatus').innerText = '✅ Firebase Conectado';
+        document.getElementById('authSection').classList.remove('active');
+        document.getElementById(role + 'Section').classList.add('active');
+        
+        if(role === 'admin') {
+            document.querySelector('.map-container').style.display = 'none';
+            listenToAdmin();
+        } else {
+            document.querySelector('.map-container').style.display = 'block';
+            if(role === 'client') document.getElementById('clientNameDisplay').innerText = currentUser.name;
+            if(role === 'transporter') { document.getElementById('transNameDisplay').innerText = currentUser.name; listenToJobs(); }
+            // Redimensionar mapa después de mostrarlo
+            setTimeout(() => { map.invalidateSize(); }, 200);
         }
+    });
 
-        // ============================================
-        // EVENTOS
-        // ============================================
-        document.addEventListener('DOMContentLoaded', function() {
-            // Login
-            document.getElementById('loginBtn').addEventListener('click', function() {
-                const email = document.getElementById('loginEmail').value;
-                const password = document.getElementById('loginPassword').value;
+    document.querySelectorAll('.logoutBtn').forEach(btn => btn.addEventListener('click', () => location.reload()));
 
-                const user = [...transporters, ...registeredClients, ...admins].find(u => u.email === email && u.password === password);
-                
-                if (user) {
-                    currentUser = user;
-                    if (user.role === 'transporter') {
-                        showSection('transporterSection');
-                        document.getElementById('transNameDisplay').textContent = user.name;
-                    } else if (user.role === 'client') {
-                        showSection('clientSection');
-                        document.getElementById('clientNameDisplay').textContent = user.name;
-                    } else if (user.role === 'admin') {
-                        showSection('adminSection');
-                        document.getElementById('loginEmail').value = '';
-                        document.getElementById('loginPassword').value = '';
-                    }
-                } else {
-                    alert('Email o contraseña incorrectos');
-                }
-            });
+    // LÓGICA DE REGISTRO
+    document.getElementById('showRegisterBtn').addEventListener('click', () => {
+        document.getElementById('authSection').classList.remove('active');
+        document.getElementById('registerSection').classList.add('active');
+    });
 
-            // Logout
-            document.querySelectorAll('.logoutBtn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    currentUser = null;
-                    showSection('loginSection');
-                    document.getElementById('loginEmail').value = '';
-                    document.getElementById('loginPassword').value = '';
-                });
-            });
+    document.getElementById('backToLoginBtn').addEventListener('click', () => {
+        document.getElementById('registerSection').classList.remove('active');
+        document.getElementById('authSection').classList.add('active');
+    });
 
-            // Tabs
-            document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const tab = this.dataset.tab;
-                    const parent = this.closest('.tabs').parentElement;
-                    
-                    parent.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-                    parent.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-                    
-                    this.classList.add('active');
-                    parent.querySelector(`#${tab}Tab`).classList.add('active');
-                });
-            });
+    document.getElementById('regTypeClient').addEventListener('click', () => {
+        document.getElementById('regTypeClient').classList.add('active');
+        document.getElementById('regTypeTrans').classList.remove('active');
+        document.getElementById('clientRegForm').style.display = 'block';
+        document.getElementById('transRegForm').style.display = 'none';
+    });
 
-            // WhatsApp para transportistas
-            document.addEventListener('click', function(e) {
-                if (e.target.id === 'msgPartnerBtn') {
-                    const transporterId = e.target.dataset.tid;
-                    sendWhatsAppToTransporter(transporterId);
-                }
-                if (e.target.id === 'msgClientBtn') {
-                    const clientEmail = e.target.dataset.email;
-                    sendWhatsAppToClient(clientEmail);
-                }
-            });
+    document.getElementById('regTypeTrans').addEventListener('click', () => {
+        document.getElementById('regTypeTrans').classList.add('active');
+        document.getElementById('regTypeClient').classList.remove('active');
+        document.getElementById('transRegForm').style.display = 'block';
+        document.getElementById('clientRegForm').style.display = 'none';
+    });
 
-            // Cerrar modales al hacer clic fuera
-            document.querySelectorAll('.modal').forEach(modal => {
-                modal.addEventListener('click', function(e) {
-                    if (e.target === this) {
-                        this.classList.remove('active');
-                    }
-                });
-            });
+    document.getElementById('executeRegisterBtn').addEventListener('click', () => {
+        const isClient = document.getElementById('regTypeClient').classList.contains('active');
+        const email = document.getElementById('regEmail').value.trim().toLowerCase();
+        const pass = document.getElementById('regPass').value;
 
-            // Admin - Mostrar lista de socios
-            const adminPartnersList = document.getElementById('adminPartnersList');
-            if (adminPartnersList) {
-                transporters.forEach(t => {
-                    const card = document.createElement('div');
-                    card.className = 'transportista-card';
-                    card.innerHTML = `
-                        <div class="transportista-header">
-                            <div class="transportista-name">${t.name}</div>
-                            <div class="transportista-price">⭐ ${t.rating}</div>
-                        </div>
-                        <div style="font-size:12px; color:#aaa; margin-bottom:10px;">
-                            <div>📞 ${t.phone}</div>
-                            <div>🚗 ${t.vehicle}</div>
-                        </div>
-                        <button class="btn btn-whatsapp btn-sm" data-tid="${t.id}" id="msgPartnerBtn">
-                            <i class="fab fa-whatsapp"></i> WhatsApp
-                        </button>
-                    `;
-                    adminPartnersList.appendChild(card);
-                });
-            }
+        if (!email || !pass) return alert('Email y contraseña son obligatorios');
 
-            // Admin - Mostrar lista de clientes
-            const adminClientsList = document.getElementById('adminClientsList');
-            if (adminClientsList) {
-                registeredClients.forEach(c => {
-                    const card = document.createElement('div');
-                    card.className = 'transportista-card';
-                    card.innerHTML = `
-                        <div class="transportista-header">
-                            <div class="transportista-name">${c.name}</div>
-                        </div>
-                        <div style="font-size:12px; color:#aaa; margin-bottom:10px;">
-                            <div>📞 ${c.phone}</div>
-                            <div>📧 ${c.email}</div>
-                        </div>
-                        <button class="btn btn-whatsapp btn-sm" data-email="${c.email}" id="msgClientBtn">
-                            <i class="fab fa-whatsapp"></i> WhatsApp
-                        </button>
-                    `;
-                    adminClientsList.appendChild(card);
-                });
-            }
+        if (isClient) {
+            const newUser = {
+                email, password: pass,
+                name: document.getElementById('regName').value,
+                idNum: document.getElementById('regId').value,
+                phone: document.getElementById('regPhone').value,
+                location: document.getElementById('regLoc').value,
+                role: 'client'
+            };
+            set(ref(db, 'users/clients/' + email.replace('.', '_')), newUser);
+            alert('Registro de Cliente exitoso. Ya puedes iniciar sesión.');
+        } else {
+            const tid = Date.now();
+            const newTrans = {
+                id: tid,
+                email, password: pass,
+                name: document.getElementById('regTName').value,
+                idNum: document.getElementById('regTId').value,
+                phone: document.getElementById('regTPhone').value,
+                age: document.getElementById('regTAge').value,
+                physical: document.getElementById('regTPhys').value,
+                vehicle: document.getElementById('regTVehicle').value,
+                plate: document.getElementById('regTPlate').value,
+                license: document.getElementById('regTLicense').value,
+                insurance: document.getElementById('regTInsurance').value,
+                rating: 5.0,
+                role: 'transporter'
+            };
+            set(ref(db, 'users/transporters/' + tid), newTrans);
+            alert('Registro de Socio exitoso. Ya puedes iniciar sesión.');
+        }
+        document.getElementById('backToLoginBtn').click();
+    });
 
-            console.log('✓ MudanzasHub cargado correctamente');
-            console.log('✓ Transportistas:', transporters.length);
-            console.log('✓ Clientes:', registeredClients.length);
+    // BÚSQUEDA DE UBICACIONES
+    const searchLocations = async (query, type) => {
+        if (query.length < 3) return;
+        const suggestionsDiv = document.getElementById(type + 'Suggestions');
+        suggestionsDiv.innerHTML = '<div style="padding:10px;color:#aaa;">Buscando...</div>';
+        suggestionsDiv.classList.add('active');
+        try {
+            const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}, Costa Rica&limit=6&countrycodes=cr`);
+            const results = await response.json();
+            suggestionsDiv.innerHTML = results.map(r => `
+                <div class="suggestion-item" data-lat="${r.lat}" data-lon="${r.lon}" data-name="${r.display_name.replace(/"/g, '&quot;')}" data-type="${type}">
+                    <div><strong>${r.name || r.display_name.split(',')[0]}</strong></div>
+                    <div class="suggestion-address">${r.display_name.substring(0, 60)}...</div>
+                </div>
+            `).join('');
+        } catch (e) { suggestionsDiv.innerHTML = '<div style="padding:10px;color:#ff6b6b;">Error</div>'; }
+    };
+
+    document.getElementById('originSearch').addEventListener('input', (e) => {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(() => searchLocations(e.target.value, 'origin'), 400);
+    });
+    document.getElementById('destinationSearch').addEventListener('input', (e) => {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(() => searchLocations(e.target.value, 'destination'), 400);
+    });
+
+    document.addEventListener('click', (e) => {
+        const item = e.target.closest('.suggestion-item');
+        if (item) {
+            const { lat, lon, name, type } = item.dataset;
+            selectLocation(parseFloat(lat), parseFloat(lon), name, type);
+        } else if (!e.target.closest('.search-container')) {
+            document.querySelectorAll('.search-suggestions').forEach(s => s.classList.remove('active'));
+        }
+    });
+
+    const selectLocation = (lat, lon, name, type) => {
+        const loc = { lat, lng: lon, name };
+        if (type === 'origin') {
+            selectedOrigin = loc;
+            document.getElementById('originSearch').value = name.split(',')[0];
+            if (markers.origin) map.removeLayer(markers.origin);
+            markers.origin = L.marker([lat, lon], { icon: L.icon({ iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png', shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png', iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34], shadowSize: [41, 41] }) }).addTo(map).bindPopup('Origen');
+        } else {
+            selectedDestination = loc;
+            document.getElementById('destinationSearch').value = name.split(',')[0];
+            if (markers.destination) map.removeLayer(markers.destination);
+            markers.destination = L.marker([lat, lon], { icon: L.icon({ iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png', shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png', iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34], shadowSize: [41, 41] }) }).addTo(map).bindPopup('Destino');
+        }
+        document.querySelectorAll('.search-suggestions').forEach(s => s.classList.remove('active'));
+        if (selectedOrigin && selectedDestination) drawRoute();
+        else map.setView([lat, lon], 14);
+    };
+
+    const drawRoute = () => {
+        if (routingControl) map.removeControl(routingControl);
+        routingControl = L.Routing.control({
+            waypoints: [L.latLng(selectedOrigin.lat, selectedOrigin.lng), L.latLng(selectedDestination.lat, selectedDestination.lng)],
+            show: false,
+            lineOptions: { styles: [{ color: '#00d4ff', opacity: 0.8, weight: 4 }] },
+            createMarker: () => null,
+            addWaypoints: false,
+            draggableWaypoints: false,
+            fitSelectedRoutes: true
+        }).addTo(map);
+        map.fitBounds(L.latLngBounds([selectedOrigin.lat, selectedOrigin.lng], [selectedDestination.lat, selectedDestination.lng]), { padding: [50, 50] });
+    };
+
+    // LÓGICA DE PRECIOS DINÁMICA
+    const calculatePrice = (dist, vehicle, weight, access, service) => {
+        const config = vehicleConfig[vehicle];
+        const basePrice = 12000; // Tarifa base
+        const distPrice = dist * 1100 * config.fuelCost; // Costo por km ajustado por combustible
+        const weightPrice = (weight / 100) * 1500; // Costo por peso
+        const accessMultipliers = { easy: 1, medium: 1.15, hard: 1.3 };
+        const servicePrice = service === 'acarreo' ? 8000 : 0;
+        
+        let total = (basePrice + distPrice + weightPrice) * config.multiplier * accessMultipliers[access] + servicePrice;
+        return Math.round(total);
+    };
+
+    document.getElementById('searchTransportersBtn').addEventListener('click', () => {
+        if (!selectedOrigin || !selectedDestination) return alert('Selecciona origen y destino');
+        const dist = calculateDist(selectedOrigin, selectedDestination);
+        const weight = parseFloat(document.getElementById('loadWeight').value) || 100;
+        const access = document.getElementById('accessType').value;
+        
+        // Generar 3 ofertas basadas en el promedio de los factores
+        const basePrice = calculatePrice(dist, selectedVehicle, weight, access, selectedServiceType);
+        
+        const offers = [
+            { ...transporters[0], price: Math.round(basePrice * 0.95) },
+            { ...transporters[1], price: basePrice },
+            { ...transporters[2], price: Math.round(basePrice * 1.05) }
+        ];
+
+        document.getElementById('transportistasList').innerHTML = offers.map(t => `
+            <div class="transportista-card" data-tid="${t.id}" data-price="${t.price}">
+                <div class="transportista-header">
+                    <div class="transportista-name">${t.name}</div>
+                    <div class="transportista-price">₡${t.price.toLocaleString()}</div>
+                </div>
+                <div style="font-size:11px; color:#bbb; margin-bottom:5px;">
+                    <i class="fas fa-truck"></i> ${t.vehicle} | <i class="fas fa-id-card"></i> ${t.plate}
+                </div>
+                <div style="font-size:11px; color:#bbb;">
+                    <i class="fas fa-phone"></i> ${t.phone} | ⭐ ${t.rating}
+                </div>
+            </div>
+        `).join('');
+    });
+
+    document.getElementById('transportistasList').addEventListener('click', (e) => {
+        const card = e.target.closest('.transportista-card');
+        if (card) {
+            const tid = parseInt(card.dataset.tid);
+            const price = parseInt(card.dataset.price);
+            openFactura(tid, price);
+        }
+    });
+
+    const openFactura = (tid, price) => {
+        selectedTransporter = transporters.find(t => t.id === tid);
+            const now = new Date();
+            pendingMoveData = {
+                client: currentUser.email,
+                clientName: currentUser.name,
+                clientPhone: currentUser.phone || '',
+                transporter: selectedTransporter.id,
+                transporterName: selectedTransporter.name,
+                transporterPhone: selectedTransporter.phone,
+                transporterPlate: selectedTransporter.plate,
+                origin: selectedOrigin,
+                destination: selectedDestination,
+                price: price,
+                vehicle: selectedVehicle,
+                service: selectedServiceType,
+                weight: document.getElementById('loadWeight').value,
+                access: document.getElementById('accessType').value,
+                status: 'pending',
+                code: Math.floor(1000 + Math.random() * 9000),
+                date: now.toLocaleDateString(),
+                time: now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                timestamp: Date.now()
+            };
+
+        // FICHA TÉCNICA (MODELO)
+        document.getElementById('fichaTransportista').innerHTML = `
+            <div class="ficha-header">
+                <div class="ficha-avatar"><i class="fas fa-user-tie"></i></div>
+                <div class="ficha-title">
+                    <div class="ficha-name">${selectedTransporter.name}</div>
+                    <div class="ficha-rating"><i class="fas fa-star"></i> ${selectedTransporter.rating} · Socio Verificado</div>
+                </div>
+            </div>
+            <div class="factura-row"><span class="factura-label">Vehículo:</span><span class="factura-value">${selectedTransporter.vehicle}</span></div>
+            <div class="factura-row"><span class="factura-label">Placa:</span><span class="factura-value">${selectedTransporter.plate}</span></div>
+            <div class="factura-row"><span class="factura-label">Teléfono:</span><span class="factura-value">${selectedTransporter.phone}</span></div>
+        `;
+
+        // DETALLES FACTURA (MODELO)
+        document.getElementById('facturaDetails').innerHTML = `
+            <div class="factura-row"><span class="factura-label">Origen:</span><span class="factura-value">${selectedOrigin.name.split(',')[0]}</span></div>
+            <div class="factura-row"><span class="factura-label">Destino:</span><span class="factura-value">${selectedDestination.name.split(',')[0]}</span></div>
+            <div class="factura-row"><span class="factura-label">Servicio:</span><span class="factura-value">${selectedServiceType === 'acarreo' ? 'Con Acarreo' : 'Puesta Afuera'}</span></div>
+            <div class="factura-row"><span class="factura-label">Peso aprox:</span><span class="factura-value">${pendingMoveData.weight} kg</span></div>
+        `;
+
+        document.getElementById('facturaTotal').textContent = '₡' + price.toLocaleString();
+        openModal('facturaModal');
+    };
+
+    document.getElementById('uploadArea').addEventListener('click', () => document.getElementById('comprobanteFileInput').click());
+    document.getElementById('comprobanteFileInput').addEventListener('change', (e) => {
+        if (e.target.files[0]) {
+            document.getElementById('uploadText').textContent = '✓ Comprobante adjunto';
+            document.getElementById('confirmMoveBtn').disabled = false;
+        }
+    });
+
+    document.getElementById('confirmMoveBtn').addEventListener('click', () => {
+        push(ref(db, 'moves'), pendingMoveData).then(() => {
+            // SIMULACIÓN DE NOTIFICACIÓN POR CORREO
+            console.log(`[SIMULACIÓN CORREO] Enviando notificación a ${selectedTransporter.email}: "Tienes una nueva oferta de mudanza vigente de ${currentUser.name}"`);
+            alert('¡Solicitud enviada! El transportista ha sido notificado por correo. Código: ' + pendingMoveData.code);
+            closeModal('facturaModal');
+            location.reload();
         });
-    </script>
+    });
+
+    // LÓGICA TRANSPORTISTA (3 VIAJES SIMULTÁNEOS EN RUTA)
+    const listenToJobs = () => {
+        onValue(ref(db, 'moves'), (snapshot) => {
+            const data = snapshot.val();
+            const jobsTab = document.getElementById('jobsTab');
+            const activeTab = document.getElementById('activeTab');
+            const historyList = document.getElementById('historyList');
+            if (!jobsTab) return;
+            
+            jobsTab.innerHTML = ''; activeTab.innerHTML = ''; historyList.innerHTML = '';
+            let earnings = 0;
+            let activeCount = 0;
+
+            if(data) {
+                Object.keys(data).forEach(key => {
+                    const m = data[key];
+                    if (m.transporter === currentUser.id) {
+                        if (m.status === 'in_progress') activeCount++;
+                        if (m.status === 'completed') {
+                            const netEarning = m.price * 0.8;
+                            earnings += netEarning;
+                            historyList.innerHTML += `
+                                <div style="background:#2a2a2a; padding:10px; border-radius:8px; margin-bottom:8px; font-size:12px;">
+                                    <div style="display:flex; justify-content:space-between;">
+                                        <strong>${m.clientName}</strong>
+                                        <span style="color:#4ade80;">₡${netEarning.toLocaleString()} (80%)</span>
+                                    </div>
+                                    <div style="color:#888; font-size:10px;">${m.date} | Total: ₡${m.price.toLocaleString()}</div>
+                                </div>`;
+                        }
+                    }
+
+                    const html = `
+                        <div class="uber-job-card">
+                            <div class="job-header">
+                                <div style="font-weight:bold;">${m.origin.name.split(',')[0]} → ${m.destination.name.split(',')[0]}</div>
+                                <div class="job-price">₡${m.price.toLocaleString()}</div>
+                            </div>
+                            <p style="font-size:11px; color:#aaa;">Cliente: ${m.clientName} | Peso: ${m.weight}kg</p>
+                            ${m.status === 'pending' && m.transporter === currentUser.id ? `
+                                <div style="display:flex; gap:10px; margin-top:10px;">
+                                    <button class="btn btn-accept acceptJobBtn" data-id="${key}" ${activeCount >= 3 ? 'disabled' : ''}>Aceptar</button>
+                                    <button class="btn btn-reject rejectJobBtn" data-id="${key}">Rechazar</button>
+                                </div>` : ''}
+                            ${m.status === 'in_progress' && m.transporter === currentUser.id ? `
+                                <div style="display:flex; flex-direction:column; gap:8px; margin-top:10px;">
+                                    <button class="btn btn-whatsapp whatsappClientBtn" data-id="${key}" style="text-decoration:none; text-align:center; font-size:12px; padding:10px;">
+                                        <i class="fab fa-whatsapp"></i> Escribir al Cliente
+                                    </button>
+                                    <button class="btn btn-sm shareLocBtn" style="background:#25d366; color:#fff;" data-id="${key}">
+                                        <i class="fab fa-whatsapp"></i> Compartir Ubicación
+                                    </button>
+                                    <div style="display:flex; gap:10px;">
+                                        <button class="btn btn-sm startNavBtn" data-id="${key}">Ver Ruta</button>
+                                        <button class="btn btn-sm openCodeBtn" style="background:#4ade80;" data-id="${key}">Finalizar</button>
+                                    </div>
+                                    <button class="btn btn-sm btn-reject cancelInProgressBtn" data-id="${key}">Cancelar en Curso</button>
+                                </div>` : ''}
+                        </div>`;
+
+                    if(m.status === 'pending' && m.transporter === currentUser.id) jobsTab.innerHTML += html;
+                    else if(m.status === 'in_progress' && m.transporter === currentUser.id) activeTab.innerHTML += html;
+                });
+            }
+            document.getElementById('totalEarnings').textContent = '₡' + Math.round(earnings).toLocaleString();
+        });
+    };
+
+    // LÓGICA ADMIN EXPANDIDA
+    const listenToAdmin = () => {
+        onValue(ref(db, 'moves'), (snapshot) => {
+            const data = snapshot.val();
+            const tbody = document.getElementById('movesTableBody');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+            let totalSales = 0, totalComm = 0, companyRegal = 0, partnersRegal = 0;
+            const selectedMonth = document.getElementById('financeCalendar').value; // YYYY-MM
+            const selectedDay = document.getElementById('movesDateFilter').value; // YYYY-MM-DD
+
+            if(data) {
+                Object.keys(data).forEach(key => {
+                    const m = data[key];
+                    const comm = m.price * 0.2;
+                    const net = m.price * 0.8;
+                    
+                    const moveDate = new Date(m.timestamp);
+                    const moveMonth = `${moveDate.getFullYear()}-${String(moveDate.getMonth()+1).padStart(2,'0')}`;
+                    const moveDay = moveDate.toISOString().split('T')[0];
+
+                    // Filtro para tabla de mudanzas (Día)
+                    if (selectedDay && moveDay !== selectedDay) return;
+
+                    totalSales += m.price;
+                    totalComm += comm;
+
+                    // Filtro para finanzas (Mes)
+                    if (!selectedMonth || moveMonth === selectedMonth) {
+                        if (m.status === 'completed') {
+                            companyRegal += comm;
+                            partnersRegal += net;
+                        }
+                    }
+
+                    tbody.innerHTML += `<tr><td>#${key.slice(-4)}</td><td>${m.clientName}</td><td>${m.transporterName}</td><td>${m.date}</td><td>${m.time || '--:--'}</td><td>₡${m.price.toLocaleString()}</td><td style="color:#4ade80;">₡${comm.toLocaleString()}</td><td><span class="status-badge status-${m.status}">${m.status}</span></td></tr>`;
+                });
+            }
+            document.getElementById('totalAdminSales').textContent = '₡' + totalSales.toLocaleString();
+            document.getElementById('totalAdminComm').textContent = '₡' + totalComm.toLocaleString();
+            document.getElementById('companyRegal').textContent = '₡' + companyRegal.toLocaleString();
+            document.getElementById('partnersRegal').textContent = '₡' + partnersRegal.toLocaleString();
+            document.getElementById('netBalance').textContent = '₡' + (companyRegal - (50 * 600)).toLocaleString(); // Simulación $50 a ₡600
+        });
+
+        const partnersList = document.getElementById('adminPartnersList');
+        if (partnersList) {
+            partnersList.innerHTML = transporters.map(t => `<div class="partner-item" data-tid="${t.id}"><i class="fas fa-user-tie"></i> ${t.name} <span style="font-size:10px; color:#666;">(${t.plate})</span></div>`).join('');
+        }
+
+        const clientsList = document.getElementById('adminClientsList');
+        if (clientsList) {
+            clientsList.innerHTML = registeredClients.map(c => `<div class="partner-item client-item" data-email="${c.email}"><i class="fas fa-user"></i> ${c.name} <span style="font-size:10px; color:#666;">(${c.email})</span></div>`).join('');
+        }
+    };
+
+    document.getElementById('financeCalendar').addEventListener('change', listenToAdmin);
+    document.getElementById('movesDateFilter').addEventListener('change', listenToAdmin);
+
+    document.getElementById('exportMovesPdfBtn').addEventListener('click', () => {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        
+        doc.setFontSize(18);
+        doc.text('Reporte de Mudanzas - MudanzasHub CR', 14, 20);
+        doc.setFontSize(11);
+        doc.text(`Fecha de reporte: ${new Date().toLocaleString()}`, 14, 30);
+        
+        const table = document.getElementById('adminMovesTable');
+        const rows = [];
+        const headers = [['ID', 'Cliente', 'Socio', 'Fecha', 'Hora', 'Total', 'Comisión (20%)', 'Estado']];
+        
+        document.querySelectorAll('#movesTableBody tr').forEach(tr => {
+            const row = [];
+            tr.querySelectorAll('td').forEach(td => row.push(td.innerText));
+            rows.push(row);
+        });
+
+        doc.autoTable({
+            head: headers,
+            body: rows,
+            startY: 40,
+            theme: 'grid',
+            headStyles: { fillColor: [0, 212, 255], textColor: [0, 0, 0], fontStyle: 'bold' },
+            styles: { fontSize: 8, cellPadding: 3 },
+            columnStyles: {
+                5: { halign: 'right', fontStyle: 'bold' },
+                6: { halign: 'right', textColor: [0, 150, 0] }
+            }
+        });
+        
+        doc.save(`Reporte_Mudanzas_${new Date().toISOString().split('T')[0]}.pdf`);
+    });
+
+
+    // LÓGICA GPS NAVEGACIÓN EN VIVO
+    const startGpsNavigation = (moveId) => {
+        onValue(ref(db, `moves/${moveId}`), (snapshot) => {
+            const m = snapshot.val();
+            if (!m) return;
+            document.getElementById('gpsView').classList.add('active');
+            document.getElementById('gpsView').style.display = 'flex';
+            if (!gpsMap) {
+                gpsMap = L.map('gpsMap').setView([m.origin.lat, m.origin.lng], 16);
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(gpsMap);
+            }
+            if (gpsRouting) gpsMap.removeControl(gpsRouting);
+            gpsRouting = L.Routing.control({
+                waypoints: [L.latLng(m.origin.lat, m.origin.lng), L.latLng(m.destination.lat, m.destination.lng)],
+                lineOptions: { styles: [{ color: '#00d4ff', weight: 6 }] },
+                addWaypoints: false, draggableWaypoints: false
+            }).addTo(gpsMap);
+            
+            setTimeout(() => { gpsMap.invalidateSize(); }, 200);
+
+            if ("geolocation" in navigator) {
+                watchId = navigator.geolocation.watchPosition((pos) => {
+                    const { latitude, longitude } = pos.coords;
+                    if (userMarker) userMarker.setLatLng([latitude, longitude]);
+                    else userMarker = L.marker([latitude, longitude], { icon: L.icon({ iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png', iconSize: [25, 41] }) }).addTo(gpsMap);
+                    gpsMap.panTo([latitude, longitude]);
+                }, null, { enableHighAccuracy: true });
+            }
+        }, { onlyOnce: true });
+    };
+
+    document.getElementById('closeGpsBtn').addEventListener('click', () => {
+        document.getElementById('gpsView').classList.remove('active');
+        document.getElementById('gpsView').style.display = 'none';
+        if (watchId) navigator.geolocation.clearWatch(watchId);
+    });
+
+    document.addEventListener('click', (e) => {
+        if (e.target.classList.contains('startNavBtn')) startGpsNavigation(e.target.dataset.id);
+
+        const partnerItem = e.target.closest('.partner-item');
+        if (partnerItem && !partnerItem.classList.contains('client-item')) {
+            const t = transporters.find(x => x.id === parseInt(partnerItem.dataset.tid));
+            if (!t) return;
+            document.getElementById('partnerDetailName').innerText = t.name;
+            document.getElementById('partnerDetailContent').innerHTML = `
+                <div style="grid-column: span 2; text-align:center; margin-bottom:10px;">
+                    <div style="width:80px; height:80px; background:#333; border-radius:50%; margin:0 auto 10px; display:flex; align-items:center; justify-content:center; border:2px solid #00d4ff; position:relative;">
+                        <i class="fas fa-user-tie" style="font-size:40px; color:#00d4ff;"></i>
+                        <label style="position:absolute; bottom:0; right:0; background:#00d4ff; color:#000; border-radius:50%; width:24px; height:24px; display:flex; align-items:center; justify-content:center; cursor:pointer;"><i class="fas fa-camera" style="font-size:12px;"></i><input type="file" style="display:none;"></label>
+                    </div>
+                </div>
+                <div class="detail-item"><div class="detail-label">Nombre</div><input type="text" class="edit-input" id="editTName" value="${t.name}"></div>
+                <div class="detail-item"><div class="detail-label">Cédula</div><input type="text" class="edit-input" id="editTId" value="${t.idNum || ''}"></div>
+                <div class="detail-item"><div class="detail-label">Edad</div><input type="number" class="edit-input" id="editTAge" value="${t.age || ''}"></div>
+                <div class="detail-item"><div class="detail-label">Discapacidad</div><select class="edit-input" id="editTPhys"><option value="no" ${t.physical==='no'?'selected':''}>No</option><option value="si" ${t.physical==='si'?'selected':''}>Sí</option></select></div>
+                <div class="detail-item"><div class="detail-label">Teléfono</div><input type="text" class="edit-input" id="editTPhone" value="${t.phone}"></div>
+                <div class="detail-item"><div class="detail-label">Placa</div><input type="text" class="edit-input" id="editTPlate" value="${t.plate}"></div>
+                <div class="detail-item"><div class="detail-label">Vehículo</div><input type="text" class="edit-input" id="editTVehicle" value="${t.vehicle}"></div>
+                <div class="detail-item"><div class="detail-label">Licencia</div><input type="text" class="edit-input" id="editTLicense" value="${t.license}"></div>
+                <div class="detail-item"><div class="detail-label">Seguro</div><input type="text" class="edit-input" id="editTInsurance" value="${t.insurance}"></div>
+                <div style="grid-column: span 2; margin-top:15px; font-weight:bold; color:#00d4ff; border-bottom:1px solid #333; padding-bottom:5px;">Historial de Servicios</div>
+                <div id="partnerHistoryList" style="grid-column: span 2; margin-top:10px; max-height:200px; overflow-y:auto;"></div>
+                <div style="grid-column: span 2; display:flex; gap:10px; margin-top:15px;">
+                    <button class="btn" id="savePartnerBtn" data-tid="${t.id}">Guardar Cambios</button>
+                    <button class="btn btn-whatsapp" id="msgPartnerBtn" data-tid="${t.id}">Mensaje</button>
+                    <button class="btn btn-reject" id="deletePartnerBtn" data-tid="${t.id}">Borrar</button>
+                </div>
+            `;
+            
+            // HISTORIAL DEL SOCIO
+            onValue(ref(db, 'moves'), (snapshot) => {
+                const data = snapshot.val();
+                const hList = document.getElementById('partnerHistoryList');
+                if(!hList) return;
+                hList.innerHTML = '';
+                let count = 0;
+                if(data) {
+                    Object.keys(data).forEach(key => {
+                        const m = data[key];
+                        if (m.transporter === t.id || m.transporterName === t.name) {
+                            count++;
+                            hList.innerHTML += `
+                                <div class="history-item" style="padding:12px; border-left:3px solid #4ade80; display:flex; justify-content:space-between; align-items:center;">
+                                    <div style="flex:1;">
+                                        <strong style="color:#4ade80;">${m.date} | ${m.time || '--:--'}</strong><br>
+                                        Cliente: ${m.clientName}<br>
+                                        ${m.origin.name.split(',')[0]} → ${m.destination.name.split(',')[0]}<br>
+                                        <span style="color:#aaa; font-size:11px;">Total: ₡${m.price.toLocaleString()} | Estado: ${m.status}</span>
+                                    </div>
+                                </div>`;
+                        }
+                    });
+                }
+                if(count === 0) hList.innerHTML = '<div style="color:#666; font-size:12px;">Sin historial.</div>';
+            }, { onlyOnce: true });
+            
+            openModal('partnerDetailModal');
+        }
+
+        if (partnerItem && partnerItem.classList.contains('client-item')) {
+            const c = registeredClients.find(x => x.email === partnerItem.dataset.email);
+            if (!c) return;
+            document.getElementById('msgClientBtn').dataset.email = c.email;
+            document.getElementById('clientDetailContent').innerHTML = `
+                <div class="detail-grid">
+                    <div class="detail-item"><div class="detail-label">Nombre</div><input type="text" class="edit-input" id="editCName" value="${c.name}"></div>
+                    <div class="detail-item"><div class="detail-label">Email</div><input type="text" class="edit-input" id="editCEmail" value="${c.email}" disabled></div>
+                    <div class="detail-item"><div class="detail-label">Teléfono</div><input type="text" class="edit-input" id="editCPhone" value="${c.phone}"></div>
+                    <div class="detail-item"><div class="detail-label">Cédula</div><input type="text" class="edit-input" id="editCId" value="${c.idNum}"></div>
+                </div>
+            `;
+            
+            // HISTORIAL DEL CLIENTE
+            onValue(ref(db, 'moves'), (snapshot) => {
+                const data = snapshot.val();
+                const hList = document.getElementById('clientHistoryList');
+                hList.innerHTML = '';
+                let count = 0;
+                if(data) {
+                    Object.keys(data).forEach(key => {
+                        const m = data[key];
+                        if (m.client === c.email) {
+                            count++;
+                            const dist = calculateDist(m.origin, m.destination);
+                            const estDuration = Math.round((dist / 40) * 60);
+                            hList.innerHTML += `
+                                <div class="history-item" style="padding:12px; border-left:3px solid #00d4ff; display:flex; justify-content:space-between; align-items:center;">
+                                    <div style="flex:1;">
+                                        <strong style="color:#00d4ff;">${m.date} | ${m.time || '--:--'}</strong><br>
+                                        ${m.origin.name.split(',')[0]} → ${m.destination.name.split(',')[0]}<br>
+                                        <span style="color:#aaa; font-size:11px;">Carga: ${m.weight}kg | ${m.service} | ~${estDuration}min</span>
+                                    </div>
+                                    <button class="btn btn-sm viewMapBtn" data-mid="${key}" style="background:#00d4ff; color:#000; font-weight:bold; padding:8px 12px; white-space:nowrap; margin-left:10px;">Ver Mapa</button>
+                                </div>`;
+                        }
+                    });
+                }
+                if(count === 0) hList.innerHTML = '<div style="color:#666; font-size:12px;">Sin historial.</div>';
+            }, { onlyOnce: true });
+
+            document.getElementById('saveClientBtn').onclick = () => {
+                const updated = {
+                    ...c,
+                    name: document.getElementById('editCName').value,
+                    phone: document.getElementById('editCPhone').value,
+                    idNum: document.getElementById('editCId').value
+                };
+                update(ref(db, 'users/clients/' + c.email.replace('.', '_')), updated);
+                alert('Cliente actualizado');
+                closeModal('clientDetailModal');
+            };
+
+            document.getElementById('deleteClientBtn').onclick = () => {
+                if(confirm('¿Borrar cliente?')) {
+                    set(ref(db, 'users/clients/' + c.email.replace('.', '_')), null);
+                    closeModal('clientDetailModal');
+                }
+            };
+            openModal('clientDetailModal');
+        }
+
+        
+        if (e.target.id === 'saveNewClientBtn') {
+            const name = document.getElementById('addCName').value;
+            const email = document.getElementById('addCEmail').value.trim().toLowerCase();
+            const pass = document.getElementById('addCPass').value;
+            const phone = document.getElementById('addCPhone').value;
+            const idNum = document.getElementById('addCId').value;
+            
+            if(!name || !email || !pass) return alert('Nombre, Email y Contraseña son obligatorios');
+            
+            const newUser = { email, password: pass, name, phone, idNum, role: 'client' };
+            set(ref(db, 'users/clients/' + email.replace('.', '_')), newUser);
+            alert('Cliente creado exitosamente');
+            closeModal('addClientModal');
+            // Limpiar campos
+            ['addCName', 'addCEmail', 'addCPass', 'addCPhone', 'addCId'].forEach(id => document.getElementById(id).value = '');
+        }
+        if (e.target.id === 'savePartnerBtn') {
+            const tid = e.target.dataset.tid;
+            const t = transporters.find(x => x.id == tid);
+            const updated = {
+                ...t,
+                name: document.getElementById('editTName').value,
+                idNum: document.getElementById('editTId').value,
+                age: document.getElementById('editTAge').value,
+                physical: document.getElementById('editTPhys').value,
+                phone: document.getElementById('editTPhone').value,
+                plate: document.getElementById('editTPlate').value,
+                vehicle: document.getElementById('editTVehicle').value,
+                license: document.getElementById('editTLicense').value,
+                insurance: document.getElementById('editTInsurance').value
+            };
+            update(ref(db, 'users/transporters/' + tid), updated);
+            alert('Socio actualizado');
+            closeModal('partnerDetailModal');
+        }
+
+        if (e.target.id === 'deletePartnerBtn') {
+            if(confirm('¿Borrar socio?')) {
+                const tid = e.target.dataset.tid;
+                set(ref(db, 'users/transporters/' + tid), null);
+                closeModal('partnerDetailModal');
+            }
+        }
+
+        if (e.target.id === 'msgPartnerBtn') {
+            const tid = e.target.dataset.tid;
+            const t = transporters.find(x => x.id == tid);
+            if(t && t.phone) {
+                const phone = t.phone.replace(/[^0-9]/g, '');
+                window.open(`https://wa.me/506${phone}`, '_blank');
+            } else { alert('No hay teléfono registrado'); }
+        }
+        
+        if (e.target.id === 'msgClientBtn') {
+            const email = e.target.dataset.email;
+            const c = registeredClients.find(x => x.email === email);
+            if(c && c.phone) {
+                const phone = c.phone.replace(/[^0-9]/g, '');
+                window.open(`https://wa.me/506${phone}`, '_blank');
+            } else { alert('No hay teléfono registrado'); }
+        }
+
+        if (e.target.classList.contains('acceptJobBtn')) update(ref(db, `moves/${e.target.dataset.id}`), { status: 'in_progress' });
+        if (e.target.classList.contains('rejectJobBtn')) {
+            if(confirm('¿Deseas rechazar esta oferta?')) {
+                update(ref(db, `moves/${e.target.dataset.id}`), { transporter: null, status: 'pending' });
+            }
+        }
+        if (e.target.classList.contains('cancelInProgressBtn')) {
+            if(confirm('¿Deseas cancelar este viaje en curso? Volverá a estar pendiente.')) {
+                update(ref(db, `moves/${e.target.dataset.id}`), { status: 'pending' });
+            }
+        }
+        if (e.target.classList.contains('whatsappClientBtn')) {
+            const mId = e.target.dataset.id;
+            onValue(ref(db, `moves/${mId}`), (snap) => {
+                const m = snap.val();
+                if(m && m.clientPhone) {
+                    const phone = m.clientPhone.replace(/[^0-9]/g, '');
+                    const text = encodeURIComponent(`Hola ${m.clientName}, soy su transportista ${m.transporterName} del viaje solicitado de ${m.origin.name.split(',')[0]} a ${m.destination.name.split(',')[0]}.`);
+                    window.open(`https://wa.me/506${phone}?text=${text}`, '_blank');
+                } else { alert('No hay teléfono del cliente registrado'); }
+            }, { onlyOnce: true });
+        }
+        if (e.target.classList.contains('shareLocBtn')) {
+            const mId = e.target.dataset.id;
+            onValue(ref(db, `moves/${mId}`), (snap) => {
+                const m = snap.val();
+                if(m && "geolocation" in navigator) {
+                    navigator.geolocation.getCurrentPosition((pos) => {
+                        const link = `https://www.google.com/maps?q=${pos.coords.latitude},${pos.coords.longitude}`;
+                        const text = encodeURIComponent(`Hola ${m.clientName}, estoy en camino. Puedes ver mi ubicación actual aquí: ${link}`);
+                        const phone = m.clientPhone ? m.clientPhone.replace(/[^0-9]/g, '') : '';
+                        window.open(`https://wa.me/506${phone}?text=${text}`, '_blank');
+                    });
+                }
+            }, { onlyOnce: true });
+        }
+        if (e.target.classList.contains('startNavBtn')) {
+            onValue(ref(db, `moves/${e.target.dataset.id}`), (snap) => {
+                const m = snap.val();
+                selectLocation(m.origin.lat, m.origin.lng, m.origin.name, 'origin');
+                selectLocation(m.destination.lat, m.destination.lng, m.destination.name, 'destination');
+                document.getElementById('navOverlay').style.display = 'flex';
+                document.getElementById('navDistance').textContent = calculateDist(m.origin, m.destination).toFixed(1) + ' km';
+            }, { onlyOnce: true });
+        }
+        if (e.target.classList.contains('openCodeBtn')) {
+            onValue(ref(db, `moves/${e.target.dataset.id}`), (snap) => {
+                activeNavMove = { ...snap.val(), key: e.target.dataset.id };
+                openModal('codeModal');
+            }, { onlyOnce: true });
+        }
+        
+        const tabBtn = e.target.closest('.tab-btn');
+        if (tabBtn) {
+            const section = tabBtn.closest('.section');
+            section.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            section.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            tabBtn.classList.add('active');
+            section.querySelector(`#${tabBtn.dataset.tab}Tab`).classList.add('active');
+            
+            // OCULTAR MAPA EN ADMIN EXCEPTO EN HISTORIAL
+            if (section.id === 'adminSection') {
+                document.querySelector('.map-container').style.display = 'none';
+            } else {
+                document.querySelector('.map-container').style.display = 'block';
+                setTimeout(() => { map.invalidateSize(); }, 200);
+            }
+        }
+        if (e.target.dataset.close) closeModal(e.target.dataset.close);
+    });
+
+    document.getElementById('validateCodeBtn').addEventListener('click', () => {
+        if (parseInt(document.getElementById('confirmCodeInput').value) === activeNavMove.code) {
+            update(ref(db, `moves/${activeNavMove.key}`), { status: 'completed' });
+            alert('¡Servicio concluido!');
+            closeModal('codeModal');
+            document.getElementById('navOverlay').style.display = 'none';
+            if (routingControl) map.removeControl(routingControl);
+        } else { alert('Código incorrecto'); }
+    });
+
+    document.getElementById('finishNavBtn').addEventListener('click', () => {
+        document.getElementById('navOverlay').style.display = 'none';
+        if (routingControl) map.removeControl(routingControl);
+    });
+
+    const calculateDist = (p1, p2) => {
+        const R = 6371;
+        const dLat = (p2.lat-p1.lat) * Math.PI / 180;
+        const dLon = (p2.lng-p1.lng) * Math.PI / 180;
+        const a = Math.sin(dLat/2)**2 + Math.cos(p1.lat*Math.PI/180)*Math.cos(p2.lat*Math.PI/180)*Math.sin(dLon/2)**2;
+        return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    };
+
+    // SELECTORES
+    document.getElementById('vehicleSelector').addEventListener('click', (e) => {
+        const opt = e.target.closest('.vehicle-option');
+        if (opt) {
+            selectedVehicle = opt.dataset.vehicle;
+            document.querySelectorAll('#vehicleSelector .vehicle-option').forEach(o => o.classList.remove('active'));
+            opt.classList.add('active');
+        }
+    });
+    document.getElementById('serviceSelector').addEventListener('click', (e) => {
+        const opt = e.target.closest('.vehicle-option');
+        if (opt) {
+            selectedServiceType = opt.dataset.service;
+            document.querySelectorAll('#serviceSelector .vehicle-option').forEach(o => o.classList.remove('active'));
+            opt.classList.add('active');
+        }
+    });
+</script>
 </body>
 </html>
