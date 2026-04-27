@@ -296,6 +296,10 @@
             { email: 'cliente@test.com', password: '1234', name: 'Laura Fernández', phone: '88880000', idNum: '1-1111-1111', location: 'San José', role: 'client' }
         ];
 
+        let admins = [
+            { email: 'admin@test.com', password: 'admin123', name: 'Administrador', role: 'admin' }
+        ];
+
         let currentUser = null;
 
         // ============================================
@@ -364,7 +368,7 @@
                 const email = document.getElementById('loginEmail').value;
                 const password = document.getElementById('loginPassword').value;
 
-                const user = [...transporters, ...registeredClients].find(u => u.email === email && u.password === password);
+                const user = [...transporters, ...registeredClients, ...admins].find(u => u.email === email && u.password === password);
                 
                 if (user) {
                     currentUser = user;
@@ -376,6 +380,8 @@
                         document.getElementById('clientNameDisplay').textContent = user.name;
                     } else if (user.role === 'admin') {
                         showSection('adminSection');
+                        document.getElementById('loginEmail').value = '';
+                        document.getElementById('loginPassword').value = '';
                     }
                 } else {
                     alert('Email o contraseña incorrectos');
