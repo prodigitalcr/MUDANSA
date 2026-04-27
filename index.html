@@ -3,946 +3,211 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MudanzasHub Costa Rica - Solución Total V3 Mejorada</title>
+    <title>MudanzasHub Costa Rica - Solución Total</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
     <style>
-        /* ============================================
-           ESTILOS BASE - MEJORADOS Y OPTIMIZADOS
-           ============================================ */
-        * { 
-            margin: 0; 
-            padding: 0; 
-            box-sizing: border-box; 
-        }
-
-        body { 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            background: #0f0f0f; 
-            color: #fff; 
-            overflow: hidden; 
-        }
-
-        .container { 
-            display: flex; 
-            height: 100vh; 
-        }
-
-        /* ============================================
-           SIDEBAR - MEJORADO
-           ============================================ */
-        .sidebar { 
-            width: 440px; 
-            background: linear-gradient(180deg, #1a1a1a 0%, #151515 100%);
-            border-right: 1px solid #333; 
-            overflow-y: auto; 
-            padding: 20px; 
-            box-shadow: 2px 0 10px rgba(0,0,0,0.5); 
-        }
-
-        .sidebar::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        .sidebar::-webkit-scrollbar-track {
-            background: #1a1a1a;
-        }
-
-        .sidebar::-webkit-scrollbar-thumb {
-            background: #00d4ff;
-            border-radius: 4px;
-        }
-
-        .sidebar::-webkit-scrollbar-thumb:hover {
-            background: #00b8d4;
-        }
-
-        /* ============================================
-           MAPA
-           ============================================ */
-        .map-container { 
-            flex: 1; 
-            position: relative; 
-        }
-
-        #map { 
-            width: 100%; 
-            height: 100%; 
-        }
-
-        /* ============================================
-           LOGO Y ENCABEZADO
-           ============================================ */
-        .logo { 
-            font-size: 22px; 
-            font-weight: bold; 
-            margin-bottom: 20px; 
-            color: #00d4ff; 
-            display: flex; 
-            align-items: center; 
-            gap: 10px; 
-            text-shadow: 0 0 10px rgba(0, 212, 255, 0.3);
-        }
-
-        .user-greeting { 
-            background: linear-gradient(135deg, #1a3a3a, #2a2a2a); 
-            border: 1px solid #00d4ff44; 
-            border-radius: 8px; 
-            padding: 10px 14px; 
-            margin-bottom: 16px; 
-            font-size: 13px; 
-            color: #00d4ff; 
-            display: flex; 
-            align-items: center; 
-            gap: 8px; 
-        }
-
-        /* ============================================
-           FORMULARIOS
-           ============================================ */
-        .form-group { 
-            margin-bottom: 18px; 
-        }
-
-        .form-group label { 
-            display: block; 
-            margin-bottom: 7px; 
-            font-size: 13px; 
-            font-weight: 600; 
-            color: #aaa; 
-        }
-
-        .search-container { 
-            position: relative; 
-            margin-bottom: 18px; 
-        }
-
-        .search-input { 
-            width: 100%; 
-            padding: 11px 12px; 
-            background: #2a2a2a; 
-            border: 1px solid #444; 
-            border-radius: 8px; 
-            color: #fff; 
-            font-size: 14px; 
-            transition: all 0.3s ease;
-        }
-
-        .search-input:focus { 
-            outline: none; 
-            border-color: #00d4ff; 
-            box-shadow: 0 0 10px rgba(0,212,255,0.3); 
-            background: #2a3535;
-        }
-
-        .search-suggestions { 
-            position: absolute; 
-            top: 100%; 
-            left: 0; 
-            right: 0; 
-            background: #2a2a2a; 
-            border: 1px solid #444; 
-            border-top: none; 
-            border-radius: 0 0 8px 8px; 
-            max-height: 300px; 
-            overflow-y: auto; 
-            z-index: 100; 
-            display: none; 
-        }
-
-        .search-suggestions.active { 
-            display: block; 
-        }
-
-        .suggestion-item { 
-            padding: 11px 12px; 
-            border-bottom: 1px solid #333; 
-            cursor: pointer; 
-            transition: all 0.2s ease; 
-            font-size: 13px; 
-        }
-
-        .suggestion-item:hover { 
-            background: #3a3a3a; 
-            color: #00d4ff; 
-            padding-left: 16px;
-        }
-
-        .suggestion-address { 
-            color: #aaa; 
-            font-size: 12px; 
-            margin-top: 3px; 
-        }
-
-        /* ============================================
-           BOTONES - MEJORADOS
-           ============================================ */
-        .btn { 
-            width: 100%; 
-            padding: 13px; 
-            background: #00d4ff; 
-            color: #000; 
-            border: none; 
-            border-radius: 8px; 
-            font-weight: 600; 
-            cursor: pointer; 
-            font-size: 14px; 
-            transition: all 0.3s ease; 
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-
-        .btn:hover { 
-            background: #00b8d4; 
-            transform: translateY(-2px); 
-            box-shadow: 0 5px 15px rgba(0,212,255,0.4); 
-        }
-
-        .btn:active {
-            transform: translateY(0);
-        }
-
-        .btn:disabled { 
-            background: #555; 
-            color: #888; 
-            cursor: not-allowed; 
-            transform: none; 
-            box-shadow: none; 
-        }
-
-        .btn-secondary { 
-            background: #333; 
-            color: #fff; 
-            margin-bottom: 10px; 
-        }
-
-        .btn-secondary:hover {
-            background: #444;
-        }
-
-        .btn-sm { 
-            width: auto; 
-            padding: 7px 14px; 
-            font-size: 12px; 
-            display: inline-block; 
-        }
-
-        .btn-whatsapp { 
-            background: #25d366; 
-            color: #fff; 
-        }
-
-        .btn-whatsapp:hover {
-            background: #20ba5a;
-            box-shadow: 0 5px 15px rgba(37, 211, 102, 0.4);
-        }
-
-        .btn-reject { 
-            background: #ff4b4b; 
-            color: #fff; 
-        }
-
-        .btn-reject:hover {
-            background: #e63939;
-        }
-
-        .btn-accept { 
-            background: #4ade80; 
-            color: #000; 
-        }
-
-        .btn-accept:hover {
-            background: #22c55e;
-        }
-
-        /* ============================================
-           MODALES
-           ============================================ */
-        .modal { 
-            display: none; 
-            position: fixed; 
-            top: 0; 
-            left: 0; 
-            width: 100%; 
-            height: 100%; 
-            background: rgba(0,0,0,0.85); 
-            z-index: 1000; 
-            align-items: center; 
-            justify-content: center; 
-            backdrop-filter: blur(4px);
-        }
-
-        .modal.active { 
-            display: flex; 
-        }
-
-        .modal-content { 
-            background: linear-gradient(135deg, #1a1a1a 0%, #202020 100%);
-            border: 1px solid #444; 
-            border-radius: 12px; 
-            padding: 28px; 
-            width: 92%; 
-            max-width: 620px; 
-            max-height: 92vh; 
-            overflow-y: auto; 
-            box-shadow: 0 10px 40px rgba(0,0,0,0.9); 
-            position: relative; 
-            animation: slideUp 0.3s ease;
-        }
-
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .modal-header { 
-            font-size: 19px; 
-            font-weight: bold; 
-            margin-bottom: 18px; 
-            color: #00d4ff; 
-        }
-
-        .modal-close { 
-            position: absolute; 
-            top: 14px; 
-            right: 14px; 
-            background: none; 
-            border: none; 
-            color: #aaa; 
-            font-size: 24px; 
-            cursor: pointer; 
-            width: auto; 
-            padding: 0; 
-            transition: all 0.2s ease;
-        }
-
-        .modal-close:hover {
-            color: #00d4ff;
-            transform: rotate(90deg);
-        }
-
-        /* ============================================
-           SECCIONES Y TABS
-           ============================================ */
-        .section { 
-            display: none; 
-        }
-
-        .section.active { 
-            display: block; 
-        }
-
-        .tabs { 
-            display: flex; 
-            background: #222; 
-            border-radius: 8px; 
-            padding: 4px; 
-            margin-bottom: 18px; 
-        }
-
-        .tab-btn { 
-            flex: 1; 
-            padding: 10px; 
-            background: none; 
-            border: none; 
-            color: #888; 
-            font-size: 12px; 
-            font-weight: 600; 
-            cursor: pointer; 
-            border-radius: 6px; 
-            transition: all 0.2s ease;
-        }
-
-        .tab-btn:hover {
-            color: #aaa;
-        }
-
-        .tab-btn.active { 
-            background: #333; 
-            color: #00d4ff; 
-        }
-
-        .tab-content { 
-            display: none; 
-        }
-
-        .tab-content.active { 
-            display: block; 
-        }
-
-        /* ============================================
-           TABLAS
-           ============================================ */
-        .admin-table { 
-            width: 100%; 
-            border-collapse: collapse; 
-            font-size: 12px; 
-            margin-top: 10px; 
-        }
-
-        .admin-table th { 
-            text-align: left; 
-            padding: 12px 8px; 
-            background: #222; 
-            color: #aaa; 
-            border: 1px solid #333; 
-            font-weight: 600;
-        }
-
-        .admin-table td { 
-            padding: 12px 8px; 
-            border: 1px solid #222; 
-        }
-
-        .admin-table tr:hover {
-            background: #1a3a3a;
-        }
-
-        .admin-footer { 
-            background: #1a3a3a; 
-            padding: 10px; 
-            border-radius: 0 0 8px 8px; 
-            border: 1px solid #333; 
-            border-top: none; 
-            display: flex; 
-            justify-content: flex-end; 
-            gap: 20px; 
-            font-size: 12px; 
-            font-weight: bold; 
-        }
-
-        /* ============================================
-           TARJETAS
-           ============================================ */
-        .transportista-card { 
-            background: linear-gradient(135deg, #2a2a2a 0%, #252525 100%);
-            border: 1px solid #444; 
-            border-radius: 10px; 
-            padding: 16px; 
-            margin-bottom: 14px; 
-            cursor: pointer; 
-            transition: all 0.3s ease; 
-        }
-
-        .transportista-card:hover { 
-            border-color: #00d4ff; 
-            background: linear-gradient(135deg, #2a3535 0%, #2a2a2a 100%);
-            box-shadow: 0 4px 12px rgba(0, 212, 255, 0.15);
-        }
-
-        .transportista-header { 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: flex-start; 
-            margin-bottom: 10px; 
-        }
-
-        .transportista-name { 
-            font-weight: 700; 
-            font-size: 15px; 
-            color: #fff; 
-        }
-
-        .transportista-price { 
-            font-size: 20px; 
-            font-weight: bold; 
-            color: #4ade80; 
-        }
-
-        .uber-job-card { 
-            background: linear-gradient(135deg, #2a2a2a 0%, #303030 100%); 
-            border: 2px solid #00d4ff; 
-            border-radius: 12px; 
-            padding: 18px; 
-            margin-bottom: 14px; 
-            box-shadow: 0 4px 15px rgba(0,212,255,0.15); 
-            animation: fadeIn 0.3s ease;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .job-header { 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            margin-bottom: 14px; 
-        }
-
-        .job-price { 
-            font-size: 22px; 
-            font-weight: bold; 
-            color: #4ade80; 
-        }
-
-        /* ============================================
-           ELEMENTOS FINANCIEROS
-           ============================================ */
-        .calendar-container { 
-            margin-bottom: 15px; 
-            background: #222; 
-            padding: 10px; 
-            border-radius: 8px; 
-            border: 1px solid #333; 
-        }
-
-        .finance-card { 
-            background: #1a1a1a; 
-            border: 1px solid #333; 
-            border-radius: 8px; 
-            padding: 15px; 
-            margin-bottom: 10px; 
-        }
-
-        .finance-row { 
-            display: flex; 
-            justify-content: space-between; 
-            margin-bottom: 5px; 
-            font-size: 13px; 
-        }
-
-        .finance-label { 
-            color: #aaa; 
-        }
-
-        .finance-value { 
-            font-weight: bold; 
-            color: #00d4ff; 
-        }
-
-        /* ============================================
-           NAVEGACIÓN GPS
-           ============================================ */
-        #gpsView { 
-            display: none; 
-            position: fixed; 
-            top: 0; 
-            left: 0; 
-            width: 100%; 
-            height: 100%; 
-            background: #000; 
-            z-index: 3000; 
-            flex-direction: column; 
-        }
-
-        #gpsView.active { 
-            display: flex; 
-        }
-
-        .gps-header { 
-            background: #1a1a1a; 
-            padding: 15px; 
-            border-bottom: 1px solid #333; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-        }
-
-        .gps-map { 
-            flex: 1; 
-            width: 100%; 
-        }
-
-        .gps-instructions { 
-            background: #fff; 
-            padding: 20px; 
-            border-top: 1px solid #333; 
-            font-size: 16px; 
-            font-weight: bold; 
-            color: #000; 
-            text-align: center; 
-            box-shadow: 0 -5px 15px rgba(0,0,0,0.2); 
-        }
-
-        .leaflet-routing-container { 
-            background: white !important; 
-            color: black !important; 
-            padding: 10px; 
-            border-radius: 8px; 
-            font-size: 12px; 
-            max-height: 200px; 
-            overflow-y: auto; 
-            box-shadow: 0 2px 10px rgba(0,0,0,0.3); 
-        }
-
-        .leaflet-routing-alt h2, 
-        .leaflet-routing-alt h3 { 
-            color: black !important; 
-        }
-
-        .leaflet-routing-instruction-text { 
-            color: black !important; 
-        }
-
-        /* ============================================
-           EDICIÓN DE PERFILES
-           ============================================ */
-        .edit-input { 
-            width: 100%; 
-            padding: 8px; 
-            background: #333; 
-            border: 1px solid #444; 
-            border-radius: 4px; 
-            color: #fff; 
-            font-size: 12px; 
-            margin-bottom: 10px; 
-            transition: all 0.2s ease;
-        }
-
-        .edit-input:focus {
-            outline: none;
-            border-color: #00d4ff;
-            background: #3a3a3a;
-        }
-
-        .history-item { 
-            background: #222; 
-            padding: 10px; 
-            border-radius: 6px; 
-            margin-bottom: 8px; 
-            font-size: 11px; 
-            border-left: 3px solid #00d4ff; 
-            transition: all 0.2s ease;
-        }
-
-        .history-item:hover {
-            background: #2a2a2a;
-            border-left-color: #00b8d4;
-        }
-
-        /* ============================================
-           BADGES Y ESTADOS
-           ============================================ */
-        .status-badge { 
-            padding: 3px 8px; 
-            border-radius: 4px; 
-            font-size: 10px; 
-            font-weight: 700; 
-        }
-
-        .status-pending { 
-            background: #f59e0b22; 
-            color: #f59e0b; 
-        }
-
-        .status-in_progress { 
-            background: #3b82f622; 
-            color: #3b82f6; 
-        }
-
-        .status-completed { 
-            background: #10b98122; 
-            color: #10b981; 
-        }
-
-        /* ============================================
-           SELECTORES DE VEHÍCULOS
-           ============================================ */
-        .vehicle-selector { 
-            display: grid; 
-            grid-template-columns: repeat(3, 1fr); 
-            gap: 10px; 
-            margin-bottom: 18px; 
-        }
-
-        .vehicle-option { 
-            background: #2a2a2a; 
-            border: 2px solid #444; 
-            border-radius: 8px; 
-            padding: 10px; 
-            text-align: center; 
-            cursor: pointer; 
-            transition: all 0.3s ease;
-        }
-
-        .vehicle-option:hover {
-            border-color: #00d4ff;
-            background: #2a3535;
-        }
-
-        .vehicle-option.active { 
-            border-color: #00d4ff; 
-            background: #1a3a3a; 
-            box-shadow: 0 0 10px rgba(0, 212, 255, 0.2);
-        }
-
-        /* ============================================
-           OVERLAY DE NAVEGACIÓN
-           ============================================ */
-        .nav-overlay { 
-            position: absolute; 
-            top: 20px; 
-            left: 50%; 
-            transform: translateX(-50%); 
-            background: rgba(26, 26, 26, 0.95); 
-            padding: 15px 25px; 
-            border-radius: 50px; 
-            border: 1px solid #00d4ff; 
-            z-index: 1000; 
-            display: none; 
-            align-items: center; 
-            gap: 15px; 
-            backdrop-filter: blur(10px);
-        }
-
-        /* ============================================
-           ALERTAS
-           ============================================ */
-        .alert-box { 
-            padding: 12px 15px; 
-            border-radius: 8px; 
-            font-size: 12px; 
-            margin-bottom: 15px; 
-            display: flex; 
-            align-items: center; 
-            gap: 10px; 
-        }
-
-        .alert-info { 
-            background: #00d4ff11; 
-            color: #00d4ff; 
-            border: 1px solid #00d4ff33; 
-        }
-
-        /* ============================================
-           ÁREAS DE CARGA
-           ============================================ */
-        .upload-area { 
-            border: 2px dashed #444; 
-            border-radius: 8px; 
-            padding: 20px; 
-            text-align: center; 
-            cursor: pointer; 
-            margin-bottom: 15px; 
-            transition: all 0.3s ease; 
-        }
-
-        .upload-area:hover { 
-            border-color: #00d4ff; 
-            background: #1a3a3a; 
-        }
-
-        .upload-icon { 
-            font-size: 30px; 
-            color: #555; 
-            margin-bottom: 10px; 
-        }
-
-        .upload-text { 
-            font-size: 12px; 
-            color: #888; 
-        }
-
-        /* ============================================
-           ELEMENTOS DE DETALLE
-           ============================================ */
-        .detail-grid { 
-            display: grid; 
-            grid-template-columns: 1fr 1fr; 
-            gap: 15px; 
-            font-size: 13px; 
-        }
-
-        .detail-item { 
-            background: #222; 
-            padding: 10px; 
-            border-radius: 6px; 
-            border: 1px solid #333; 
-        }
-
-        .detail-label { 
-            color: #888; 
-            font-size: 11px; 
-            margin-bottom: 4px; 
-            font-weight: 600;
-        }
-
-        .partner-item { 
-            padding: 10px; 
-            border-bottom: 1px solid #333; 
-            cursor: pointer; 
-            transition: background 0.2s; 
-        }
-
-        .partner-item:hover { 
-            background: #2a2a2a; 
-            color: #00d4ff; 
-        }
-
-        /* ============================================
-           REGISTRO
-           ============================================ */
-        .register-link { 
-            text-align: center; 
-            margin-top: 15px; 
-            font-size: 13px; 
-            color: #aaa; 
-        }
-
-        .register-link span { 
-            color: #00d4ff; 
-            cursor: pointer; 
-            font-weight: bold; 
-        }
-
-        .register-type-selector { 
-            display: grid; 
-            grid-template-columns: 1fr 1fr; 
-            gap: 10px; 
-            margin-bottom: 20px; 
-        }
-
-        .register-type-btn { 
-            padding: 15px; 
-            background: #2a2a2a; 
-            border: 2px solid #444; 
-            border-radius: 8px; 
-            color: #fff; 
-            cursor: pointer; 
-            text-align: center; 
-            font-size: 13px; 
-            transition: 0.3s; 
-        }
-
-        .register-type-btn:hover {
-            border-color: #00d4ff;
-            background: #2a3535;
-        }
-
-        .register-type-btn.active { 
-            border-color: #00d4ff; 
-            background: #1a3a3a; 
-        }
-
-        /* ============================================
-           FACTURA Y FICHA
-           ============================================ */
-        .factura-header { 
-            border-bottom: 1px solid #333; 
-            padding-bottom: 15px; 
-            margin-bottom: 15px; 
-        }
-
-        .factura-row { 
-            display: flex; 
-            justify-content: space-between; 
-            padding: 8px 0; 
-            border-bottom: 1px solid #222; 
-        }
-
-        /* ============================================
-           RESPONSIVE - MÓVIL OPTIMIZADO
-           ============================================ */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #0f0f0f; color: #fff; overflow: hidden; }
+        .container { display: flex; height: 100vh; }
+        .sidebar { width: 440px; background: #1a1a1a; border-right: 1px solid #333; overflow-y: auto; padding: 20px; box-shadow: 2px 0 10px rgba(0,0,0,0.5); }
+        .map-container { flex: 1; position: relative; }
+        #map { width: 100%; height: 100%; }
+        .logo { font-size: 22px; font-weight: bold; margin-bottom: 20px; color: #00d4ff; display: flex; align-items: center; gap: 10px; }
+        .user-greeting { background: linear-gradient(135deg, #1a3a3a, #2a2a2a); border: 1px solid #00d4ff44; border-radius: 8px; padding: 10px 14px; margin-bottom: 16px; font-size: 13px; color: #00d4ff; display: flex; align-items: center; gap: 8px; }
+        .form-group { margin-bottom: 18px; }
+        .form-group label { display: block; margin-bottom: 7px; font-size: 13px; font-weight: 600; color: #aaa; }
+        .search-container { position: relative; margin-bottom: 18px; }
+        .search-input { width: 100%; padding: 11px 12px; background: #2a2a2a; border: 1px solid #444; border-radius: 8px; color: #fff; font-size: 14px; }
+        .search-input:focus { outline: none; border-color: #00d4ff; box-shadow: 0 0 10px rgba(0,212,255,0.3); }
+        .search-suggestions { position: absolute; top: 100%; left: 0; right: 0; background: #2a2a2a; border: 1px solid #444; border-top: none; border-radius: 0 0 8px 8px; max-height: 300px; overflow-y: auto; z-index: 100; display: none; }
+        .search-suggestions.active { display: block; }
+        .suggestion-item { padding: 11px 12px; border-bottom: 1px solid #333; cursor: pointer; transition: all 0.2s ease; font-size: 13px; }
+        .suggestion-item:hover { background: #3a3a3a; color: #00d4ff; }
+        .suggestion-address { color: #aaa; font-size: 12px; margin-top: 3px; }
+        .btn { width: 100%; padding: 13px; background: #00d4ff; color: #000; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 14px; transition: all 0.3s ease; }
+        .btn:hover { background: #00b8d4; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,212,255,0.4); }
+        .btn:disabled { background: #555; color: #888; cursor: not-allowed; transform: none; box-shadow: none; }
+        .btn-secondary { background: #333; color: #fff; margin-bottom: 10px; }
+        .btn-sm { width: auto; padding: 7px 14px; font-size: 12px; display: inline-block; }
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 1000; align-items: center; justify-content: center; }
+        .modal.active { display: flex; }
+        .modal-content { background: #1a1a1a; border: 1px solid #444; border-radius: 12px; padding: 28px; width: 92%; max-width: 620px; max-height: 92vh; overflow-y: auto; box-shadow: 0 10px 40px rgba(0,0,0,0.9); position: relative; }
+        .modal-header { font-size: 19px; font-weight: bold; margin-bottom: 18px; color: #00d4ff; }
+        .modal-close { position: absolute; top: 14px; right: 14px; background: none; border: none; color: #aaa; font-size: 24px; cursor: pointer; width: auto; padding: 0; }
+        .section { display: none; }
+        .section.active { display: block; }
+        .tabs { display: flex; background: #222; border-radius: 8px; padding: 4px; margin-bottom: 18px; }
+        .tab-btn { flex: 1; padding: 10px; background: none; border: none; color: #888; font-size: 12px; font-weight: 600; cursor: pointer; border-radius: 6px; }
+        .tab-btn.active { background: #333; color: #00d4ff; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .admin-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 10px; }
+        .admin-table th { text-align: left; padding: 12px 8px; background: #222; color: #aaa; border: 1px solid #333; }
+        .admin-table td { padding: 12px 8px; border: 1px solid #222; }
+        .admin-footer { background: #1a3a3a; padding: 10px; border-radius: 0 0 8px 8px; border: 1px solid #333; border-top: none; display: flex; justify-content: flex-end; gap: 20px; font-size: 12px; font-weight: bold; }
+        .btn-whatsapp { background: #25d366; color: #fff; }
+        .btn-reject { background: #ff4b4b; color: #fff; }
+        .btn-accept { background: #4ade80; color: #000; }
+        .calendar-container { margin-bottom: 15px; background: #222; padding: 10px; border-radius: 8px; border: 1px solid #333; }
+        .finance-card { background: #1a1a1a; border: 1px solid #333; border-radius: 8px; padding: 15px; margin-bottom: 10px; }
+        .finance-row { display: flex; justify-content: space-between; margin-bottom: 5px; font-size: 13px; }
+        .finance-label { color: #aaa; }
+        .finance-value { font-weight: bold; color: #00d4ff; }
+        #gpsView { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 3000; flex-direction: column; }
+        #gpsView.active { display: flex; }
+        .gps-header { background: #1a1a1a; padding: 15px; border-bottom: 1px solid #333; display: flex; justify-content: space-between; align-items: center; }
+        .gps-map { flex: 1; width: 100%; }
+        .gps-instructions { background: #fff; padding: 20px; border-top: 1px solid #333; font-size: 16px; font-weight: bold; color: #000; text-align: center; box-shadow: 0 -5px 15px rgba(0,0,0,0.2); }
+        .edit-input { width: 100%; padding: 8px; background: #333; border: 1px solid #444; border-radius: 4px; color: #fff; font-size: 12px; margin-bottom: 10px; }
+        .history-item { background: #222; padding: 10px; border-radius: 6px; margin-bottom: 8px; font-size: 11px; border-left: 3px solid #00d4ff; }
+        .status-badge { padding: 3px 8px; border-radius: 4px; font-size: 10px; font-weight: 700; }
+        .status-pending { background: #f59e0b22; color: #f59e0b; }
+        .status-in_progress { background: #3b82f622; color: #3b82f6; }
+        .status-completed { background: #10b98122; color: #10b981; }
+        .vehicle-selector { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 18px; }
+        .vehicle-option { background: #2a2a2a; border: 2px solid #444; border-radius: 8px; padding: 10px; text-align: center; cursor: pointer; }
+        .vehicle-option.active { border-color: #00d4ff; background: #1a3a3a; }
+        .transportista-card { background: #2a2a2a; border: 1px solid #444; border-radius: 10px; padding: 16px; margin-bottom: 14px; cursor: pointer; transition: all 0.3s ease; }
+        .transportista-card:hover { border-color: #00d4ff; background: #2a3535; }
+        .transportista-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+        .transportista-name { font-weight: 700; font-size: 15px; color: #fff; }
+        .transportista-price { font-size: 20px; font-weight: bold; color: #4ade80; }
+        .uber-job-card { background: linear-gradient(135deg, #2a2a2a 0%, #303030 100%); border: 2px solid #00d4ff; border-radius: 12px; padding: 18px; margin-bottom: 14px; box-shadow: 0 4px 15px rgba(0,212,255,0.15); }
+        .job-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+        .job-price { font-size: 22px; font-weight: bold; color: #4ade80; }
+        .nav-overlay { position: absolute; top: 20px; left: 50%; transform: translateX(-50%); background: rgba(26, 26, 26, 0.9); padding: 15px 25px; border-radius: 50px; border: 1px solid #00d4ff; z-index: 1000; display: none; align-items: center; gap: 15px; }
+        .alert-box { padding: 12px 15px; border-radius: 8px; font-size: 12px; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
+        .alert-info { background: #00d4ff11; color: #00d4ff; border: 1px solid #00d4ff33; }
+        .upload-area { border: 2px dashed #444; border-radius: 8px; padding: 20px; text-align: center; cursor: pointer; margin-bottom: 15px; transition: all 0.3s ease; }
+        .upload-area:hover { border-color: #00d4ff; background: #1a3a3a; }
+        .upload-icon { font-size: 30px; color: #555; margin-bottom: 10px; }
+        .upload-text { font-size: 12px; color: #888; }
+        .partner-item { padding: 10px; border-bottom: 1px solid #333; cursor: pointer; transition: background 0.2s; }
+        .partner-item:hover { background: #2a2a2a; color: #00d4ff; }
+        .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; font-size: 13px; }
+        .detail-item { background: #222; padding: 10px; border-radius: 6px; border: 1px solid #333; }
+        .detail-label { color: #888; font-size: 11px; margin-bottom: 4px; }
+        .register-link { text-align: center; margin-top: 15px; font-size: 13px; color: #aaa; }
+        .register-link span { color: #00d4ff; cursor: pointer; font-weight: bold; }
+        .register-type-selector { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+        .register-type-btn { padding: 15px; background: #2a2a2a; border: 2px solid #444; border-radius: 8px; color: #fff; cursor: pointer; text-align: center; font-size: 13px; transition: 0.3s; }
+        .register-type-btn.active { border-color: #00d4ff; background: #1a3a3a; }
+        .factura-header { border-bottom: 1px solid #333; padding-bottom: 15px; margin-bottom: 15px; }
+        .factura-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #222; }
+        
         @media (max-width: 480px) {
-            .container {
-                flex-direction: column;
-            }
-
-            .sidebar { 
-                width: 100%; 
-                position: absolute; 
-                z-index: 2000; 
-                height: 100%; 
-                max-height: 100vh;
-            }
-
-            .map-container {
-                display: none;
-            }
-
-            .sidebar.mobile-visible {
-                display: block;
-            }
-
-            .map-container.mobile-visible {
-                display: block;
-                position: absolute;
-                width: 100%;
-                height: 100%;
-                z-index: 1;
-            }
-
-            .uber-job-card { 
-                padding: 12px; 
-                margin-bottom: 10px; 
-            }
-
-            .job-header { 
-                flex-direction: column; 
-                align-items: flex-start; 
-                gap: 5px; 
-            }
-
-            .job-price { 
-                font-size: 18px; 
-            }
-
-            .btn-sm { 
-                padding: 10px; 
-                width: 100%; 
-                text-align: center; 
-                margin-top: 5px; 
-            }
-
-            .detail-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .vehicle-selector {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .modal-content {
-                width: 95%;
-                padding: 20px;
-            }
-        }
-
-        /* ============================================
-           SCROLLBAR PERSONALIZADO
-           ============================================ */
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: #1a1a1a;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: #00d4ff;
-            border-radius: 4px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: #00b8d4;
+            .sidebar { width: 100%; position: absolute; z-index: 2000; height: 100%; }
+            .uber-job-card { padding: 12px; margin-bottom: 10px; }
+            .job-header { flex-direction: column; align-items: flex-start; gap: 5px; }
+            .job-price { font-size: 18px; }
+            .btn-sm { padding: 10px; width: 100%; text-align: center; margin-top: 5px; }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="sidebar" id="sidebar">
-            <!-- Contenido dinámico del sidebar -->
+            <!-- SECCIÓN LOGIN -->
+            <div class="section active" id="loginSection">
+                <div class="logo"><i class="fas fa-truck"></i> MudanzasHub</div>
+                <div style="text-align:center; margin-bottom:30px; color:#00d4ff;">
+                    <i class="fas fa-map-location-dot" style="font-size:40px; margin-bottom:10px; display:block;"></i>
+                    <div style="font-size:12px; color:#aaa;">Solución Total de Mudanzas</div>
+                </div>
+
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="loginEmail" class="search-input" placeholder="correo@ejemplo.com">
+                </div>
+                <div class="form-group">
+                    <label>Contraseña</label>
+                    <input type="password" id="loginPassword" class="search-input" placeholder="Contraseña">
+                </div>
+                <button class="btn" id="loginBtn">Iniciar Sesión</button>
+                <div class="register-link">¿No tienes cuenta? <span id="goRegisterBtn">Registrarse</span></div>
+            </div>
+
+            <!-- SECCIÓN CLIENTE -->
+            <div class="section" id="clientSection">
+                <div class="logo"><i class="fas fa-truck"></i> MudanzasHub</div>
+                <div class="user-greeting"><i class="fas fa-user"></i> <span id="clientNameDisplay">Cliente</span></div>
+                <button class="btn btn-secondary logoutBtn">Cerrar Sesión</button>
+                
+                <div class="search-container">
+                    <label style="font-size:12px; color:#aaa; margin-bottom:5px; display:block;">Origen</label>
+                    <input type="text" id="originSearch" class="search-input" placeholder="¿De dónde salen las cosas?">
+                    <div id="originSuggestions" class="search-suggestions"></div>
+                </div>
+                <div class="search-container">
+                    <label style="font-size:12px; color:#aaa; margin-bottom:5px; display:block;">Destino</label>
+                    <input type="text" id="destinationSearch" class="search-input" placeholder="¿A dónde las llevamos?">
+                    <div id="destinationSuggestions" class="search-suggestions"></div>
+                </div>
+
+                <div class="form-group">
+                    <label>Tipo de Vehículo</label>
+                    <div class="vehicle-selector" id="vehicleSelector">
+                        <div class="vehicle-option active" data-vehicle="pickup">Pickup</div>
+                        <div class="vehicle-option" data-vehicle="buseta">Buseta</div>
+                        <div class="vehicle-option" data-vehicle="camion">Camión</div>
+                    </div>
+                </div>
+
+                <button class="btn" id="searchTransportersBtn">Ver Ofertas Disponibles</button>
+                
+                <div id="transportistasList" style="margin-top:20px;"></div>
+            </div>
+
+            <!-- SECCIÓN TRANSPORTISTA -->
+            <div class="section" id="transporterSection">
+                <div class="logo"><i class="fas fa-truck"></i> MudanzasHub</div>
+                <div class="user-greeting"><i class="fas fa-id-card"></i> <span id="transNameDisplay">Transportista</span></div>
+                <button class="btn btn-secondary logoutBtn">Cerrar Sesión</button>
+                
+                <div class="tabs">
+                    <button class="tab-btn active" data-tab="jobs">Ofertas</button>
+                    <button class="tab-btn" data-tab="active">En Curso</button>
+                    <button class="tab-btn" data-tab="history">Historial</button>
+                </div>
+                <div id="jobsTab" class="tab-content active"></div>
+                <div id="activeTab" class="tab-content"></div>
+                <div id="historyTab" class="tab-content">
+                    <div style="background:#222; padding:10px; border-radius:8px; margin-bottom:10px; text-align:center;">
+                        <div style="font-size:11px; color:#aaa;">Ganancias Totales</div>
+                        <div id="totalEarnings" style="font-size:20px; font-weight:bold; color:#4ade80;">₡0</div>
+                    </div>
+                    <div id="historyList"></div>
+                </div>
+            </div>
+
+            <!-- SECCIÓN ADMINISTRADOR -->
+            <div class="section" id="adminSection">
+                <div class="logo"><i class="fas fa-shield-alt"></i> Admin Panel</div>
+                <button class="btn btn-secondary logoutBtn">Cerrar Sesión</button>
+                <div class="tabs">
+                    <button class="tab-btn active" data-tab="moves">Mudanzas</button>
+                    <button class="tab-btn" data-tab="partners">Socios</button>
+                    <button class="tab-btn" data-tab="clients">Clientes</button>
+                </div>
+                <div id="movesTab" class="tab-content active">
+                    <div style="margin-bottom:10px; font-weight:bold; color:#00d4ff;">Mudanzas del Sistema</div>
+                    <div id="adminMovesList"></div>
+                </div>
+                <div id="partnersTab" class="tab-content">
+                    <div style="margin-bottom:10px; font-weight:bold; color:#00d4ff;">Lista de Socios</div>
+                    <button class="btn btn-secondary" id="addPartnerBtn" style="margin-bottom:10px;">+ Agregar Socio</button>
+                    <div id="adminPartnersList"></div>
+                </div>
+                <div id="clientsTab" class="tab-content">
+                    <div style="margin-bottom:10px; font-weight:bold; color:#00d4ff;">Lista de Clientes</div>
+                    <button class="btn btn-secondary" id="addClientAdminBtn" style="margin-bottom:10px;">+ Agregar Cliente</button>
+                    <div id="adminClientsList"></div>
+                </div>
+            </div>
         </div>
         <div class="map-container">
             <div id="map"></div>
@@ -979,7 +244,7 @@
             <div style="display:flex; gap:10px; margin-top:15px;">
                 <button class="btn" id="saveClientBtn">Guardar Cambios</button>
                 <button class="btn btn-whatsapp" id="msgClientBtn">
-                    <i class="fab fa-whatsapp"></i> Mensaje
+                    <i class="fab fa-whatsapp"></i> WhatsApp
                 </button>
                 <button class="btn btn-reject" id="deleteClientBtn">Borrar</button>
             </div>
@@ -992,64 +257,35 @@
             <div class="modal-header">Agregar Cliente</div>
             <div class="form-group">
                 <label>Nombre</label>
-                <input type="text" id="addCName" class="edit-input" placeholder="Nombre completo">
+                <input type="text" id="addCName" class="search-input" placeholder="Nombre completo">
             </div>
             <div class="form-group">
                 <label>Email</label>
-                <input type="email" id="addCEmail" class="edit-input" placeholder="correo@ejemplo.com">
+                <input type="email" id="addCEmail" class="search-input" placeholder="correo@ejemplo.com">
             </div>
             <div class="form-group">
                 <label>Contraseña</label>
-                <input type="password" id="addCPass" class="edit-input" placeholder="Contraseña">
+                <input type="password" id="addCPass" class="search-input" placeholder="Contraseña">
             </div>
             <div class="form-group">
                 <label>Teléfono (WhatsApp)</label>
-                <input type="tel" id="addCPhone" class="edit-input" placeholder="8888-8888">
+                <input type="tel" id="addCPhone" class="search-input" placeholder="8888-8888">
             </div>
             <div class="form-group">
                 <label>Cédula</label>
-                <input type="text" id="addCId" class="edit-input" placeholder="1-1111-1111">
+                <input type="text" id="addCId" class="search-input" placeholder="1-1111-1111">
             </div>
-            <button class="btn" id="saveNewClientBtn">
-                <i class="fas fa-save"></i> Crear Cliente
-            </button>
+            <button class="btn" id="saveNewClientBtn">Crear Cliente</button>
         </div>
     </div>
 
-    <div class="modal" id="codeModal">
-        <div class="modal-content">
-            <button class="modal-close" onclick="closeModal('codeModal')">×</button>
-            <div class="modal-header">Código de Confirmación</div>
-            <div id="codeContent"></div>
-        </div>
-    </div>
-
-    <!-- SCRIPTS -->
-    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-database.js"></script>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.umd.js"></script>
+    <script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.js"></script>
 
     <script>
-        /* ============================================
-           CONFIGURACIÓN FIREBASE
-           ============================================ */
-        const firebaseConfig = {
-            apiKey: "AIzaSyDZxxx",
-            authDomain: "mudanzashub-xxx.firebaseapp.com",
-            databaseURL: "https://mudanzashub-xxx.firebaseio.com",
-            projectId: "mudanzashub-xxx",
-            storageBucket: "mudanzashub-xxx.appspot.com",
-            messagingSenderId: "198057203593",
-            appId: "1:198057203593:web:d8a5d2f575bcc565b73358"
-        };
-
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.database();
-
-        /* ============================================
-           DATOS DE PRUEBA
-           ============================================ */
+        // ============================================
+        // DATOS DE PRUEBA
+        // ============================================
         let transporters = [
             { id: 1, email: 'carlos@test.com', password: '1234', name: 'Carlos Rodríguez', phone: '88881111', plate: 'BC-123', vehicle: 'Toyota Hiace', rating: 4.8, model: '2022', license: 'B2', insurance: 'INS-992', emergency: '88880000', role: 'transporter' },
             { id: 2, email: 'miguel@test.com', password: '1234', name: 'Miguel Vargas', phone: '88882222', plate: 'CL-456', vehicle: 'Hino 300', rating: 4.6, model: '2021', license: 'B3', insurance: 'INS-112', emergency: '88880001', role: 'transporter' },
@@ -1062,9 +298,9 @@
 
         let currentUser = null;
 
-        /* ============================================
-           FUNCIONES DE UTILIDAD
-           ============================================ */
+        // ============================================
+        // FUNCIONES DE UTILIDAD
+        // ============================================
         function openModal(modalId) {
             document.getElementById(modalId).classList.add('active');
         }
@@ -1073,36 +309,26 @@
             document.getElementById(modalId).classList.remove('active');
         }
 
-        function calculateDist(origin, destination) {
-            const R = 6371;
-            const dLat = (destination.lat - origin.lat) * Math.PI / 180;
-            const dLng = (destination.lng - origin.lng) * Math.PI / 180;
-            const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
-                      Math.cos(origin.lat * Math.PI / 180) * Math.cos(destination.lat * Math.PI / 180) *
-                      Math.sin(dLng/2) * Math.sin(dLng/2);
-            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-            return R * c;
+        function showSection(sectionId) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.getElementById(sectionId).classList.add('active');
         }
 
-        /* ============================================
-           FUNCIONES DE WHATSAPP - MEJORADAS
-           ============================================ */
+        // ============================================
+        // FUNCIONES DE WHATSAPP - MEJORADAS
+        // ============================================
         function sendWhatsAppMessage(phone, message = '') {
             if (!phone) {
                 alert('No hay teléfono registrado');
                 return;
             }
             
-            // Limpiar el teléfono de caracteres especiales
             const cleanPhone = phone.replace(/[^0-9]/g, '');
-            
-            // Asegurar que tenga el código de país (506 para Costa Rica)
             let fullPhone = cleanPhone;
             if (!cleanPhone.startsWith('506')) {
                 fullPhone = '506' + cleanPhone;
             }
             
-            // Construir URL de WhatsApp
             let whatsappUrl = `https://wa.me/${fullPhone}`;
             if (message) {
                 whatsappUrl += `?text=${encodeURIComponent(message)}`;
@@ -1129,36 +355,126 @@
             }
         }
 
-        /* ============================================
-           MANEJADORES DE EVENTOS
-           ============================================ */
-        document.addEventListener('click', function(e) {
-            // Botones de WhatsApp para transportistas
-            if (e.target.id === 'msgPartnerBtn') {
-                const transporterId = e.target.dataset.tid;
-                sendWhatsAppToTransporter(transporterId);
-            }
-
-            // Botones de WhatsApp para clientes
-            if (e.target.id === 'msgClientBtn') {
-                const clientEmail = e.target.dataset.email;
-                sendWhatsAppToClient(clientEmail);
-            }
-
-            // Cerrar modales
-            if (e.target.classList.contains('modal')) {
-                e.target.classList.remove('active');
-            }
-        });
-
-        /* ============================================
-           INICIALIZACIÓN
-           ============================================ */
+        // ============================================
+        // EVENTOS
+        // ============================================
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('✓ MudanzasHub mejorado cargado correctamente');
-            console.log('✓ Funcionalidad de WhatsApp optimizada');
-            console.log('✓ Transportistas disponibles:', transporters.length);
-            console.log('✓ Clientes registrados:', registeredClients.length);
+            // Login
+            document.getElementById('loginBtn').addEventListener('click', function() {
+                const email = document.getElementById('loginEmail').value;
+                const password = document.getElementById('loginPassword').value;
+
+                const user = [...transporters, ...registeredClients].find(u => u.email === email && u.password === password);
+                
+                if (user) {
+                    currentUser = user;
+                    if (user.role === 'transporter') {
+                        showSection('transporterSection');
+                        document.getElementById('transNameDisplay').textContent = user.name;
+                    } else if (user.role === 'client') {
+                        showSection('clientSection');
+                        document.getElementById('clientNameDisplay').textContent = user.name;
+                    } else if (user.role === 'admin') {
+                        showSection('adminSection');
+                    }
+                } else {
+                    alert('Email o contraseña incorrectos');
+                }
+            });
+
+            // Logout
+            document.querySelectorAll('.logoutBtn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    currentUser = null;
+                    showSection('loginSection');
+                    document.getElementById('loginEmail').value = '';
+                    document.getElementById('loginPassword').value = '';
+                });
+            });
+
+            // Tabs
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const tab = this.dataset.tab;
+                    const parent = this.closest('.tabs').parentElement;
+                    
+                    parent.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                    parent.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                    
+                    this.classList.add('active');
+                    parent.querySelector(`#${tab}Tab`).classList.add('active');
+                });
+            });
+
+            // WhatsApp para transportistas
+            document.addEventListener('click', function(e) {
+                if (e.target.id === 'msgPartnerBtn') {
+                    const transporterId = e.target.dataset.tid;
+                    sendWhatsAppToTransporter(transporterId);
+                }
+                if (e.target.id === 'msgClientBtn') {
+                    const clientEmail = e.target.dataset.email;
+                    sendWhatsAppToClient(clientEmail);
+                }
+            });
+
+            // Cerrar modales al hacer clic fuera
+            document.querySelectorAll('.modal').forEach(modal => {
+                modal.addEventListener('click', function(e) {
+                    if (e.target === this) {
+                        this.classList.remove('active');
+                    }
+                });
+            });
+
+            // Admin - Mostrar lista de socios
+            const adminPartnersList = document.getElementById('adminPartnersList');
+            if (adminPartnersList) {
+                transporters.forEach(t => {
+                    const card = document.createElement('div');
+                    card.className = 'transportista-card';
+                    card.innerHTML = `
+                        <div class="transportista-header">
+                            <div class="transportista-name">${t.name}</div>
+                            <div class="transportista-price">⭐ ${t.rating}</div>
+                        </div>
+                        <div style="font-size:12px; color:#aaa; margin-bottom:10px;">
+                            <div>📞 ${t.phone}</div>
+                            <div>🚗 ${t.vehicle}</div>
+                        </div>
+                        <button class="btn btn-whatsapp btn-sm" data-tid="${t.id}" id="msgPartnerBtn">
+                            <i class="fab fa-whatsapp"></i> WhatsApp
+                        </button>
+                    `;
+                    adminPartnersList.appendChild(card);
+                });
+            }
+
+            // Admin - Mostrar lista de clientes
+            const adminClientsList = document.getElementById('adminClientsList');
+            if (adminClientsList) {
+                registeredClients.forEach(c => {
+                    const card = document.createElement('div');
+                    card.className = 'transportista-card';
+                    card.innerHTML = `
+                        <div class="transportista-header">
+                            <div class="transportista-name">${c.name}</div>
+                        </div>
+                        <div style="font-size:12px; color:#aaa; margin-bottom:10px;">
+                            <div>📞 ${c.phone}</div>
+                            <div>📧 ${c.email}</div>
+                        </div>
+                        <button class="btn btn-whatsapp btn-sm" data-email="${c.email}" id="msgClientBtn">
+                            <i class="fab fa-whatsapp"></i> WhatsApp
+                        </button>
+                    `;
+                    adminClientsList.appendChild(card);
+                });
+            }
+
+            console.log('✓ MudanzasHub cargado correctamente');
+            console.log('✓ Transportistas:', transporters.length);
+            console.log('✓ Clientes:', registeredClients.length);
         });
     </script>
 </body>
