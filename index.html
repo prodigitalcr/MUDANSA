@@ -394,6 +394,7 @@
                 <button class="tab-btn" data-tab="partners">Socios</button>
                 <button class="tab-btn" data-tab="clients">Clientes</button>
                 <button class="tab-btn" data-tab="docs">Documentación</button>
+                <button class="tab-btn" data-tab="agentai" style="color:#00d4ff;">🤖 Agente IA</button>
             </div>
             <div id="movesTab" class="tab-content active">
                 <div style="display:flex; gap:10px; margin-bottom:15px; align-items:center; flex-wrap:wrap;">
@@ -438,6 +439,49 @@
                         <div class="finance-row" style="border-top:1px solid #333; margin-top:10px; padding-top:5px;">
                             <span class="finance-label">Balance Neto:</span><span class="finance-value" id="netBalance">₡0</span>
                         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+            <!-- TAB: AGENTE IA -->
+            <div id="agentaiTab" class="tab-content">
+                <div style="background:#1a3a1a; border:1px solid #00d4ff33; border-radius:8px; padding:12px 14px; margin-bottom:14px; font-size:12px; color:#00d4ff; display:flex; align-items:center; gap:8px;">
+                    <span>⚡</span> Los cambios se guardan en Firebase y el agente los usa de inmediato.
+                </div>
+
+                <div style="margin-bottom:12px;">
+                    <label style="font-size:12px; color:#aaa; display:block; margin-bottom:6px; font-weight:600;">📋 PROMPT PRINCIPAL (personalidad + instrucciones)</label>
+                    <textarea id="aiPromptEditor" style="width:100%; height:220px; background:#2a2a2a; border:1px solid #444; border-radius:8px; color:#fff; font-size:12px; padding:10px; font-family:monospace; resize:vertical; line-height:1.5;"></textarea>
+                </div>
+
+                <div style="margin-bottom:12px;">
+                    <label style="font-size:12px; color:#aaa; display:block; margin-bottom:6px; font-weight:600;">💰 PRECIOS Y TARIFAS ACTUALES</label>
+                    <textarea id="aiPricesEditor" style="width:100%; height:120px; background:#2a2a2a; border:1px solid #444; border-radius:8px; color:#fff; font-size:12px; padding:10px; font-family:monospace; resize:vertical; line-height:1.5;"></textarea>
+                </div>
+
+                <div style="margin-bottom:12px;">
+                    <label style="font-size:12px; color:#aaa; display:block; margin-bottom:6px; font-weight:600;">❓ PREGUNTAS FRECUENTES (FAQ)</label>
+                    <div id="faqList" style="margin-bottom:8px;"></div>
+                    <div style="display:flex; gap:6px; margin-bottom:8px;">
+                        <input type="text" id="faqQuestion" class="search-input" placeholder="Pregunta" style="flex:1; font-size:12px; padding:8px;">
+                        <button class="btn btn-sm" id="addFaqBtn" style="background:#00d4ff; color:#000; white-space:nowrap;">+ Agregar</button>
+                    </div>
+                    <textarea id="faqAnswer" class="search-input" placeholder="Respuesta para esta pregunta..." style="width:100%; height:70px; font-size:12px; resize:vertical;"></textarea>
+                </div>
+
+                <div style="display:flex; gap:8px;">
+                    <button class="btn" id="saveAiConfigBtn" style="background:#4ade80; color:#000;">💾 Guardar y Activar Cambios</button>
+                    <button class="btn btn-secondary btn-sm" id="testAiBtn" style="width:auto; padding:0 16px;">🧪 Probar</button>
+                </div>
+                <div id="aiSaveStatus" style="font-size:12px; margin-top:10px; text-align:center;"></div>
+
+                <!-- Mini preview chat para test -->
+                <div id="aiTestPanel" style="display:none; margin-top:14px; background:#222; border:1px solid #333; border-radius:8px; overflow:hidden;">
+                    <div style="padding:10px 12px; background:#1a3a3a; font-size:12px; font-weight:700; color:#00d4ff;">🧪 Test del Agente</div>
+                    <div id="aiTestMessages" style="height:160px; overflow-y:auto; padding:10px; display:flex; flex-direction:column; gap:8px; font-size:12px;"></div>
+                    <div style="display:flex; gap:6px; padding:8px;">
+                        <input type="text" id="aiTestInput" class="search-input" placeholder="Escribe una pregunta de prueba..." style="flex:1; font-size:12px; padding:8px;" onkeydown="if(event.key==='Enter') adminTestSend()">
+                        <button class="btn btn-sm" onclick="adminTestSend()" style="background:#00d4ff; color:#000; white-space:nowrap;">Enviar</button>
                     </div>
                 </div>
             </div>
@@ -1469,140 +1513,333 @@
     });
 </script>
 
-<!-- ===== AGENTE IA MUDANZASHUB ===== -->
-<script>
-(function() {
-    const AI_SYSTEM = `Eres "Mudi", el asistente de ventas virtual de MudanzasHub Costa Rica, la plataforma líder de mudanzas y acarreos del país.
+<!-- ===== AGENTE IA MUDANZASHUB v2 ===== -->
+<script type="module">
+import { getDatabase, ref, set, onValue, get } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 
-INFORMACIÓN DEL SERVICIO:
-- Servicio de mudanzas y acarreos en Costa Rica
-- Tres tipos de vehículo: Pickup (₡15,000 base, hasta 800kg), Buseta (₡21,000 base, hasta 1,500kg), Camión (₡27,000 base, hasta 3,500kg)
-- Servicios: "Con Acarreo" (el transportista ayuda a cargar) o "Puesta Afuera" (el cliente pone las cosas en la calle)
-- El precio varía según: distancia, tipo de vehículo, peso de la carga, y dificultad de acceso
-- Tarifa aproximada: base del vehículo + ₡500/km + recargo por peso si supera el 60% de la capacidad
-- Acceso difícil tiene recargo del 15-20% al total
-- Horarios: disponible todos los días, se puede programar mudanzas con fecha y hora
-- Pago: SINPE Móvil al 7228-4602, adjuntando comprobante en la plataforma
-- Cobertura: todo el territorio nacional de Costa Rica
-- Cada transportista tiene calificación, placa, seguro y licencia verificados
-- El cliente recibe código de confirmación para finalizar el servicio
+// Reutilizar la app Firebase ya inicializada
+const app = getApps()[0];
+const db = getDatabase(app);
 
-PROCESO:
-1. El cliente se registra o inicia sesión
-2. Ingresa origen y destino en el mapa
-3. Selecciona tipo de vehículo y servicio
-4. Ve las ofertas disponibles de transportistas con precios
-5. Selecciona un transportista y ve su ficha completa
-6. Paga por SINPE y confirma
-7. El transportista acepta y se activa la navegación GPS
-8. Al finalizar, el cliente da un código de confirmación
+// ===== DEFAULTS DEL AGENTE =====
+const DEFAULT_PROMPT = `Eres "Mudi", el asistente de ventas de MudanzasHub Costa Rica. Eres amigable, entusiasta y muy conocedor del servicio. Tu meta es ayudar al cliente a entender el servicio, resolver sus dudas y animarlo a solicitar una mudanza. Responde siempre en español, de forma corta y clara (máximo 4 oraciones). Si preguntan por precios, da estimados reales. Si quieren cotizar, pídeles origen, destino y tipo de carga.`;
 
-Tu objetivo es resolver dudas, explicar el servicio de forma amigable, motivar al cliente a usar la plataforma, y cerrar preguntas de ventas. Responde en español, máximo 3-4 oraciones cortas. Sé entusiasta pero profesional. Si el cliente quiere cotizar, pídele origen, destino y tipo de carga para orientarlo mejor.`;
+const DEFAULT_PRICES = `- Pickup: tarifa base ₡15,000 (hasta 800kg)
+- Buseta: tarifa base ₡21,000 (hasta 1,500kg)  
+- Camión: tarifa base ₡27,000 (hasta 3,500kg)
+- Costo por km: ₡1,100/km (pickup), ₡1,430/km (buseta), ₡1,870/km (camión)
+- Servicio con acarreo: +₡8,000
+- Acceso difícil: +15-30% sobre el total
+- Pago por SINPE Móvil al 7228-4602`;
 
-    let aiHistory = [];
-    let aiReady = false;
+const DEFAULT_FAQS = [
+    { q: "¿Cómo funciona el servicio?", a: "Ingresas origen y destino, seleccionas el tipo de vehículo y ves ofertas de transportistas verificados. Pagas por SINPE y el transportista te recoge. Al finalizar te damos un código de confirmación." },
+    { q: "¿Están asegurados?", a: "Sí, todos nuestros socios transportistas tienen seguro vehicular verificado, licencia vigente y calificación de clientes anteriores." },
+    { q: "¿Cuánto tiempo tarda?", a: "Puedes programar tu mudanza con fecha y hora exacta, o buscar disponibilidad para hoy mismo. El tiempo de llegada depende de la ubicación del transportista." }
+];
 
-    // Mostrar botón solo cuando hay sesión activa de cliente o transportista
-    function checkAiVisibility() {
-        const clientActive = document.getElementById('clientSection')?.classList.contains('active');
-        const transActive = document.getElementById('transporterSection')?.classList.contains('active');
-        const btn = document.getElementById('aiAgentBtn');
-        if (btn) btn.style.display = (clientActive || transActive) ? 'flex' : 'none';
+// ===== ESTADO GLOBAL DEL AGENTE =====
+window._mudiConfig = {
+    prompt: DEFAULT_PROMPT,
+    prices: DEFAULT_PRICES,
+    faqs: DEFAULT_FAQS
+};
+
+let aiHistory = [];
+let aiReady = false;
+let adminTestHistory = [];
+let adminFaqs = [...DEFAULT_FAQS];
+
+// Construir el system prompt completo
+function buildSystemPrompt() {
+    const cfg = window._mudiConfig;
+    let faqText = '';
+    if (cfg.faqs && cfg.faqs.length > 0) {
+        faqText = '\n\nPREGUNTAS FRECUENTES Y SUS RESPUESTAS:\n' + cfg.faqs.map(f => `P: ${f.q}\nR: ${f.a}`).join('\n\n');
     }
+    return `${cfg.prompt}\n\nINFORMACIÓN DE PRECIOS Y TARIFAS:\n${cfg.prices}${faqText}`;
+}
 
-    // Observar cambios de sección
-    const observer = new MutationObserver(checkAiVisibility);
-    const sections = ['clientSection','transporterSection','authSection','adminSection'];
-    sections.forEach(id => {
-        const el = document.getElementById(id);
-        if (el) observer.observe(el, { attributes: true, attributeFilter: ['class'] });
-    });
-
-    // Toggle panel
-    document.getElementById('aiAgentBtn').addEventListener('click', () => {
-        const panel = document.getElementById('aiChatPanel');
-        const isOpen = panel.classList.contains('open');
-        if (!isOpen) {
-            panel.classList.add('open');
-            if (!aiReady) {
-                aiReady = true;
-                aiAddMessage('bot', '¡Hola! 👋 Soy Mudi, tu asistente de MudanzasHub. ¿En qué te puedo ayudar hoy? Puedo orientarte sobre precios, vehículos, o cómo funciona el servicio.');
+// Cargar configuración desde Firebase
+function loadAiConfig() {
+    onValue(ref(db, 'aiConfig'), (snap) => {
+        const data = snap.val();
+        if (data) {
+            window._mudiConfig = {
+                prompt: data.prompt || DEFAULT_PROMPT,
+                prices: data.prices || DEFAULT_PRICES,
+                faqs: data.faqs ? Object.values(data.faqs) : DEFAULT_FAQS
+            };
+            adminFaqs = [...window._mudiConfig.faqs];
+            // Si el admin está abierto, actualizar los editores
+            if (document.getElementById('aiPromptEditor')) {
+                document.getElementById('aiPromptEditor').value = window._mudiConfig.prompt;
+                document.getElementById('aiPricesEditor').value = window._mudiConfig.prices;
+                renderFaqList();
             }
-            document.getElementById('aiInput').focus();
         } else {
-            panel.classList.remove('open');
+            // Primera vez: cargar defaults en los editores
+            if (document.getElementById('aiPromptEditor')) {
+                document.getElementById('aiPromptEditor').value = DEFAULT_PROMPT;
+                document.getElementById('aiPricesEditor').value = DEFAULT_PRICES;
+                renderFaqList();
+            }
         }
     });
+}
 
-    document.getElementById('aiCloseBtn').addEventListener('click', () => {
-        document.getElementById('aiChatPanel').classList.remove('open');
-    });
+loadAiConfig();
 
-    window.aiQuick = function(text) {
-        document.getElementById('aiInput').value = text;
-        aiSend();
-    };
+// ===== VISIBILIDAD DEL BOTÓN =====
+function checkAiVisibility() {
+    const clientActive = document.getElementById('clientSection')?.classList.contains('active');
+    const transActive = document.getElementById('transporterSection')?.classList.contains('active');
+    const btn = document.getElementById('aiAgentBtn');
+    if (btn) btn.style.display = (clientActive || transActive) ? 'flex' : 'none';
+}
 
-    window.aiSend = async function() {
-        const input = document.getElementById('aiInput');
-        const text = input.value.trim();
-        if (!text) return;
-        input.value = '';
-        aiAddMessage('user', text);
-        aiHistory.push({ role: 'user', content: text });
-        document.getElementById('aiSendBtn').disabled = true;
-        aiShowTyping();
-        try {
-            const res = await fetch('https://api.anthropic.com/v1/messages', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    model: 'claude-sonnet-4-20250514',
-                    max_tokens: 1000,
-                    system: AI_SYSTEM,
-                    messages: aiHistory
-                })
-            });
-            const data = await res.json();
-            aiRemoveTyping();
-            const reply = data.content?.[0]?.text || 'Disculpa, hubo un problema. ¿Puedes repetir tu pregunta?';
-            aiHistory.push({ role: 'assistant', content: reply });
-            aiAddMessage('bot', reply);
-        } catch(e) {
-            aiRemoveTyping();
-            aiAddMessage('bot', 'Hay un problema de conexión en este momento. Por favor intenta de nuevo.');
+const observer = new MutationObserver(checkAiVisibility);
+['clientSection','transporterSection','authSection','adminSection'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) observer.observe(el, { attributes: true, attributeFilter: ['class'] });
+});
+checkAiVisibility();
+setInterval(checkAiVisibility, 800);
+
+// ===== TOGGLE PANEL CLIENTE =====
+document.getElementById('aiAgentBtn').addEventListener('click', () => {
+    const panel = document.getElementById('aiChatPanel');
+    const isOpen = panel.classList.contains('open');
+    if (!isOpen) {
+        panel.classList.add('open');
+        if (!aiReady) {
+            aiReady = true;
+            const name = document.getElementById('clientNameDisplay')?.innerText || '';
+            aiAddMessage('bot', `¡Hola${name ? ' ' + name.split(' ')[0] : ''}! 👋 Soy Mudi, tu asistente de MudanzasHub. Estoy aquí para ayudarte con precios, cotizaciones y cualquier duda sobre el servicio. ¿En qué te puedo ayudar?`);
         }
-        document.getElementById('aiSendBtn').disabled = false;
-        document.getElementById('aiInput').focus();
+        setTimeout(() => document.getElementById('aiInput')?.focus(), 100);
+    } else {
+        panel.classList.remove('open');
+    }
+});
+
+document.getElementById('aiCloseBtn').addEventListener('click', () => {
+    document.getElementById('aiChatPanel').classList.remove('open');
+});
+
+// ===== ENVÍO DE MENSAJES CLIENTE =====
+window.aiQuick = function(text) {
+    document.getElementById('aiInput').value = text;
+    window.aiSend();
+};
+
+window.aiSend = async function() {
+    const input = document.getElementById('aiInput');
+    const text = input.value.trim();
+    if (!text) return;
+    input.value = '';
+    aiAddMessage('user', text);
+    aiHistory.push({ role: 'user', content: text });
+    document.getElementById('aiSendBtn').disabled = true;
+    aiShowTyping('aiMessages', 'aiTyping');
+
+    try {
+        const res = await fetch('https://api.anthropic.com/v1/messages', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                model: 'claude-sonnet-4-20250514',
+                max_tokens: 600,
+                system: buildSystemPrompt(),
+                messages: aiHistory
+            })
+        });
+        const data = await res.json();
+        aiRemoveTyping('aiTyping');
+        const reply = data.content?.[0]?.text || 'Disculpa, hubo un problema. ¿Puedes repetir?';
+        aiHistory.push({ role: 'assistant', content: reply });
+        aiAddMessage('bot', reply);
+    } catch(e) {
+        aiRemoveTyping('aiTyping');
+        aiAddMessage('bot', 'Error de conexión. Por favor intenta de nuevo.');
+    }
+    document.getElementById('aiSendBtn').disabled = false;
+    document.getElementById('aiInput')?.focus();
+};
+
+// ===== FUNCIONES DE MENSAJES =====
+function aiAddMessage(role, text, containerId = 'aiMessages') {
+    const msgs = document.getElementById(containerId);
+    if (!msgs) return;
+    const div = document.createElement('div');
+    div.className = `ai-msg ${role}`;
+    div.innerHTML = `<div class="ai-msg-avatar">${role==='bot'?'🤖':'Yo'}</div><div class="ai-bubble">${text.replace(/\n/g,'<br>')}</div>`;
+    msgs.appendChild(div);
+    msgs.scrollTop = msgs.scrollHeight;
+}
+
+function aiShowTyping(containerId, typingId) {
+    const msgs = document.getElementById(containerId);
+    if (!msgs) return;
+    const div = document.createElement('div');
+    div.className = 'ai-msg bot'; div.id = typingId;
+    div.innerHTML = `<div class="ai-msg-avatar">🤖</div><div class="ai-bubble"><div class="ai-typing"><span></span><span></span><span></span></div></div>`;
+    msgs.appendChild(div);
+    msgs.scrollTop = msgs.scrollHeight;
+}
+
+function aiRemoveTyping(typingId) {
+    const t = document.getElementById(typingId);
+    if (t) t.remove();
+}
+
+// ===== PANEL ADMIN: GESTIÓN DEL AGENTE =====
+function renderFaqList() {
+    const list = document.getElementById('faqList');
+    if (!list) return;
+    if (adminFaqs.length === 0) {
+        list.innerHTML = '<div style="font-size:11px; color:#666; padding:6px 0;">No hay FAQs aún. Agrega la primera.</div>';
+        return;
+    }
+    list.innerHTML = adminFaqs.map((f, i) => `
+        <div style="background:#2a2a2a; border:1px solid #333; border-radius:6px; padding:8px 10px; margin-bottom:6px; font-size:11px;">
+            <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:8px;">
+                <div style="flex:1;">
+                    <div style="color:#00d4ff; font-weight:700; margin-bottom:2px;">P: ${f.q}</div>
+                    <div style="color:#aaa; line-height:1.4;">R: ${f.a}</div>
+                </div>
+                <button onclick="removeFaq(${i})" style="background:#ff4b4b22; border:1px solid #ff4b4b44; color:#ff4b4b; border-radius:4px; padding:2px 8px; cursor:pointer; font-size:10px; white-space:nowrap;">✕ Eliminar</button>
+            </div>
+        </div>
+    `).join('');
+}
+
+window.removeFaq = function(i) {
+    adminFaqs.splice(i, 1);
+    renderFaqList();
+};
+
+// Botón agregar FAQ
+document.getElementById('addFaqBtn')?.addEventListener('click', () => {
+    const q = document.getElementById('faqQuestion').value.trim();
+    const a = document.getElementById('faqAnswer').value.trim();
+    if (!q || !a) return alert('Completa la pregunta y la respuesta.');
+    adminFaqs.push({ q, a });
+    document.getElementById('faqQuestion').value = '';
+    document.getElementById('faqAnswer').value = '';
+    renderFaqList();
+});
+
+// Guardar en Firebase
+document.getElementById('saveAiConfigBtn')?.addEventListener('click', async () => {
+    const btn = document.getElementById('saveAiConfigBtn');
+    const status = document.getElementById('aiSaveStatus');
+    btn.disabled = true;
+    btn.textContent = '⏳ Guardando...';
+    status.style.color = '#aaa';
+    status.textContent = '';
+
+    const newConfig = {
+        prompt: document.getElementById('aiPromptEditor').value.trim(),
+        prices: document.getElementById('aiPricesEditor').value.trim(),
+        faqs: adminFaqs.reduce((acc, f, i) => { acc[i] = f; return acc; }, {})
     };
 
-    function aiAddMessage(role, text) {
-        const msgs = document.getElementById('aiMessages');
-        const div = document.createElement('div');
-        div.className = `ai-msg ${role}`;
-        div.innerHTML = `<div class="ai-msg-avatar">${role==='bot'?'🤖':'Yo'}</div><div class="ai-bubble">${text.replace(/\n/g,'<br>')}</div>`;
-        msgs.appendChild(div);
-        msgs.scrollTop = msgs.scrollHeight;
+    try {
+        await set(ref(db, 'aiConfig'), newConfig);
+        window._mudiConfig = { ...newConfig, faqs: adminFaqs };
+        aiHistory = []; // Reset del historial para aplicar nuevo prompt
+        status.style.color = '#4ade80';
+        status.textContent = '✅ Guardado. El agente ya usa la nueva configuración.';
+        btn.textContent = '✅ Guardado';
+        setTimeout(() => { btn.textContent = '💾 Guardar y Activar Cambios'; btn.disabled = false; status.textContent = ''; }, 3000);
+    } catch(e) {
+        status.style.color = '#ff4b4b';
+        status.textContent = '❌ Error al guardar. Revisa la conexión.';
+        btn.textContent = '💾 Guardar y Activar Cambios';
+        btn.disabled = false;
     }
+});
 
-    function aiShowTyping() {
-        const msgs = document.getElementById('aiMessages');
-        const div = document.createElement('div');
-        div.className = 'ai-msg bot'; div.id = 'aiTyping';
-        div.innerHTML = `<div class="ai-msg-avatar">🤖</div><div class="ai-bubble"><div class="ai-typing"><span></span><span></span><span></span></div></div>`;
-        msgs.appendChild(div);
-        msgs.scrollTop = msgs.scrollHeight;
+// Botón test
+document.getElementById('testAiBtn')?.addEventListener('click', () => {
+    const panel = document.getElementById('aiTestPanel');
+    panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+    if (panel.style.display === 'block' && document.getElementById('aiTestMessages').children.length === 0) {
+        addTestMsg('bot', '¡Hola! Soy Mudi en modo prueba. Escribe una pregunta para ver cómo respondería el agente con la configuración actual.');
     }
+});
 
-    function aiRemoveTyping() {
-        const t = document.getElementById('aiTyping');
-        if (t) t.remove();
+window.adminTestSend = async function() {
+    const input = document.getElementById('aiTestInput');
+    const text = input.value.trim();
+    if (!text) return;
+    input.value = '';
+    addTestMsg('user', text);
+    adminTestHistory.push({ role: 'user', content: text });
+    aiShowTyping('aiTestMessages', 'adminTestTyping');
+
+    // Usar el prompt de los editores (no el guardado, para previsualizar antes de guardar)
+    const previewPrompt = buildPreviewPrompt();
+
+    try {
+        const res = await fetch('https://api.anthropic.com/v1/messages', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                model: 'claude-sonnet-4-20250514',
+                max_tokens: 600,
+                system: previewPrompt,
+                messages: adminTestHistory
+            })
+        });
+        const data = await res.json();
+        aiRemoveTyping('adminTestTyping');
+        const reply = data.content?.[0]?.text || 'Error al obtener respuesta.';
+        adminTestHistory.push({ role: 'assistant', content: reply });
+        addTestMsg('bot', reply);
+    } catch(e) {
+        aiRemoveTyping('adminTestTyping');
+        addTestMsg('bot', 'Error de conexión.');
     }
+};
 
-    // Chequeo inicial y periódico
-    checkAiVisibility();
-    setInterval(checkAiVisibility, 1000);
-})();
+function buildPreviewPrompt() {
+    const p = document.getElementById('aiPromptEditor')?.value || '';
+    const pr = document.getElementById('aiPricesEditor')?.value || '';
+    const faqText = adminFaqs.length > 0
+        ? '\n\nFAQs:\n' + adminFaqs.map(f => `P: ${f.q}\nR: ${f.a}`).join('\n\n')
+        : '';
+    return `${p}\n\nTARIFAS:\n${pr}${faqText}`;
+}
+
+function addTestMsg(role, text) {
+    const msgs = document.getElementById('aiTestMessages');
+    if (!msgs) return;
+    const div = document.createElement('div');
+    div.style.cssText = `display:flex; gap:6px; align-items:flex-start; margin-bottom:6px; flex-direction:${role==='user'?'row-reverse':'row'}`;
+    div.innerHTML = `<div style="background:${role==='bot'?'#2a2a2a':'#00d4ff'}; color:${role==='bot'?'#fff':'#000'}; padding:7px 10px; border-radius:8px; font-size:11px; max-width:80%; line-height:1.5;">${text.replace(/\n/g,'<br>')}</div>`;
+    msgs.appendChild(div);
+    msgs.scrollTop = msgs.scrollHeight;
+}
+
+// Cargar valores en editores cuando se activa la pestaña
+document.addEventListener('click', (e) => {
+    const tabBtn = e.target.closest('.tab-btn');
+    if (tabBtn && tabBtn.dataset.tab === 'agentai') {
+        setTimeout(() => {
+            const cfg = window._mudiConfig;
+            const pe = document.getElementById('aiPromptEditor');
+            const pr = document.getElementById('aiPricesEditor');
+            if (pe && !pe.value) pe.value = cfg.prompt || DEFAULT_PROMPT;
+            if (pr && !pr.value) pr.value = cfg.prices || DEFAULT_PRICES;
+            if (adminFaqs.length === 0) adminFaqs = [...(cfg.faqs || DEFAULT_FAQS)];
+            renderFaqList();
+            adminTestHistory = [];
+        }, 50);
+    }
+});
 </script>
 </body>
 </html>
