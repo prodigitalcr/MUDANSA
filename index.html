@@ -35,10 +35,10 @@
         .btn-secondary { background: #333; color: #fff; margin-bottom: 10px; }
         .btn-sm { width: auto; padding: 7px 14px; font-size: 12px; display: inline-block; }
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 1000; align-items: center; justify-content: center; }
-        .modal.active { display: flex !important; }
+        .modal.active { display: flex; }
         .modal-content { background: #1a1a1a; border: 1px solid #444; border-radius: 12px; padding: 28px; width: 92%; max-width: 620px; max-height: 92vh; overflow-y: auto; box-shadow: 0 10px 40px rgba(0,0,0,0.9); position: relative; }
         .modal-header { font-size: 19px; font-weight: bold; margin-bottom: 18px; color: #00d4ff; }
-        .modal-close { position: absolute; top: 14px; right: 14px; background: none; border: none; color: #aaa; font-size: 24px; cursor: pointer; width: auto; padding: 0; z-index: 1001; }
+        .modal-close { position: absolute; top: 14px; right: 14px; background: none; border: none; color: #aaa; font-size: 24px; cursor: pointer; width: auto; padding: 0; }
         .section { display: none; }
         .section.active { display: block; }
         .tabs { display: flex; background: #222; border-radius: 8px; padding: 4px; margin-bottom: 18px; }
@@ -51,12 +51,13 @@
         .admin-table td { padding: 12px 8px; border: 1px solid #222; }
         .admin-footer { background: #1a3a3a; padding: 10px; border-radius: 0 0 8px 8px; border: 1px solid #333; border-top: none; display: flex; justify-content: flex-end; gap: 20px; font-size: 12px; font-weight: bold; }
         
-        /* MÓVIL OPTIMIZADO */
-        @media (max-width: 768px) {
-            .container { flex-direction: column; }
-            .sidebar { width: 100%; height: auto; max-height: 60vh; border-right: none; border-bottom: 1px solid #333; }
-            .map-container { height: 40vh; }
-            #map { height: 100%; }
+        /* MÓVIL OPTIMIZADO PARA TRANSPORTISTAS */
+        @media (max-width: 480px) {
+            .sidebar { width: 100%; position: absolute; z-index: 2000; height: 100%; }
+            .uber-job-card { padding: 12px; margin-bottom: 10px; }
+            .job-header { flex-direction: column; align-items: flex-start; gap: 5px; }
+            .job-price { font-size: 18px; }
+            .btn-sm { padding: 10px; width: 100%; text-align: center; margin-top: 5px; }
         }
         
         .btn-whatsapp { background: #25d366; color: #fff; }
@@ -70,8 +71,8 @@
         .finance-value { font-weight: bold; color: #00d4ff; }
         
         /* NAVEGACIÓN GPS MÓVIL */
-        #gpsView { display: none !important; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 3000; flex-direction: column; }
-        #gpsView.active { display: flex !important; }
+        #gpsView { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 3000; flex-direction: column; }
+        #gpsView.active { display: flex; }
         .gps-header { background: #1a1a1a; padding: 15px; border-bottom: 1px solid #333; display: flex; justify-content: space-between; align-items: center; }
         .gps-map { flex: 1; width: 100%; }
         .gps-instructions { background: #fff; padding: 20px; border-top: 1px solid #333; font-size: 16px; font-weight: bold; color: #000; text-align: center; box-shadow: 0 -5px 15px rgba(0,0,0,0.2); }
@@ -121,7 +122,7 @@
         /* MEJORAS INTERFAZ FACTURA Y FICHA (MODELO) */
         .factura-header { border-bottom: 1px solid #333; padding-bottom: 15px; margin-bottom: 15px; }
         .factura-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 13px; }
-        .factura-label { color: #aaa; }
+        .factura-label { color: #888; }
         .factura-value { font-weight: 600; }
         .transportista-ficha { background: #222; border-radius: 10px; padding: 15px; border: 1px solid #333; margin-bottom: 15px; }
         .ficha-header { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; }
@@ -129,9 +130,111 @@
         .ficha-title { flex: 1; }
         .ficha-name { font-weight: bold; font-size: 16px; }
         .ficha-rating { color: #fbbf24; font-size: 12px; }
+
+        /* ===== AGENTE IA MUDANZAS ===== */
+        #aiAgentBtn {
+            position: fixed; bottom: 28px; right: 28px;
+            width: 58px; height: 58px; border-radius: 50%;
+            background: linear-gradient(135deg, #00d4ff, #0099bb);
+            border: none; cursor: pointer; z-index: 5000;
+            display: none; align-items: center; justify-content: center;
+            box-shadow: 0 4px 20px rgba(0,212,255,0.5);
+            transition: transform 0.2s, box-shadow 0.2s;
+            font-size: 24px; color: #000;
+        }
+        #aiAgentBtn:hover { transform: scale(1.1); box-shadow: 0 6px 28px rgba(0,212,255,0.7); }
+        #aiAgentBtn .ai-badge {
+            position: absolute; top: -4px; right: -4px;
+            width: 16px; height: 16px; background: #4ade80;
+            border-radius: 50%; border: 2px solid #0f0f0f;
+        }
+        #aiChatPanel {
+            position: fixed; bottom: 100px; right: 28px;
+            width: 340px; background: #1a1a1a;
+            border: 1px solid #00d4ff44; border-radius: 16px;
+            box-shadow: 0 8px 40px rgba(0,0,0,0.8);
+            z-index: 5000; display: none; flex-direction: column;
+            max-height: 520px; overflow: hidden;
+        }
+        #aiChatPanel.open { display: flex; }
+        .ai-panel-header {
+            padding: 14px 16px; border-bottom: 1px solid #333;
+            display: flex; align-items: center; gap: 10px;
+            background: linear-gradient(135deg, #1a3a3a, #222);
+        }
+        .ai-panel-avatar {
+            width: 36px; height: 36px; border-radius: 50%;
+            background: #00d4ff22; border: 1px solid #00d4ff66;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 16px; flex-shrink: 0;
+        }
+        .ai-panel-title { font-size: 13px; font-weight: 700; color: #fff; }
+        .ai-panel-subtitle { font-size: 11px; color: #00d4ff; }
+        .ai-close-btn { margin-left: auto; background: none; border: none; color: #888; font-size: 20px; cursor: pointer; padding: 0; width: auto; }
+        #aiMessages {
+            flex: 1; overflow-y: auto; padding: 14px;
+            display: flex; flex-direction: column; gap: 10px;
+            min-height: 200px; max-height: 320px;
+        }
+        .ai-msg { display: flex; gap: 8px; align-items: flex-start; }
+        .ai-msg.user { flex-direction: row-reverse; }
+        .ai-bubble {
+            max-width: 80%; padding: 9px 13px;
+            border-radius: 12px; font-size: 13px; line-height: 1.5;
+        }
+        .ai-msg.bot .ai-bubble {
+            background: #2a2a2a; color: #fff;
+            border: 1px solid #333; border-radius: 4px 12px 12px 12px;
+        }
+        .ai-msg.user .ai-bubble {
+            background: #00d4ff; color: #000;
+            border-radius: 12px 4px 12px 12px; font-weight: 500;
+        }
+        .ai-msg-avatar { width: 24px; height: 24px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; background: #00d4ff22; color: #00d4ff; }
+        .ai-quick-btns { display: flex; gap: 5px; flex-wrap: wrap; padding: 0 14px 8px; }
+        .ai-quick-btn { font-size: 11px; padding: 4px 10px; border-radius: 20px; border: 1px solid #00d4ff44; background: #00d4ff11; color: #00d4ff; cursor: pointer; white-space: nowrap; transition: background 0.15s; }
+        .ai-quick-btn:hover { background: #00d4ff33; }
+        .ai-input-row { padding: 10px 14px; border-top: 1px solid #333; display: flex; gap: 8px; }
+        .ai-input-row input { flex: 1; background: #2a2a2a; border: 1px solid #444; border-radius: 8px; padding: 9px 12px; color: #fff; font-size: 13px; outline: none; }
+        .ai-input-row input:focus { border-color: #00d4ff; }
+        .ai-send { width: 34px; height: 34px; border-radius: 50%; background: #00d4ff; border: none; color: #000; cursor: pointer; font-size: 14px; flex-shrink: 0; }
+        .ai-send:disabled { background: #333; color: #666; cursor: not-allowed; }
+        .ai-typing { display: flex; gap: 4px; align-items: center; padding: 6px 0; }
+        .ai-typing span { width: 5px; height: 5px; border-radius: 50%; background: #00d4ff; animation: aiBounce 1.2s infinite; }
+        .ai-typing span:nth-child(2) { animation-delay: 0.2s; }
+        .ai-typing span:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes aiBounce { 0%,60%,100%{transform:translateY(0)} 30%{transform:translateY(-5px)} }
     </style>
 </head>
 <body>
+
+<!-- BOTÓN FLOTANTE AGENTE IA -->
+<button id="aiAgentBtn" title="Asistente IA MudanzasHub">
+    🤖<div class="ai-badge"></div>
+</button>
+
+<!-- PANEL CHAT AGENTE IA -->
+<div id="aiChatPanel">
+    <div class="ai-panel-header">
+        <div class="ai-panel-avatar">🤖</div>
+        <div>
+            <div class="ai-panel-title">Asistente MudanzasHub</div>
+            <div class="ai-panel-subtitle">● En línea · IA disponible</div>
+        </div>
+        <button class="ai-close-btn" id="aiCloseBtn">×</button>
+    </div>
+    <div id="aiMessages"></div>
+    <div class="ai-quick-btns">
+        <button class="ai-quick-btn" onclick="aiQuick('¿Cuánto cuesta una mudanza?')">💰 Precios</button>
+        <button class="ai-quick-btn" onclick="aiQuick('¿Cómo funciona el servicio?')">❓ ¿Cómo funciona?</button>
+        <button class="ai-quick-btn" onclick="aiQuick('¿Qué vehículos tienen?')">🚛 Vehículos</button>
+        <button class="ai-quick-btn" onclick="aiQuick('¿Cómo pago el servicio?')">💳 Pagos</button>
+    </div>
+    <div class="ai-input-row">
+        <input type="text" id="aiInput" placeholder="Escribe tu pregunta..." onkeydown="if(event.key==='Enter') aiSend()">
+        <button class="ai-send" id="aiSendBtn" onclick="aiSend()">➤</button>
+    </div>
+</div>
 
 <div class="nav-overlay" id="navOverlay">
     <i class="fas fa-navigation" style="color:#00d4ff;"></i>
@@ -247,223 +350,258 @@
                 </div>
             </div>
 
-            <button class="btn" id="searchTransportersBtn">Buscar Transportistas</button>
+            <div class="form-group">
+                <label>Programar Mudanza (Opcional)</label>
+                <div style="display:flex; gap:10px;">
+                    <input type="date" id="reserveDate" class="search-input">
+                    <input type="time" id="reserveTime" class="search-input">
+                </div>
+            </div>
+
+            <button class="btn" id="searchTransportersBtn">Ver Ofertas Disponibles</button>
+            
             <div id="transportistasList" style="margin-top:20px;"></div>
         </div>
 
         <!-- SECCIÓN TRANSPORTISTA -->
         <div class="section" id="transporterSection">
             <div class="logo"><i class="fas fa-truck"></i> MudanzasHub</div>
-            <div class="user-greeting"><i class="fas fa-id-badge"></i> <span id="transNameDisplay">Socio</span></div>
+            <div class="user-greeting"><i class="fas fa-id-card"></i> <span id="transNameDisplay">Transportista</span></div>
             <button class="btn btn-secondary logoutBtn">Cerrar Sesión</button>
-
-            <div class="finance-card">
-                <div class="finance-row"><span class="finance-label">Ganancias Netas (80%)</span><span class="finance-value" id="totalEarnings">₡0</span></div>
-            </div>
-
+            
             <div class="tabs">
-                <button class="tab-btn active" data-tab="jobs">Disponibles</button>
+                <button class="tab-btn active" data-tab="jobs">Ofertas</button>
                 <button class="tab-btn" data-tab="active">En Curso</button>
                 <button class="tab-btn" data-tab="history">Historial</button>
             </div>
-
             <div id="jobsTab" class="tab-content active"></div>
             <div id="activeTab" class="tab-content"></div>
             <div id="historyTab" class="tab-content">
+                <div style="background:#222; padding:10px; border-radius:8px; margin-bottom:10px; text-align:center;">
+                    <div style="font-size:11px; color:#aaa;">Ganancias Totales</div>
+                    <div id="totalEarnings" style="font-size:20px; font-weight:bold; color:#4ade80;">₡0</div>
+                </div>
                 <div id="historyList"></div>
             </div>
         </div>
 
-        <!-- SECCIÓN ADMIN -->
+        <!-- SECCIÓN ADMINISTRADOR -->
         <div class="section" id="adminSection">
-            <div class="logo"><i class="fas fa-user-shield"></i> Admin Panel</div>
+            <div class="logo"><i class="fas fa-shield-alt"></i> Admin Panel</div>
             <button class="btn btn-secondary logoutBtn">Cerrar Sesión</button>
-
             <div class="tabs">
-                <button class="tab-btn active" data-tab="adminMoves">Mudanzas</button>
-                <button class="tab-btn" data-tab="adminFinance">Finanzas</button>
-                <button class="tab-btn" data-tab="adminUsers">Usuarios</button>
+                <button class="tab-btn active" data-tab="moves">Mudanzas</button>
+                <button class="tab-btn" data-tab="partners">Socios</button>
+                <button class="tab-btn" data-tab="clients">Clientes</button>
+                <button class="tab-btn" data-tab="docs">Documentación</button>
             </div>
-
-            <div id="adminMovesTab" class="tab-content active">
-                <div class="form-group">
-                    <label>Filtrar por Día</label>
-                    <input type="date" id="movesDateFilter" class="search-input">
+            <div id="movesTab" class="tab-content active">
+                <div style="display:flex; gap:10px; margin-bottom:15px; align-items:center; flex-wrap:wrap;">
+                    <div style="flex:1; min-width:200px;">
+                        <label style="font-size:11px; color:#888; display:block; margin-bottom:4px;">Filtrar por Día</label>
+                        <input type="date" id="movesDateFilter" class="search-input" style="padding:8px;">
+                    </div>
+                    <button class="btn btn-sm" id="exportMovesPdfBtn" style="background:#ff4b4b; color:#fff; margin-top:15px;">
+                        <i class="fas fa-file-pdf"></i> Exportar a PDF
+                    </button>
                 </div>
                 <div style="overflow-x:auto;">
                     <table class="admin-table" id="adminMovesTable">
-                        <thead><tr><th>ID</th><th>Cliente</th><th>Socio</th><th>Fecha</th><th>Hora</th><th>Total</th><th>Comisión</th><th>Estado</th></tr></thead>
+                        <thead><tr><th>ID</th><th>Cliente</th><th>Socio</th><th>Fecha</th><th>Hora</th><th>Total</th><th>Comisión (20%)</th><th>Estado</th></tr></thead>
                         <tbody id="movesTableBody"></tbody>
                     </table>
                 </div>
-                <button id="exportMovesPdfBtn" class="btn btn-secondary" style="margin-top:15px;"><i class="fas fa-file-pdf"></i> Exportar PDF</button>
+                <div class="admin-footer">
+                    <span>Total Comisiones: <span id="totalAdminComm" style="color:#4ade80;">₡0</span></span>
+                    <span>Total General: <span id="totalAdminSales" style="color:#00d4ff;">₡0</span></span>
+                </div>
             </div>
-
-            <div id="adminFinanceTab" class="tab-content">
+            <div id="clientsTab" class="tab-content">
+                <div style="margin-bottom:10px; font-weight:bold; color:#00d4ff;">Lista de Clientes</div>
+                <div id="adminClientsList"></div>
+            </div>
+            <div id="partnersTab" class="tab-content">
+                <div style="margin-bottom:10px; font-weight:bold; color:#00d4ff;">Lista de Socios</div>
+                <div id="adminPartnersList"></div>
+            </div>
+            <div id="docsTab" class="tab-content">
                 <div class="calendar-container">
-                    <label style="font-size:12px; color:#aaa;">Seleccionar Mes</label>
+                    <label style="font-size:12px; color:#aaa;">Filtrar por Mes:</label>
                     <input type="month" id="financeCalendar" class="search-input" style="margin-top:5px;">
                 </div>
-                <div class="finance-card">
-                    <div class="finance-row"><span class="finance-label">Ventas Totales</span><span class="finance-value" id="totalAdminSales">₡0</span></div>
-                    <div class="finance-row"><span class="finance-label">Comisiones (20%)</span><span class="finance-value" id="totalAdminComm">₡0</span></div>
-                    <hr style="border:0; border-top:1px solid #333; margin:10px 0;">
-                    <div class="finance-row"><span class="finance-label">Utilidad Empresa</span><span class="finance-value" id="companyRegal" style="color:#4ade80;">₡0</span></div>
-                    <div class="finance-row"><span class="finance-label">Pago a Socios</span><span class="finance-value" id="partnersRegal">₡0</span></div>
-                    <div class="finance-row"><span class="finance-label">Balance Neto (Post-Gastos)</span><span class="finance-value" id="netBalance">₡0</span></div>
+                <div id="financeReport">
+                    <div class="finance-card">
+                        <div style="font-weight:bold; color:#00d4ff; margin-bottom:10px;">Finanzas de la Plataforma (Mensual)</div>
+                        <div class="finance-row"><span class="finance-label">Regalías Empresa:</span><span class="finance-value" id="companyRegal">₡0</span></div>
+                        <div class="finance-row"><span class="finance-label">Regalías Socios:</span><span class="finance-value" id="partnersRegal">₡0</span></div>
+                        <div class="finance-row"><span class="finance-label">Mantenimiento:</span><span class="finance-value" style="color:#ff4b4b;">-$50.00</span></div>
+                        <div class="finance-row" style="border-top:1px solid #333; margin-top:10px; padding-top:5px;">
+                            <span class="finance-label">Balance Neto:</span><span class="finance-value" id="netBalance">₡0</span>
+                        </div>
+                    </div>
                 </div>
             </div>
-
-            <div id="adminUsersTab" class="tab-content">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-                    <h4 style="font-size:14px; color:#00d4ff;">Socios Transportistas</h4>
-                </div>
-                <div id="adminPartnersList" style="max-height:200px; overflow-y:auto; background:#222; border-radius:8px; border:1px solid #333;"></div>
-                
-                <div style="display:flex; justify-content:space-between; align-items:center; margin:20px 0 10px;">
-                    <h4 style="font-size:14px; color:#00d4ff;">Clientes Registrados</h4>
-                    <button class="btn btn-sm" id="addNewClientBtn" onclick="openModal('addClientModal')">+ Nuevo</button>
-                </div>
-                <div id="adminClientsList" style="max-height:200px; overflow-y:auto; background:#222; border-radius:8px; border:1px solid #333;"></div>
-            </div>
         </div>
     </div>
-
-    <!-- MAPA -->
-    <div class="map-container">
-        <div id="map"></div>
-    </div>
+    <div class="map-container"><div id="map"></div></div>
 </div>
 
-<!-- MODALES -->
-<div id="facturaModal" class="modal">
-    <div class="modal-content">
-        <button class="modal-close" onclick="closeModal('facturaModal')">&times;</button>
-        <div class="modal-header">Confirmación de Servicio</div>
-        
-        <div class="transportista-ficha">
-            <div class="ficha-header">
-                <div class="ficha-avatar"><i class="fas fa-user-tie"></i></div>
-                <div class="ficha-title">
-                    <div class="ficha-name" id="fichaName">Transportista</div>
-                    <div class="ficha-rating"><i class="fas fa-star"></i> <span id="fichaRating">5.0</span></div>
-                </div>
-            </div>
-            <div class="factura-row"><span class="factura-label">Vehículo:</span><span class="factura-value" id="fichaVehicle">-</span></div>
-            <div class="factura-row"><span class="factura-label">Placa:</span><span class="factura-value" id="fichaPlate">-</span></div>
-            <div class="factura-row"><span class="factura-label">Teléfono:</span><span class="factura-value" id="fichaPhone">-</span></div>
-        </div>
-
-        <div class="factura-header">
-            <div style="font-size:12px; color:#aaa; margin-bottom:5px;">DETALLES DEL VIAJE</div>
-            <div class="factura-row"><span class="factura-label">Origen:</span><span class="factura-value" id="facturaOrigin">-</span></div>
-            <div class="factura-row"><span class="factura-label">Destino:</span><span class="factura-value" id="facturaDestination">-</span></div>
-            <div class="factura-row"><span class="factura-label">Servicio:</span><span class="factura-value" id="facturaService">-</span></div>
-            <div class="factura-row"><span class="factura-label">Peso aprox:</span><span class="factura-value" id="facturaWeight">-</span></div>
-        </div>
-
-        <div style="border-top: 2px solid #00d4ff; padding-top: 15px; margin-top: 15px; display: flex; justify-content: space-between; align-items: center;">
-            <div style="font-size: 16px; font-weight: bold;">TOTAL A PAGAR</div>
-            <div style="font-size: 24px; font-weight: 800; color: #00d4ff;" id="facturaTotal">₡0</div>
-        </div>
-
-        <div class="alert-box alert-info" style="margin-top:20px;">
-            <i class="fas fa-info-circle"></i>
-            <div>Para confirmar, adjunta el comprobante de SINPE Móvil al 8888-0000.</div>
-        </div>
-
-        <div class="upload-area" id="uploadArea">
-            <i class="fas fa-cloud-upload-alt upload-icon"></i>
-            <div class="upload-text" id="uploadText">Haz clic para subir comprobante</div>
-            <input type="file" id="comprobanteFileInput" style="display:none;" accept="image/*">
-        </div>
-
-        <button id="confirmMoveBtn" class="btn" disabled>Enviar Solicitud al Socio</button>
+<!-- VISTA GPS NAVEGACIÓN -->
+<div id="gpsView">
+    <div class="gps-header">
+        <div style="font-weight:bold; color:#00d4ff;"><i class="fas fa-location-arrow"></i> Navegación GPS</div>
+        <button class="btn btn-sm btn-reject" id="closeGpsBtn" style="width:auto;">Salir</button>
     </div>
+    <div id="gpsMap" class="gps-map"></div>
+    <div class="gps-instructions" id="gpsInstructions">Iniciando navegación...</div>
 </div>
 
-<div id="partnerDetailModal" class="modal">
-    <div class="modal-content">
-        <button class="modal-close" onclick="closeModal('partnerDetailModal')">&times;</button>
-        <div class="modal-header">Expediente del Socio</div>
-        <div id="partnerDetailContent" class="detail-grid"></div>
-    </div>
-</div>
 
-<div id="clientDetailModal" class="modal">
-    <div class="modal-content">
-        <button class="modal-close" onclick="closeModal('clientDetailModal')">&times;</button>
-        <div class="modal-header">Expediente del Cliente</div>
-        <div id="clientDetailContent"></div>
-        <div style="margin-top:15px; font-weight:bold; color:#00d4ff; border-bottom:1px solid #333; padding-bottom:5px;">Historial de Mudanzas</div>
-        <div id="clientHistoryList" style="margin-top:10px; max-height:250px; overflow-y:auto;"></div>
-        <div style="display:flex; gap:10px; margin-top:20px;">
-            <button class="btn" id="saveClientBtn">Guardar Cambios</button>
-            <button class="btn btn-whatsapp" id="msgClientBtn">Mensaje</button>
-            <button class="btn btn-reject" id="deleteClientBtn">Borrar</button>
-        </div>
-    </div>
-</div>
-
-<div id="addClientModal" class="modal">
+<!-- MODAL AGREGAR CLIENTE (ADMIN) -->
+<div class="modal" id="addClientModal">
     <div class="modal-content">
         <button class="modal-close" onclick="closeModal('addClientModal')">&times;</button>
-        <div class="modal-header">Registrar Nuevo Cliente</div>
-        <div class="form-group"><label>Nombre</label><input type="text" id="addCName" class="search-input"></div>
-        <div class="form-group"><label>Email</label><input type="email" id="addCEmail" class="search-input"></div>
-        <div class="form-group"><label>Contraseña</label><input type="password" id="addCPass" class="search-input"></div>
-        <div class="form-group"><label>Teléfono</label><input type="text" id="addCPhone" class="search-input"></div>
-        <div class="form-group"><label>Cédula</label><input type="text" id="addCId" class="search-input"></div>
+        <div class="modal-header">Agregar Nuevo Cliente</div>
+        <div class="form-group">
+            <label>Nombre Completo</label>
+            <input type="text" id="addCName" class="search-input">
+        </div>
+        <div class="form-group">
+            <label>Correo Electrónico</label>
+            <input type="email" id="addCEmail" class="search-input">
+        </div>
+        <div class="form-group">
+            <label>Contraseña</label>
+            <input type="password" id="addCPass" class="search-input">
+        </div>
+        <div class="form-group">
+            <label>Teléfono</label>
+            <input type="text" id="addCPhone" class="search-input">
+        </div>
+        <div class="form-group">
+            <label>Cédula</label>
+            <input type="text" id="addCId" class="search-input">
+        </div>
         <button class="btn" id="saveNewClientBtn">Crear Cliente</button>
     </div>
 </div>
+<!-- MODAL DETALLE CLIENTE (ADMIN) -->
+<div class="modal" id="clientDetailModal">
+    <div class="modal-content">
+        <button class="modal-close" onclick="closeModal('clientDetailModal')">&times;</button>
+        <div class="modal-header">Perfil del Cliente</div>
+        <div id="clientDetailContent"></div>
+        <div style="margin-top:20px; font-weight:bold; color:#00d4ff; border-bottom:1px solid #333; padding-bottom:5px;">Historial de Servicios</div>
+        <div id="clientHistoryList" style="margin-top:10px; max-height:200px; overflow-y:auto;"></div>
+        <div id="adminHistoryMap" style="height:200px; margin-top:15px; border-radius:8px; display:none;"></div>
+        <div style="display:flex; gap:10px; margin-top:20px;">
+            <button class="btn" id="saveClientBtn">Guardar Cambios</button>
+            <button class="btn btn-whatsapp" id="msgClientBtn">WhatsApp</button>
+            <button class="btn btn-reject" id="deleteClientBtn">Eliminar Cliente</button>
+        </div>
+    </div>
+</div>
 
-<div id="codeModal" class="modal">
-    <div class="modal-content" style="max-width:400px; text-align:center;">
-        <button class="modal-close" onclick="closeModal('codeModal')">&times;</button>
+<!-- MODAL MENSAJERÍA ADMIN -->
+<div class="modal" id="messageModal">
+    <div class="modal-content">
+        <button class="modal-close" onclick="closeModal('messageModal')">&times;</button>
+        <div class="modal-header">Enviar Mensaje</div>
+        <div id="messageTargetInfo" style="margin-bottom:15px; color:#aaa; font-size:13px;"></div>
+        <textarea id="adminMessageText" class="search-input" style="height:120px; resize:none;" placeholder="Escribe tu mensaje aquí..."></textarea>
+        <button class="btn" id="sendAdminMessageBtn" style="margin-top:15px;">Enviar Mensaje</button>
+    </div>
+</div>
+
+<!-- MODAL SOCIO DETALLE -->
+<div class="modal" id="partnerDetailModal">
+    <div class="modal-content">
+        <button class="modal-close" data-close="partnerDetailModal">×</button>
+        <div class="modal-header" id="partnerDetailName">Detalle del Socio</div>
+        <div class="detail-grid" id="partnerDetailContent"></div>
+    </div>
+</div>
+
+<!-- MODAL FACTURA -->
+<div class="modal" id="facturaModal">
+        <div class="modal-content">
+            <button class="modal-close" data-close="facturaModal">×</button>
+            <div class="modal-header"><i class="fas fa-file-invoice-dollar"></i> Detalle de la Mudanza</div>
+            
+            <div class="transportista-ficha" id="fichaTransportista">
+                <!-- Se llena dinámicamente -->
+            </div>
+
+            <div id="facturaDetails" class="factura-header">
+                <!-- Se llena dinámicamente -->
+            </div>
+
+            <div style="background: #1a3a3a; padding: 15px; border-radius: 8px; margin-bottom: 15px; border: 1px solid #00d4ff44;">
+                <div style="display:flex; justify-content:space-between; font-weight:bold; font-size:20px; color:#4ade80;">
+                    <span>Total:</span>
+                    <span id="facturaTotal">₡0</span>
+                </div>
+            </div>
+
+            <div class="alert-box alert-info"><i class="fas fa-info-circle"></i> Pago por SINPE: 7228-4602. Adjunta el comprobante para confirmar.</div>
+            
+            <div class="upload-area" id="uploadArea">
+                <input type="file" id="comprobanteFileInput" style="display:none">
+                <i class="fas fa-cloud-upload-alt upload-icon"></i>
+                <div class="upload-text" id="uploadText">Subir comprobante de pago</div>
+            </div>
+            
+            <button class="btn" id="confirmMoveBtn" disabled>Confirmar Mudanza</button>
+        </div>
+</div>
+
+<!-- MODAL CÓDIGO -->
+<div class="modal" id="codeModal">
+    <div class="modal-content" style="text-align:center;">
+        <button class="modal-close" onclick="closeModal('codeModal')">×</button>
         <div class="modal-header">Finalizar Servicio</div>
-        <p style="font-size:13px; color:#aaa; margin-bottom:20px;">Solicita al cliente el código de 4 dígitos para concluir el viaje.</p>
-        <input type="number" id="confirmCodeInput" class="search-input" placeholder="0000" style="text-align:center; font-size:30px; letter-spacing:10px; margin-bottom:20px;">
-        <button id="validateCodeBtn" class="btn">Validar y Finalizar</button>
-        <button class="btn btn-secondary" style="margin-top:10px;" onclick="closeModal('codeModal')">Cancelar</button>
+        <p style="margin-bottom:20px; color:#aaa;">Pide el código de confirmación al cliente.</p>
+        <input type="text" id="confirmCodeInput" class="search-input" style="text-align:center; font-size:24px; letter-spacing:5px; margin-bottom:20px;" placeholder="0000">
+        <button class="btn" id="validateCodeBtn">Validar y Finalizar</button>
     </div>
 </div>
 
-<div id="gpsView">
-    <div class="gps-header">
-        <div style="color:#00d4ff; font-weight:bold;"><i class="fas fa-navigation"></i> NAVEGACIÓN EN VIVO</div>
-        <button id="closeGpsBtn" style="background:none; border:none; color:#fff; font-size:20px;"><i class="fas fa-times"></i></button>
-    </div>
-    <div id="gpsMap" class="gps-map"></div>
-    <div class="gps-instructions" id="gpsInstruction">Calculando ruta óptima...</div>
-</div>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.js"></script>
 
-<!-- SCRIPTS -->
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getDatabase, ref, set, push, onValue, update } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
     const firebaseConfig = {
-        databaseURL: "https://mudanzashub-cr-default-rtdb.firebaseio.com"
+        apiKey: "AIzaSyCppQ2yPzQxTMSs8GfBCSyKzoQoUUzaWJo",
+        authDomain: "mudanzascanaan.firebaseapp.com",
+        databaseURL: "https://mudanzascanaan-default-rtdb.firebaseio.com",
+        projectId: "mudanzascanaan",
+        storageBucket: "mudanzascanaan.firebasestorage.app",
+        messagingSenderId: "198057203593",
+        appId: "1:198057203593:web:d8a5d2f575bcc565b73358"
     };
 
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
+    document.getElementById('connStatus').innerText = "✅ Firebase Conectado";
+    document.getElementById('connStatus').style.color = "#4ade80";
 
-    // VARIABLES GLOBALES
-    let map, gpsMap, routingControl, gpsRouting, userMarker, watchId;
-    let currentUser = null;
-    let selectedOrigin = null;
-    let selectedDestination = null;
-    let markers = { origin: null, destination: null };
-    let searchTimeout = null;
+    // ESTADO GLOBAL
+    let map, selectedOrigin, selectedDestination, currentUser, selectedTransporter;
+    let markers = {};
     let selectedVehicle = 'pickup';
     let selectedServiceType = 'acarreo';
-    let selectedTransporter = null;
-    let pendingMoveData = null;
+    let routingControl = null;
     let activeNavMove = null;
+    let pendingMoveData = null;
+    let searchTimeout = null;
+    
+    // GPS NAVEGACIÓN
+    let gpsMap = null, gpsRouting = null, userMarker = null, watchId = null;
 
-    // CONFIGURACIÓN DE VEHÍCULOS
+    // CONFIGURACIÓN DE VEHÍCULOS (Consumo y Capacidad)
     const vehicleConfig = {
         pickup: { multiplier: 1.0, fuelCost: 1.0, capacity: 800, name: 'Pickup' },
         buseta: { multiplier: 1.4, fuelCost: 1.3, capacity: 1500, name: 'Buseta' },
@@ -487,7 +625,6 @@
         }
         if(currentUser && currentUser.role === 'admin') listenToAdmin();
     });
-    
     onValue(ref(db, 'users/clients'), (snap) => {
         const data = snap.val();
         if (data) {
@@ -504,20 +641,8 @@
     map = L.map('map').setView([9.9281, -84.0907], 12);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 
-    // Funciones globales para modales
-    window.openModal = (id) => {
-        const modal = document.getElementById(id);
-        if (modal) {
-            modal.classList.add('active');
-        }
-    };
-    
-    window.closeModal = (id) => {
-        const modal = document.getElementById(id);
-        if (modal) {
-            modal.classList.remove('active');
-        }
-    };
+    const openModal = (id) => document.getElementById(id).classList.add('active');
+    const closeModal = (id) => document.getElementById(id).classList.remove('active');
 
     // SEGURIDAD: Control de intentos fallidos de login
     let _loginAttempts = 0;
@@ -529,9 +654,10 @@
     document.getElementById('loginBtn').addEventListener('click', () => {
         const now = Date.now();
 
+        // Bloqueo temporal por exceso de intentos
         if (now < _loginBlockedUntil) {
             const secsLeft = Math.ceil((_loginBlockedUntil - now) / 1000);
-            document.getElementById('connStatus').innerText = '⛔ Demasiados intentos. Espera ' + secsLeft + 's.';
+            document.getElementById('connStatus').innerText = '\u26d4 Demasiados intentos. Espera ' + secsLeft + 's.';
             document.getElementById('connStatus').style.color = '#ff6b6b';
             return;
         }
@@ -540,12 +666,14 @@
         const pass = document.getElementById('authPassword').value;
         const role = document.getElementById('authRole').value;
 
+        // Los tres campos son obligatorios
         if (!email || !pass || !role) {
-            document.getElementById('connStatus').innerText = '⚠️ Completa todos los campos.';
+            document.getElementById('connStatus').innerText = '\u26a0\ufe0f Completa todos los campos.';
             document.getElementById('connStatus').style.color = '#f59e0b';
             return;
         }
 
+        // Validaci\u00f3n estricta: email + contrase\u00f1a + rol deben coincidir exactamente
         let _authenticated = false;
 
         if (role === 'admin' && email === 'admin@test.com' && pass === 'ADMIN') {
@@ -559,6 +687,7 @@
             if (c) { currentUser = { ...c, role }; _authenticated = true; }
         }
 
+        // Intento fallido
         if (!_authenticated) {
             _loginAttempts++;
             document.getElementById('authPassword').value = '';
@@ -566,21 +695,22 @@
                 _loginBlockedUntil = Date.now() + _BLOCK_MS;
                 _loginAttempts = 0;
                 document.getElementById('loginBtn').disabled = true;
-                document.getElementById('connStatus').innerText = '⛔ Bloqueado 30s por múltiples intentos fallidos.';
+                document.getElementById('connStatus').innerText = '\u26d4 Bloqueado 30s por m\u00faltiples intentos fallidos.';
                 document.getElementById('connStatus').style.color = '#ff6b6b';
                 setTimeout(() => {
                     document.getElementById('loginBtn').disabled = false;
-                    document.getElementById('connStatus').innerText = '✅ Firebase Conectado';
+                    document.getElementById('connStatus').innerText = '\u2705 Firebase Conectado';
                     document.getElementById('connStatus').style.color = '#4ade80';
                 }, _BLOCK_MS);
             } else {
                 const _rem = _MAX_ATTEMPTS - _loginAttempts;
-                document.getElementById('connStatus').innerText = '❌ Credenciales incorrectas. Intentos restantes: ' + _rem;
+                document.getElementById('connStatus').innerText = '\u274c Credenciales incorrectas. Intentos restantes: ' + _rem;
                 document.getElementById('connStatus').style.color = '#ff6b6b';
             }
             return;
         }
 
+        // Login exitoso
         _loginAttempts = 0;
         _loginBlockedUntil = 0;
         document.getElementById('connStatus').innerText = '✅ Firebase Conectado';
@@ -593,11 +723,7 @@
         } else {
             document.querySelector('.map-container').style.display = 'block';
             if(role === 'client') document.getElementById('clientNameDisplay').innerText = currentUser.name;
-            if(role === 'transporter') { 
-                document.getElementById('transNameDisplay').innerText = currentUser.name; 
-                listenToJobs(); 
-            }
-            setTimeout(() => { map.invalidateSize(); }, 300);
+            if(role === 'transporter') { document.getElementById('transNameDisplay').innerText = currentUser.name; listenToJobs(); }
         }
     });
 
@@ -691,7 +817,6 @@
         clearTimeout(searchTimeout);
         searchTimeout = setTimeout(() => searchLocations(e.target.value, 'origin'), 400);
     });
-    
     document.getElementById('destinationSearch').addEventListener('input', (e) => {
         clearTimeout(searchTimeout);
         searchTimeout = setTimeout(() => searchLocations(e.target.value, 'destination'), 400);
@@ -742,9 +867,9 @@
     // LÓGICA DE PRECIOS DINÁMICA
     const calculatePrice = (dist, vehicle, weight, access, service) => {
         const config = vehicleConfig[vehicle];
-        const basePrice = 12000;
-        const distPrice = dist * 1100 * config.fuelCost;
-        const weightPrice = (weight / 100) * 1500;
+        const basePrice = 12000; // Tarifa base
+        const distPrice = dist * 1100 * config.fuelCost; // Costo por km ajustado por combustible
+        const weightPrice = (weight / 100) * 1500; // Costo por peso
         const accessMultipliers = { easy: 1, medium: 1.15, hard: 1.3 };
         const servicePrice = service === 'acarreo' ? 8000 : 0;
         
@@ -758,6 +883,7 @@
         const weight = parseFloat(document.getElementById('loadWeight').value) || 100;
         const access = document.getElementById('accessType').value;
         
+        // Generar 3 ofertas basadas en el promedio de los factores
         const basePrice = calculatePrice(dist, selectedVehicle, weight, access, selectedServiceType);
         
         const offers = [
@@ -793,41 +919,52 @@
 
     const openFactura = (tid, price) => {
         selectedTransporter = transporters.find(t => t.id === tid);
-        const now = new Date();
-        pendingMoveData = {
-            client: currentUser.email,
-            clientName: currentUser.name,
-            clientPhone: currentUser.phone || '',
-            transporter: selectedTransporter.id,
-            transporterName: selectedTransporter.name,
-            transporterPhone: selectedTransporter.phone,
-            transporterPlate: selectedTransporter.plate,
-            origin: selectedOrigin,
-            destination: selectedDestination,
-            price: price,
-            vehicle: selectedVehicle,
-            service: selectedServiceType,
-            weight: document.getElementById('loadWeight').value,
-            access: document.getElementById('accessType').value,
-            status: 'pending',
-            code: Math.floor(1000 + Math.random() * 9000),
-            date: now.toLocaleDateString(),
-            time: now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-            timestamp: Date.now()
-        };
+            const now = new Date();
+            pendingMoveData = {
+                client: currentUser.email,
+                clientName: currentUser.name,
+                clientPhone: currentUser.phone || '',
+                transporter: selectedTransporter.id,
+                transporterName: selectedTransporter.name,
+                transporterPhone: selectedTransporter.phone,
+                transporterPlate: selectedTransporter.plate,
+                origin: selectedOrigin,
+                destination: selectedDestination,
+                price: price,
+                vehicle: selectedVehicle,
+                service: selectedServiceType,
+                weight: document.getElementById('loadWeight').value,
+                access: document.getElementById('accessType').value,
+                status: 'pending',
+                code: Math.floor(1000 + Math.random() * 9000),
+                timestamp: Date.now(),
+                date: now.toLocaleDateString(),
+                time: now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+            };
 
-        document.getElementById('fichaName').innerText = selectedTransporter.name;
-        document.getElementById('fichaRating').innerText = selectedTransporter.rating;
-        document.getElementById('fichaVehicle').innerText = selectedTransporter.vehicle;
-        document.getElementById('fichaPlate').innerText = selectedTransporter.plate;
-        document.getElementById('fichaPhone').innerText = selectedTransporter.phone;
-        
-        document.getElementById('facturaOrigin').innerText = selectedOrigin.name.split(',')[0];
-        document.getElementById('facturaDestination').innerText = selectedDestination.name.split(',')[0];
-        document.getElementById('facturaService').innerText = selectedServiceType === 'acarreo' ? 'Con Acarreo' : 'Puesta Afuera';
-        document.getElementById('facturaWeight').innerText = pendingMoveData.weight + ' kg';
-        document.getElementById('facturaTotal').innerText = '₡' + price.toLocaleString();
-        
+        // FICHA TÉCNICA (MODELO)
+        document.getElementById('fichaTransportista').innerHTML = `
+            <div class="ficha-header">
+                <div class="ficha-avatar"><i class="fas fa-user-tie"></i></div>
+                <div class="ficha-title">
+                    <div class="ficha-name">${selectedTransporter.name}</div>
+                    <div class="ficha-rating"><i class="fas fa-star"></i> ${selectedTransporter.rating} · Socio Verificado</div>
+                </div>
+            </div>
+            <div class="factura-row"><span class="factura-label">Vehículo:</span><span class="factura-value">${selectedTransporter.vehicle}</span></div>
+            <div class="factura-row"><span class="factura-label">Placa:</span><span class="factura-value">${selectedTransporter.plate}</span></div>
+            <div class="factura-row"><span class="factura-label">Teléfono:</span><span class="factura-value">${selectedTransporter.phone}</span></div>
+        `;
+
+        // DETALLES FACTURA (MODELO)
+        document.getElementById('facturaDetails').innerHTML = `
+            <div class="factura-row"><span class="factura-label">Origen:</span><span class="factura-value">${selectedOrigin.name.split(',')[0]}</span></div>
+            <div class="factura-row"><span class="factura-label">Destino:</span><span class="factura-value">${selectedDestination.name.split(',')[0]}</span></div>
+            <div class="factura-row"><span class="factura-label">Servicio:</span><span class="factura-value">${selectedServiceType === 'acarreo' ? 'Con Acarreo' : 'Puesta Afuera'}</span></div>
+            <div class="factura-row"><span class="factura-label">Peso aprox:</span><span class="factura-value">${pendingMoveData.weight} kg</span></div>
+        `;
+
+        document.getElementById('facturaTotal').textContent = '₡' + price.toLocaleString();
         openModal('facturaModal');
     };
 
@@ -841,6 +978,7 @@
 
     document.getElementById('confirmMoveBtn').addEventListener('click', () => {
         push(ref(db, 'moves'), pendingMoveData).then(() => {
+            // SIMULACIÓN DE NOTIFICACIÓN POR CORREO
             console.log(`[SIMULACIÓN CORREO] Enviando notificación a ${selectedTransporter.email}: "Tienes una nueva oferta de mudanza vigente de ${currentUser.name}"`);
             alert('¡Solicitud enviada! El transportista ha sido notificado por correo. Código: ' + pendingMoveData.code);
             closeModal('facturaModal');
@@ -848,7 +986,7 @@
         });
     });
 
-    // LÓGICA TRANSPORTISTA
+    // LÓGICA TRANSPORTISTA (3 VIAJES SIMULTÁNEOS EN RUTA)
     const listenToJobs = () => {
         onValue(ref(db, 'moves'), (snapshot) => {
             const data = snapshot.val();
@@ -894,9 +1032,9 @@
                                 </div>` : ''}
                             ${m.status === 'in_progress' && m.transporter === currentUser.id ? `
                                 <div style="display:flex; flex-direction:column; gap:8px; margin-top:10px;">
-                                    <button class="btn btn-whatsapp whatsappClientBtn" data-id="${key}" style="text-align:center; font-size:12px; padding:10px;">
-                                        <i class="fab fa-whatsapp"></i> Escribir al Cliente
-                                    </button>
+                                    <a href="https://wa.me/${m.clientPhone || ''}" target="_blank" class="btn btn-whatsapp" style="text-decoration:none; text-align:center; font-size:12px; padding:10px;">
+                                        <i class="fab fa-whatsapp"></i> Llamar al Cliente
+                                    </a>
                                     <button class="btn btn-sm shareLocBtn" style="background:#25d366; color:#fff;" data-id="${key}">
                                         <i class="fab fa-whatsapp"></i> Compartir Ubicación
                                     </button>
@@ -916,7 +1054,7 @@
         });
     };
 
-    // LÓGICA ADMIN
+    // LÓGICA ADMIN EXPANDIDA
     const listenToAdmin = () => {
         onValue(ref(db, 'moves'), (snapshot) => {
             const data = snapshot.val();
@@ -924,8 +1062,8 @@
             if (!tbody) return;
             tbody.innerHTML = '';
             let totalSales = 0, totalComm = 0, companyRegal = 0, partnersRegal = 0;
-            const selectedMonth = document.getElementById('financeCalendar').value;
-            const selectedDay = document.getElementById('movesDateFilter').value;
+            const selectedMonth = document.getElementById('financeCalendar').value; // YYYY-MM
+            const selectedDay = document.getElementById('movesDateFilter').value; // YYYY-MM-DD
 
             if(data) {
                 Object.keys(data).forEach(key => {
@@ -937,11 +1075,13 @@
                     const moveMonth = `${moveDate.getFullYear()}-${String(moveDate.getMonth()+1).padStart(2,'0')}`;
                     const moveDay = moveDate.toISOString().split('T')[0];
 
+                    // Filtro para tabla de mudanzas (Día)
                     if (selectedDay && moveDay !== selectedDay) return;
 
                     totalSales += m.price;
                     totalComm += comm;
 
+                    // Filtro para finanzas (Mes)
                     if (!selectedMonth || moveMonth === selectedMonth) {
                         if (m.status === 'completed') {
                             companyRegal += comm;
@@ -956,7 +1096,7 @@
             document.getElementById('totalAdminComm').textContent = '₡' + totalComm.toLocaleString();
             document.getElementById('companyRegal').textContent = '₡' + companyRegal.toLocaleString();
             document.getElementById('partnersRegal').textContent = '₡' + partnersRegal.toLocaleString();
-            document.getElementById('netBalance').textContent = '₡' + (companyRegal - (50 * 600)).toLocaleString();
+            document.getElementById('netBalance').textContent = '₡' + (companyRegal - (50 * 600)).toLocaleString(); // Simulación $50 a ₡600
         });
 
         const partnersList = document.getElementById('adminPartnersList');
@@ -982,6 +1122,7 @@
         doc.setFontSize(11);
         doc.text(`Fecha de reporte: ${new Date().toLocaleString()}`, 14, 30);
         
+        const table = document.getElementById('adminMovesTable');
         const rows = [];
         const headers = [['ID', 'Cliente', 'Socio', 'Fecha', 'Hora', 'Total', 'Comisión (20%)', 'Estado']];
         
@@ -1007,6 +1148,7 @@
         doc.save(`Reporte_Mudanzas_${new Date().toISOString().split('T')[0]}.pdf`);
     });
 
+
     // LÓGICA GPS NAVEGACIÓN EN VIVO
     const startGpsNavigation = (moveId) => {
         onValue(ref(db, `moves/${moveId}`), (snapshot) => {
@@ -1023,9 +1165,6 @@
                 lineOptions: { styles: [{ color: '#00d4ff', weight: 6 }] },
                 addWaypoints: false, draggableWaypoints: false
             }).addTo(gpsMap);
-            
-            setTimeout(() => { gpsMap.invalidateSize(); }, 200);
-
             if ("geolocation" in navigator) {
                 watchId = navigator.geolocation.watchPosition((pos) => {
                     const { latitude, longitude } = pos.coords;
@@ -1049,6 +1188,59 @@
         if (partnerItem && !partnerItem.classList.contains('client-item')) {
             const t = transporters.find(x => x.id === parseInt(partnerItem.dataset.tid));
             if (!t) return;
+            document.getElementById('partnerDetailName').innerText = t.name;
+            document.getElementById('partnerDetailContent').innerHTML = `
+                <div style="grid-column: span 2; text-align:center; margin-bottom:10px;">
+                    <div style="width:80px; height:80px; background:#333; border-radius:50%; margin:0 auto 10px; display:flex; align-items:center; justify-content:center; border:2px solid #00d4ff; position:relative;">
+                        <i class="fas fa-user-tie" style="font-size:40px; color:#00d4ff;"></i>
+                        <label style="position:absolute; bottom:0; right:0; background:#00d4ff; color:#000; border-radius:50%; width:24px; height:24px; display:flex; align-items:center; justify-content:center; cursor:pointer;"><i class="fas fa-camera" style="font-size:12px;"></i><input type="file" style="display:none;"></label>
+                    </div>
+                </div>
+                <div class="detail-item"><div class="detail-label">Nombre</div><input type="text" class="edit-input" id="editTName" value="${t.name}"></div>
+                <div class="detail-item"><div class="detail-label">Cédula</div><input type="text" class="edit-input" id="editTId" value="${t.idNum || ''}"></div>
+                <div class="detail-item"><div class="detail-label">Edad</div><input type="number" class="edit-input" id="editTAge" value="${t.age || ''}"></div>
+                <div class="detail-item"><div class="detail-label">Discapacidad</div><select class="edit-input" id="editTPhys"><option value="no" ${t.physical==='no'?'selected':''}>No</option><option value="si" ${t.physical==='si'?'selected':''}>Sí</option></select></div>
+                <div class="detail-item"><div class="detail-label">Teléfono</div><input type="text" class="edit-input" id="editTPhone" value="${t.phone}"></div>
+                <div class="detail-item"><div class="detail-label">Placa</div><input type="text" class="edit-input" id="editTPlate" value="${t.plate}"></div>
+                <div class="detail-item"><div class="detail-label">Vehículo</div><input type="text" class="edit-input" id="editTVehicle" value="${t.vehicle}"></div>
+                <div class="detail-item"><div class="detail-label">Licencia</div><input type="text" class="edit-input" id="editTLicense" value="${t.license}"></div>
+                <div class="detail-item"><div class="detail-label">Seguro</div><input type="text" class="edit-input" id="editTInsurance" value="${t.insurance}"></div>
+                <div style="grid-column: span 2; margin-top:15px; font-weight:bold; color:#00d4ff; border-bottom:1px solid #333; padding-bottom:5px;">Historial de Servicios</div>
+                <div id="partnerHistoryList" style="grid-column: span 2; margin-top:10px; max-height:200px; overflow-y:auto;"></div>
+                <div style="grid-column: span 2; display:flex; gap:10px; margin-top:15px;">
+                    <button class="btn" id="savePartnerBtn" data-tid="${t.id}">Guardar Cambios</button>
+                    <button class="btn btn-whatsapp" id="msgPartnerBtn" data-email="${t.email}">Mensaje</button>
+                    <button class="btn btn-reject" id="deletePartnerBtn" data-tid="${t.id}">Borrar</button>
+                </div>
+            `;
+            
+            // HISTORIAL DEL SOCIO
+            onValue(ref(db, 'moves'), (snapshot) => {
+                const data = snapshot.val();
+                const hList = document.getElementById('partnerHistoryList');
+                if(!hList) return;
+                hList.innerHTML = '';
+                let count = 0;
+                if(data) {
+                    Object.keys(data).forEach(key => {
+                        const m = data[key];
+                        if (m.transporter === t.email || m.transporterName === t.name) {
+                            count++;
+                            hList.innerHTML += `
+                                <div class="history-item" style="padding:12px; border-left:3px solid #4ade80; display:flex; justify-content:space-between; align-items:center;">
+                                    <div style="flex:1;">
+                                        <strong style="color:#4ade80;">${m.date} | ${m.time || '--:--'}</strong><br>
+                                        Cliente: ${m.clientName}<br>
+                                        ${m.origin.name.split(',')[0]} → ${m.destination.name.split(',')[0]}<br>
+                                        <span style="color:#aaa; font-size:11px;">Total: ₡${m.price.toLocaleString()} | Estado: ${m.status}</span>
+                                    </div>
+                                </div>`;
+                        }
+                    });
+                }
+                if(count === 0) hList.innerHTML = '<div style="color:#666; font-size:12px;">Sin historial.</div>';
+            }, { onlyOnce: true });
+            
             openModal('partnerDetailModal');
         }
 
@@ -1056,9 +1248,65 @@
             const c = registeredClients.find(x => x.email === partnerItem.dataset.email);
             if (!c) return;
             document.getElementById('msgClientBtn').dataset.email = c.email;
+            document.getElementById('clientDetailContent').innerHTML = `
+                <div class="detail-grid">
+                    <div class="detail-item"><div class="detail-label">Nombre</div><input type="text" class="edit-input" id="editCName" value="${c.name}"></div>
+                    <div class="detail-item"><div class="detail-label">Email</div><input type="text" class="edit-input" id="editCEmail" value="${c.email}" disabled></div>
+                    <div class="detail-item"><div class="detail-label">Teléfono</div><input type="text" class="edit-input" id="editCPhone" value="${c.phone}"></div>
+                    <div class="detail-item"><div class="detail-label">Cédula</div><input type="text" class="edit-input" id="editCId" value="${c.idNum}"></div>
+                </div>
+            `;
+            
+            // HISTORIAL DEL CLIENTE
+            onValue(ref(db, 'moves'), (snapshot) => {
+                const data = snapshot.val();
+                const hList = document.getElementById('clientHistoryList');
+                hList.innerHTML = '';
+                let count = 0;
+                if(data) {
+                    Object.keys(data).forEach(key => {
+                        const m = data[key];
+                        if (m.client === c.email) {
+                            count++;
+                            const dist = calculateDist(m.origin, m.destination);
+                            const estDuration = Math.round((dist / 40) * 60);
+                            hList.innerHTML += `
+                                <div class="history-item" style="padding:12px; border-left:3px solid #00d4ff; display:flex; justify-content:space-between; align-items:center;">
+                                    <div style="flex:1;">
+                                        <strong style="color:#00d4ff;">${m.date} | ${m.time || '--:--'}</strong><br>
+                                        ${m.origin.name.split(',')[0]} → ${m.destination.name.split(',')[0]}<br>
+                                        <span style="color:#aaa; font-size:11px;">Carga: ${m.weight}kg | ${m.service} | ~${estDuration}min</span>
+                                    </div>
+                                    <button class="btn btn-sm viewMapBtn" data-mid="${key}" style="background:#00d4ff; color:#000; font-weight:bold; padding:8px 12px; white-space:nowrap; margin-left:10px;">Ver Mapa</button>
+                                </div>`;
+                        }
+                    });
+                }
+                if(count === 0) hList.innerHTML = '<div style="color:#666; font-size:12px;">Sin historial.</div>';
+            }, { onlyOnce: true });
+
+            document.getElementById('saveClientBtn').onclick = () => {
+                const updated = {
+                    ...c,
+                    name: document.getElementById('editCName').value,
+                    phone: document.getElementById('editCPhone').value,
+                    idNum: document.getElementById('editCId').value
+                };
+                update(ref(db, 'users/clients/' + c.email.replace('.', '_')), updated);
+                alert('Cliente actualizado');
+                closeModal('clientDetailModal');
+            };
+
+            document.getElementById('deleteClientBtn').onclick = () => {
+                if(confirm('¿Borrar cliente?')) {
+                    set(ref(db, 'users/clients/' + c.email.replace('.', '_')), null);
+                    closeModal('clientDetailModal');
+                }
+            };
             openModal('clientDetailModal');
         }
 
+        
         if (e.target.id === 'saveNewClientBtn') {
             const name = document.getElementById('addCName').value;
             const email = document.getElementById('addCEmail').value.trim().toLowerCase();
@@ -1072,7 +1320,53 @@
             set(ref(db, 'users/clients/' + email.replace('.', '_')), newUser);
             alert('Cliente creado exitosamente');
             closeModal('addClientModal');
+            // Limpiar campos
             ['addCName', 'addCEmail', 'addCPass', 'addCPhone', 'addCId'].forEach(id => document.getElementById(id).value = '');
+        }
+        if (e.target.id === 'savePartnerBtn') {
+            const tid = e.target.dataset.tid;
+            const t = transporters.find(x => x.id == tid);
+            const updated = {
+                ...t,
+                name: document.getElementById('editTName').value,
+                idNum: document.getElementById('editTId').value,
+                age: document.getElementById('editTAge').value,
+                physical: document.getElementById('editTPhys').value,
+                phone: document.getElementById('editTPhone').value,
+                plate: document.getElementById('editTPlate').value,
+                vehicle: document.getElementById('editTVehicle').value,
+                license: document.getElementById('editTLicense').value,
+                insurance: document.getElementById('editTInsurance').value
+            };
+            update(ref(db, 'users/transporters/' + tid), updated);
+            alert('Socio actualizado');
+            closeModal('partnerDetailModal');
+        }
+
+        if (e.target.id === 'deletePartnerBtn') {
+            if(confirm('¿Borrar socio?')) {
+                const tid = e.target.dataset.tid;
+                set(ref(db, 'users/transporters/' + tid), null);
+                closeModal('partnerDetailModal');
+            }
+        }
+
+        if (e.target.id === 'msgPartnerBtn') {
+            const tid = e.target.dataset.tid;
+            const t = transporters.find(x => x.id == tid);
+            if(t && t.phone) {
+                const phone = t.phone.replace(/[^0-9]/g, '');
+                window.open(`https://wa.me/506${phone}`, '_blank');
+            } else { alert('No hay teléfono registrado'); }
+        }
+        
+        if (e.target.id === 'msgClientBtn') {
+            const email = e.target.dataset.email;
+            const c = registeredClients.find(x => x.email === email);
+            if(c && c.phone) {
+                const phone = c.phone.replace(/[^0-9]/g, '');
+                window.open(`https://wa.me/506${phone}`, '_blank');
+            } else { alert('No hay teléfono registrado'); }
         }
 
         if (e.target.classList.contains('acceptJobBtn')) update(ref(db, `moves/${e.target.dataset.id}`), { status: 'in_progress' });
@@ -1086,17 +1380,6 @@
                 update(ref(db, `moves/${e.target.dataset.id}`), { status: 'pending' });
             }
         }
-        if (e.target.classList.contains('whatsappClientBtn')) {
-            const mId = e.target.dataset.id;
-            onValue(ref(db, `moves/${mId}`), (snap) => {
-                const m = snap.val();
-                if(m && m.clientPhone) {
-                    const phone = m.clientPhone.replace(/[^0-9]/g, '');
-                    const text = encodeURIComponent(`Hola ${m.clientName}, soy su transportista ${m.transporterName} del viaje solicitado de ${m.origin.name.split(',')[0]} a ${m.destination.name.split(',')[0]}.`);
-                    window.open(`https://wa.me/506${phone}?text=${text}`, '_blank');
-                } else { alert('No hay teléfono del cliente registrado'); }
-            }, { onlyOnce: true });
-        }
         if (e.target.classList.contains('shareLocBtn')) {
             const mId = e.target.dataset.id;
             onValue(ref(db, `moves/${mId}`), (snap) => {
@@ -1105,8 +1388,7 @@
                     navigator.geolocation.getCurrentPosition((pos) => {
                         const link = `https://www.google.com/maps?q=${pos.coords.latitude},${pos.coords.longitude}`;
                         const text = encodeURIComponent(`Hola ${m.clientName}, estoy en camino. Puedes ver mi ubicación actual aquí: ${link}`);
-                        const phone = m.clientPhone ? m.clientPhone.replace(/[^0-9]/g, '') : '';
-                        window.open(`https://wa.me/506${phone}?text=${text}`, '_blank');
+                        window.open(`https://wa.me/${m.clientPhone}?text=${text}`, '_blank');
                     });
                 }
             }, { onlyOnce: true });
@@ -1135,13 +1417,14 @@
             tabBtn.classList.add('active');
             section.querySelector(`#${tabBtn.dataset.tab}Tab`).classList.add('active');
             
+            // OCULTAR MAPA EN ADMIN EXCEPTO EN HISTORIAL
             if (section.id === 'adminSection') {
                 document.querySelector('.map-container').style.display = 'none';
             } else {
                 document.querySelector('.map-container').style.display = 'block';
-                setTimeout(() => { map.invalidateSize(); }, 200);
             }
         }
+        if (e.target.dataset.close) closeModal(e.target.dataset.close);
     });
 
     document.getElementById('validateCodeBtn').addEventListener('click', () => {
@@ -1184,6 +1467,142 @@
             opt.classList.add('active');
         }
     });
+</script>
+
+<!-- ===== AGENTE IA MUDANZASHUB ===== -->
+<script>
+(function() {
+    const AI_SYSTEM = `Eres "Mudi", el asistente de ventas virtual de MudanzasHub Costa Rica, la plataforma líder de mudanzas y acarreos del país.
+
+INFORMACIÓN DEL SERVICIO:
+- Servicio de mudanzas y acarreos en Costa Rica
+- Tres tipos de vehículo: Pickup (₡15,000 base, hasta 800kg), Buseta (₡21,000 base, hasta 1,500kg), Camión (₡27,000 base, hasta 3,500kg)
+- Servicios: "Con Acarreo" (el transportista ayuda a cargar) o "Puesta Afuera" (el cliente pone las cosas en la calle)
+- El precio varía según: distancia, tipo de vehículo, peso de la carga, y dificultad de acceso
+- Tarifa aproximada: base del vehículo + ₡500/km + recargo por peso si supera el 60% de la capacidad
+- Acceso difícil tiene recargo del 15-20% al total
+- Horarios: disponible todos los días, se puede programar mudanzas con fecha y hora
+- Pago: SINPE Móvil al 7228-4602, adjuntando comprobante en la plataforma
+- Cobertura: todo el territorio nacional de Costa Rica
+- Cada transportista tiene calificación, placa, seguro y licencia verificados
+- El cliente recibe código de confirmación para finalizar el servicio
+
+PROCESO:
+1. El cliente se registra o inicia sesión
+2. Ingresa origen y destino en el mapa
+3. Selecciona tipo de vehículo y servicio
+4. Ve las ofertas disponibles de transportistas con precios
+5. Selecciona un transportista y ve su ficha completa
+6. Paga por SINPE y confirma
+7. El transportista acepta y se activa la navegación GPS
+8. Al finalizar, el cliente da un código de confirmación
+
+Tu objetivo es resolver dudas, explicar el servicio de forma amigable, motivar al cliente a usar la plataforma, y cerrar preguntas de ventas. Responde en español, máximo 3-4 oraciones cortas. Sé entusiasta pero profesional. Si el cliente quiere cotizar, pídele origen, destino y tipo de carga para orientarlo mejor.`;
+
+    let aiHistory = [];
+    let aiReady = false;
+
+    // Mostrar botón solo cuando hay sesión activa de cliente o transportista
+    function checkAiVisibility() {
+        const clientActive = document.getElementById('clientSection')?.classList.contains('active');
+        const transActive = document.getElementById('transporterSection')?.classList.contains('active');
+        const btn = document.getElementById('aiAgentBtn');
+        if (btn) btn.style.display = (clientActive || transActive) ? 'flex' : 'none';
+    }
+
+    // Observar cambios de sección
+    const observer = new MutationObserver(checkAiVisibility);
+    const sections = ['clientSection','transporterSection','authSection','adminSection'];
+    sections.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) observer.observe(el, { attributes: true, attributeFilter: ['class'] });
+    });
+
+    // Toggle panel
+    document.getElementById('aiAgentBtn').addEventListener('click', () => {
+        const panel = document.getElementById('aiChatPanel');
+        const isOpen = panel.classList.contains('open');
+        if (!isOpen) {
+            panel.classList.add('open');
+            if (!aiReady) {
+                aiReady = true;
+                aiAddMessage('bot', '¡Hola! 👋 Soy Mudi, tu asistente de MudanzasHub. ¿En qué te puedo ayudar hoy? Puedo orientarte sobre precios, vehículos, o cómo funciona el servicio.');
+            }
+            document.getElementById('aiInput').focus();
+        } else {
+            panel.classList.remove('open');
+        }
+    });
+
+    document.getElementById('aiCloseBtn').addEventListener('click', () => {
+        document.getElementById('aiChatPanel').classList.remove('open');
+    });
+
+    window.aiQuick = function(text) {
+        document.getElementById('aiInput').value = text;
+        aiSend();
+    };
+
+    window.aiSend = async function() {
+        const input = document.getElementById('aiInput');
+        const text = input.value.trim();
+        if (!text) return;
+        input.value = '';
+        aiAddMessage('user', text);
+        aiHistory.push({ role: 'user', content: text });
+        document.getElementById('aiSendBtn').disabled = true;
+        aiShowTyping();
+        try {
+            const res = await fetch('https://api.anthropic.com/v1/messages', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    model: 'claude-sonnet-4-20250514',
+                    max_tokens: 1000,
+                    system: AI_SYSTEM,
+                    messages: aiHistory
+                })
+            });
+            const data = await res.json();
+            aiRemoveTyping();
+            const reply = data.content?.[0]?.text || 'Disculpa, hubo un problema. ¿Puedes repetir tu pregunta?';
+            aiHistory.push({ role: 'assistant', content: reply });
+            aiAddMessage('bot', reply);
+        } catch(e) {
+            aiRemoveTyping();
+            aiAddMessage('bot', 'Hay un problema de conexión en este momento. Por favor intenta de nuevo.');
+        }
+        document.getElementById('aiSendBtn').disabled = false;
+        document.getElementById('aiInput').focus();
+    };
+
+    function aiAddMessage(role, text) {
+        const msgs = document.getElementById('aiMessages');
+        const div = document.createElement('div');
+        div.className = `ai-msg ${role}`;
+        div.innerHTML = `<div class="ai-msg-avatar">${role==='bot'?'🤖':'Yo'}</div><div class="ai-bubble">${text.replace(/\n/g,'<br>')}</div>`;
+        msgs.appendChild(div);
+        msgs.scrollTop = msgs.scrollHeight;
+    }
+
+    function aiShowTyping() {
+        const msgs = document.getElementById('aiMessages');
+        const div = document.createElement('div');
+        div.className = 'ai-msg bot'; div.id = 'aiTyping';
+        div.innerHTML = `<div class="ai-msg-avatar">🤖</div><div class="ai-bubble"><div class="ai-typing"><span></span><span></span><span></span></div></div>`;
+        msgs.appendChild(div);
+        msgs.scrollTop = msgs.scrollHeight;
+    }
+
+    function aiRemoveTyping() {
+        const t = document.getElementById('aiTyping');
+        if (t) t.remove();
+    }
+
+    // Chequeo inicial y periódico
+    checkAiVisibility();
+    setInterval(checkAiVisibility, 1000);
+})();
 </script>
 </body>
 </html>
